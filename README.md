@@ -20,7 +20,7 @@ Take a look at the directory structure:
 ├── Pipfile.lock
 ├── README.md
 └── lib
-    ├── classes
+    ├── models
     │   ├── __init__.py
     │   └── model_1.py
     ├── cli.py
@@ -112,9 +112,9 @@ your application, and you will update `lib/helpers.py` to replace `helper_1()`
 with a useful function based on the specific problem domain you decide to
 implement, along with adding other helper functions to the module.
 
-In the `lib/classes` folder, you should rename `model_1.py` with the name of a
+In the `lib/models` folder, you should rename `model_1.py` with the name of a
 data model class from your specific problem domain, and add other classes to the
-folder as needed. The file `lib/classes/__init__.py` has been initialized to
+folder as needed. The file `lib/models/__init__.py` has been initialized to
 create the necessary database constants. You need to add import statements to
 the various data model classes in order to use the database constants.
 

@@ -1,4 +1,4 @@
-# Phase 3 Project Template
+# Phase 3 Project CLI+ORM Template
 
 ## Learning Goals
 
@@ -156,7 +156,6 @@ users and collaborators, but a little more syntactically complicated. Only add
 these in if you're feeling comfortable with Markdown.
 
 ---
-
 
 ## Conclusion
 

@@ -157,14 +157,6 @@ these in if you're feeling comfortable with Markdown.
 
 ---
 
-## Submitting your project
-
-When you are done creating and testing your CLI, and have finished editing your
-`README.md`, push your project to github and then submit your repo to this
-Canvas assignment. There are no Codegrade tests to pass, your project will be
-manually evaluated.
-
----
 
 ## Conclusion
 

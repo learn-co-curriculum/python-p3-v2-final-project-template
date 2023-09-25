@@ -105,3 +105,9 @@ class Activity:
             description TEXT NOT NULL, price REAL NOT NULL)"""
         CURSOR.execute(sql)
         CONN.commit()
+
+    @classmethod
+    def drop_tabl(cls):
+        sql = """ DROP TABLE IF EXISTS activities;"""
+        CURSOR.execute(sql)
+        CONN.commit()

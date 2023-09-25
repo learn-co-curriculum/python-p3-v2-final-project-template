@@ -127,3 +127,27 @@ class Activity:
         except ValueError as e:
             print(str(e))
             return None
+
+    @classmethod
+    def create_table(cls):
+        sql = """ CREATE TABLE IF NOT EXISTS activities (
+            id INTEGER PRIMARY KEY AUTOINCREMENT, activity TEXT NOT NULL, 
+            description TEXT NOT NULL, price REAL NOT NULL)"""
+        CURSOR.execute(sql)
+        CONN.commit()
+
+    @classmethod
+    def drop_table(cls):
+        sql = """ DROP TABLE IF EXISTS activities;"""
+        CURSOR.execute(sql)
+        CONN.commit()
+
+    def save(self):
+        sql = """ INSERT INTO activities (activity, description, price)
+        VALUES (?,?,?)"""
+
+        CURSOR.execute(sql, self.activity, self.description, self.price)
+        CONN.commit()
+
+        self.id = CURSOR.lastrowid
+        type(self).all[self.id] = self

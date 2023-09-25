@@ -1,35 +1,40 @@
-# lib/models/department.py
+# lib/models/itinerary.py
 from models.__init__ import CURSOR, CONN
 
 
 class Trip:
-    def __init__(self, day, trip, id=None,):
-        self.day = day
-        self.trip = trip
+
+    all = {}
+
+    def __init__(self, name, location, id=None,):
+        self.name = name
+        self.location = location
         self.id = id
         
+    def __repr__(self):
+        return f"<Trip {self.id}: {self.name}, {self.location}>"
 
     @property
-    def day(self):
-        return self._day
-
-    @day.setter
-    def day(self, day):
-        if isinstance(day, str):
-            self._day = day
+    def name(self):
+        return self._name
+    
+    @name.setter
+    def name(self, name):
+        if isinstance(name, str) and len(name) in range(3,31) and not hasattr(self, "name"):
+            self._name = name
         else:
-            raise Exception("Day must be a string that is a weekday")
+            raise Exception("Trip name must be unique string between 3-30 characters.")
 
     @property
-    def trip(self):
-        return self._trip
+    def location(self):
+        return self._location
 
-    @trip.setter
-    def trip(self, trip):
-        if isinstance(trip, str) and len(trip) > 3 and not hasattr(self, "trip"):
-            self._trip = trip
+    @location.setter
+    def location(self, location):
+        if isinstance(location, str) and len(location) > 3:
+            self._location = location
         else:
-            raise Exception("Trip must be unique string over 3 characters")
+            raise Exception("Location must be a string over 3 characters")
 
     @property
     def activity(self):
@@ -40,8 +45,8 @@ class Trip:
     def create_table(cls):
         sql = """
             CREATE TABLE IF NOT EXISTS trips (
-            id INTEGER PRIMARY KEY,
-            name TEXT,      
+            id INTEGER PRIMARY KEY,      
+            name TEXT,
             location TEXT)
         """
         CURSOR.execute(sql)
@@ -57,27 +62,116 @@ class Trip:
 
     def save(self):
         sql = """
-            INSERT INTO trips (day, trip, activity)
+            INSERT INTO trips (name, location)
             VALUES(?,?)
         """
 
-        CURSOR.execute(sql(self.day, self.trip))
+        CURSOR.execute(sql, (self.name, self.location))
         CONN.commit()
 
         self.id = CURSOR.lastrowid
         type(self).all[self.id] = self
 
     @classmethod
-    def create(cls, day, trip): 
-        trip = cls(day, trip)
+    def create(cls, name, location): 
+        trip = cls(name, location)
         trip.save()
         return trip
+    
+    def update(self):
+        """Update the table row corresponding to the current Trip instance."""
+        sql = """
+            UPDATE trips
+            SET name = ?, location = ?
+            WHERE id = ?
+        """
+        CURSOR.execute(sql, (self.name, self.location, self.id))
+        CONN.commit()
+
+    def delete(self):
+        """Delete the table row corresponding to the current Trip instance,
+        delete the dictionary entry, and reassign id attribute"""
+
+        sql = """
+            DELETE FROM trips
+            WHERE id = ?
+        """
+
+        CURSOR.execute(sql, (self.id,))
+        CONN.commit()
+
+        del type(self).all[self.id]
+
+        self.id = None
+
+    @classmethod
+    def instance_from_db(cls, row):
+        """Return a Trip object having the attribute values from the table row."""
+
+        trip = cls.all.get(row[0])
+        if trip:
+            trip.name = row[1]
+            trip.location = row[2]
+        else:
+            trip = cls(row[1], row[2])
+            trip.id = row[0]
+            cls.all[trip.id] = trip
+        return trip
+
+    @classmethod
+    def get_all(cls):
+        """Return a list containing a Trip object per row in the table"""
+        sql = """
+            SELECT *
+            FROM trips
+        """
+
+        rows = CURSOR.execute(sql).fetchall()
+
+        return [cls.instance_from_db(row) for row in rows]
+
+    @classmethod
+    def find_by_id(cls, id):
+        """Return a Trip object corresponding to the table row matching the specified primary key"""
+        sql = """
+            SELECT *
+            FROM trips
+            WHERE id = ?
+        """
+
+        row = CURSOR.execute(sql, (id,)).fetchone()
+        return cls.instance_from_db(row) if row else None
+
+    @classmethod
+    def find_by_name(cls, name):
+        """Return a Trip object corresponding to first table row matching specified name"""
+        sql = """
+            SELECT *
+            FROM trips
+            WHERE name is ?
+        """
+
+        row = CURSOR.execute(sql, (name,)).fetchone()
+        return cls.instance_from_db(row) if row else None
+
 
 class Activity:
-    def __init__(self, activity, description, price, id=None):
+    def __init__(self, activity, description, price, day, id=None):
+        self.day = day
         self.activity = activity
         self.description = description
         self.price = price
+
+    @property
+    def day(self):
+        return self._day
+
+    @day.setter
+    def day(self, day):
+        if isinstance(day, str):
+            self._day = day
+        else:
+            raise Exception("Day must be a string that is a weekday")
 
     @property
     def activity(self):

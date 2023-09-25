@@ -3,11 +3,11 @@ from models.__init__ import CURSOR, CONN
 
 
 class Trip:
-    def __init__(self, day, trip, activity, id=None,):
+    def __init__(self, day, trip, id=None,):
         self.day = day
         self.trip = trip
         self.id = id
-        self.activity = activity
+        
 
     @property
     def day(self):
@@ -35,13 +35,43 @@ class Trip:
     def activity(self):
         return self._activity
 
-    @activity.setter
-    def activity(self, activity):
-        if isinstance(activity, Activity):
-            self._activity = activity
-        else:
-            raise Exception("Activity must be from the activity class")
+        
+    @classmethod
+    def create_table(cls):
+        sql = """
+            CREATE TABLE IF NOT EXISTS trips (
+            id INTEGER PRIMARY KEY,
+            name TEXT,      
+            location TEXT)
+        """
+        CURSOR.execute(sql)
+        CONN.commit()
 
+    @classmethod
+    def drop_table(cls):
+        sql = """
+            DROP TABLE IF EXISTS trips;
+        """
+        CURSOR.execute(sql)
+        CONN.commit()
+
+    def save(self):
+        sql = """
+            INSERT INTO trips (day, trip, activity)
+            VALUES(?,?)
+        """
+
+        CURSOR.execute(sql(self.day, self.trip))
+        CONN.commit()
+
+        self.id = CURSOR.lastrowid
+        type(self).all[self.id] = self
+
+    @classmethod
+    def create(cls, day, trip): 
+        trip = cls(day, trip)
+        trip.save()
+        return trip
 
 class Activity:
     def __init__(self, activity, description, price, id=None):

@@ -2,7 +2,8 @@
 
 from helpers import (
     exit_program,
-    helper_1
+    helper_1,
+    create_trip,
 )
 
 
@@ -13,7 +14,7 @@ def main():
         if choice == "0":
             exit_program()
         elif choice == "1":
-            helper_1()
+            create_trip()
         else:
             print("Invalid choice")
 
@@ -21,7 +22,7 @@ def main():
 def menu():
     print("Please select an option:")
     print("0. Exit the program")
-    print("1. Some useful function")
+    print("1. Create new trip")
 
 
 if __name__ == "__main__":

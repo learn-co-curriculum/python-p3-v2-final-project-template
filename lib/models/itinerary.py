@@ -12,7 +12,7 @@ class Trip:
     @property
     def day(self):
         return self._day
-    
+
     @day.setter
     def day(self, day):
         if isinstance(day, str):
@@ -23,19 +23,18 @@ class Trip:
     @property
     def trip(self):
         return self._trip
-    
+
     @trip.setter
-    def trip (self, trip):
+    def trip(self, trip):
         if isinstance(trip, str) and len(trip) > 3 and not hasattr(self, "trip"):
             self._trip = trip
         else:
             raise Exception("Trip must be unique string over 3 characters")
-        
 
     @property
     def activity(self):
         return self._activity
-    
+
     @activity.setter
     def activity(self, activity):
         if isinstance(activity, Activity):
@@ -44,10 +43,8 @@ class Trip:
             raise Exception("Activity must be from the activity class")
 
 
-
-
 class Activity:
-    def __init__(self, activity, description, price):
+    def __init__(self, activity, description, price, id=None):
         self.activity = activity
         self.description = description
         self.price = price
@@ -84,3 +81,19 @@ class Activity:
             self._price = price
         else:
             raise Exception("Invalid price.")
+
+    def create_activity():
+        activity = input("Enter activity: ")
+        description = input("Enter description: ")
+        try:
+            price = float(input("Enter price: "))
+        except ValueError:
+            print("Invalid price. Please enter a valid price.")
+            return None
+
+        try:
+            activity = Activity(activity, description, price)
+            return activity
+        except ValueError as e:
+            print(str(e))
+            return None

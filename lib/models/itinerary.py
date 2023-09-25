@@ -118,3 +118,6 @@ class Activity:
 
         CURSOR.execute(sql, self.activity, self.description, self.price)
         CONN.commit()
+
+        self.id = CURSOR.lastrowid
+        type(self).all[self.id] = self

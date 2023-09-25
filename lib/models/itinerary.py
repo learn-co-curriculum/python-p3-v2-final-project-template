@@ -97,3 +97,11 @@ class Activity:
         except ValueError as e:
             print(str(e))
             return None
+
+    @classmethod
+    def create_table(cls):
+        sql = """ CREATE TABLE IF NOT EXISTS activities (
+            id INTEGER PRIMARY KEY AUTOINCREMENT, activity TEXT NOT NULL, 
+            description TEXT NOT NULL, price REAL NOT NULL)"""
+        CURSOR.execute(sql)
+        CONN.commit()

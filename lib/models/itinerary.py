@@ -107,7 +107,7 @@ class Activity:
         CONN.commit()
 
     @classmethod
-    def drop_tabl(cls):
+    def drop_table(cls):
         sql = """ DROP TABLE IF EXISTS activities;"""
         CURSOR.execute(sql)
         CONN.commit()

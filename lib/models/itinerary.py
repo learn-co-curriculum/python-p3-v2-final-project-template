@@ -111,3 +111,10 @@ class Activity:
         sql = """ DROP TABLE IF EXISTS activities;"""
         CURSOR.execute(sql)
         CONN.commit()
+
+    def save(self):
+        sql = """ INSERT INTO activities (activity, description, price)
+        VALUES (?,?,?)"""
+
+        CURSOR.execute(sql, self.activity, self.description, self.price)
+        CONN.commit()

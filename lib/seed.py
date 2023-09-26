@@ -13,7 +13,7 @@ def seed_database():
     
 
     summer = Trip.create("Summer Break", "Cancun")
-    swimming = Trip.create(
+    swimming = Activity.create(
         "Swimming", "Swimming at the Infinity Pool", 0.00, "Thursday")
 
 

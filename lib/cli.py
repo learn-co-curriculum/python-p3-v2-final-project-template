@@ -8,6 +8,12 @@ from helpers import (
     find_trip_by_name,
     update_trip,
     delete_trip,
+    create_activity,
+    list_activities,
+    find_activity_by_name,
+    find_activity_by_id,
+    update_activity,
+    delete_activity
 )
 
 
@@ -29,6 +35,18 @@ def main():
             find_trip_by_id()
         elif choice == "6":
             find_trip_by_name()
+        elif choice == "7":
+            create_activity()
+        elif choice == "8":
+            list_activities()
+        elif choice == "9":
+            find_activity_by_name()
+        elif choice == "10":
+            find_activity_by_id()
+        elif choice == "11":
+            update_activity()
+        elif choice == "12":
+            delete_activity()
         else:
             print("\033[31mInvalid choice\033[0m")
 
@@ -42,6 +60,12 @@ def menu():
     print("4. Update a trip")
     print("5. Find trip by id")
     print("6. Find trip by name")
+    print("7. Create new activity")
+    print("8. List activities")
+    print("9. Find activity by id")
+    print("10. Find activity by name")
+    print("11. Update an activity")
+    print("12. Delete an activity")
 
 
 if __name__ == "__main__":

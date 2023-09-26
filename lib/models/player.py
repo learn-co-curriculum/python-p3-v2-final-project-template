@@ -4,10 +4,15 @@ import re
 class Player:
     all = {}
 
-    def __init__(self, username, email, id=None):
+    def __init__(self, username, email, id=None, hit_points=150):
         self.id = id
         self.username = username
         self.email = email
+        self.hit_points = hit_points
+        self.max_hit_points = 150
+
+    def __repr__(self):
+        return f"{self.username} (HP: {self.hit_points})"
 
     def __repr__(self):
         return (
@@ -24,8 +29,8 @@ class Player:
         if not isinstance(username, str):
             raise ValueError("Username must be a string.")
 
-        if not 5 <= len(username) <= 20:
-            raise ValueError("Username must be between 5 and 20 characters.")
+        if not 3 <= len(username) <= 20:
+            raise ValueError("Username must be between 3 and 20 characters.")
 
         if not re.match("^[a-zA-Z0-9_]*$", username):
             raise ValueError(

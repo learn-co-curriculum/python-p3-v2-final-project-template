@@ -69,6 +69,8 @@ def delete_trip():
 def create_activity():
     activity = input("Enter activity: ")
     description = input("Enter description: ")
+    day = input("Enter day: ")
+
     try:
         price = float(input("Enter price: "))
     except ValueError:
@@ -76,7 +78,7 @@ def create_activity():
         return None
 
     try:
-        activity = Activity(activity, description, price)
+        activity = Activity(activity, description, price, day)
         return activity
     except ValueError as e:
         print(str(e))

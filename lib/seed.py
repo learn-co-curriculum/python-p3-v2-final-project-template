@@ -14,7 +14,9 @@ def seed_database():
 
     summer = Trip.create("Summer Break", "Cancun")
     swimming = Activity.create(
-        "Swimming", "Swimming at the Infinity Pool", 0.00, "Thursday")
+        "Swimming", "Swimming at the Infinity Pool", 0.00, "Thursday", summer)
+    
+    
 
 seed_database()
 print("Seeded database")

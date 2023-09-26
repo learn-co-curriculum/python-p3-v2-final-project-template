@@ -2,7 +2,7 @@ from models.__init__ import CURSOR, CONN
 import re
 
 class Player:
-    all = {}
+    ALL = {}
 
     def __init__(self, username, email, id=None):
         self.id = id
@@ -20,7 +20,7 @@ class Player:
         return self._username
 
     @username.setter
-    def username(self, username):
+    def username(self, username, is_username_unique):
         if not isinstance(username, str):
             raise ValueError("Username must be a string.")
         
@@ -42,7 +42,7 @@ class Player:
         return self._email
     
     @email.setter
-    def email(self, email):
+    def email(self, email, is_email_unique):
         if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
             raise ValueError("Email is not in a valid format.")
         
@@ -53,63 +53,156 @@ class Player:
 
     @classmethod
     def create_table(cls):
-        # SQL command to create Player table
-        pass
+        # SQL command to create new Player table to persist attribute's Player instance
+        sql = """
+            CREATE TABLE IF NOT EXISTS players (
+            id INTEGER PRIMARY KEY,
+            name TEXT,
+            location TEXT)
+        """
+        CURSOR.execute(sql)
+        CONN.commit()
 
     @classmethod
     def drop_table(cls):
-        # SQL command to drop Player table
-        pass
+        # SQL command to drop Player table that persists Player instances
+        sql = """
+            DROP TABLE IF EXISTS players;
+        """
+        CURSOR.execute(sql)
+        CONN.commit()
 
     def save(self):
-        # Save player instance to database
-        pass
+        # Save player instance to new database row
+        sql = """
+            INSERT INTO players (username, email)
+            VALUES (?, ?)
+        """
+
+        # Update object id attribute using the primary key value of new row
+        CURSOR.execute(sql, (self.username, self.email))
+        CONN.commit()
+
+        # Save the object in local dictionary using table row's PK as dictionary key
+        self.id = CURSOR.lastrowid
+        type(self).ALL[self.id] = self
 
     def update(self):
-        # Update this player's data
-        pass
+        # Update this player's table row corresponding to the current Player instance
+        sql = """
+            UPDATE players
+            SET username = ?, email = ?
+            WHERE id = ?
+        """
+        CURSOR.execute(sql, (self.username, self.email, self.id))
+        CONN.commit()
 
     def delete(self):
         # Delete this player from database
-        pass
+        sql = """
+            DELETE FROM players
+            WHERE id = ?
+        """
+        CURSOR.execute(sql, (self.id,))
+        CONN.commit()
+
+        # Delete the dictionary entry using id as the key
+        del type(self).ALL[self.id]
+
+        # Set id to None
+        self.id = None
 
     @classmethod
-    def create(cls, username):
-        # Create and return a new player instance
-        pass
+    def create(cls, username, email):
+        # Create a new player instance and save it to database row
+        player = cls(username, email)
+        player.save()
+        return player
 
     @classmethod
     def instance_from_db(cls, row):
-        # Initialize an instance from a database row
-        pass
+        # Return a Player object with attributes from correct table row
+
+        # Check the dictionary for an existing instance using the row's primary key
+        player = cls.ALL.get(row[0])
+        if player:
+            # ensure attributes match row values in case local instance was modified
+            player.username = row[1]
+            player.email = row[2]
+        else:
+            # not in dictionary, create new instance and add to dictionary
+            player = cls(row[1], row[2])
+            player.id = row[0]
+            cls.ALL[player.id] = player
+        return player
 
     @classmethod
     def get_all(cls):
-        # Get all player instances
-        pass
+        # Return a list containing all player instances
+        sql = """
+            SELECT *
+            FROM players
+        """
+
+        rows = CURSOR.execute(sql).fetchall()
+
+        return [cls.instance_from_db(row) for row in rows]
 
     @classmethod
     def find_by_id(cls, id):
         # Find a player by their ID
-        pass
+        sql = """
+            SELECT *
+            FROM players
+            WHERE id = ?
+        """
+        # Return Player object from the table row with matching primary key
+        row = CURSOR.execute(sql, (id,)).fetchone()
+        return cls.instance_from_db(row) if row else None
 
     @classmethod
     def find_by_username(cls, username):
         # Find a player by their username
-        pass
+        sql = """
+            SELECT *
+            FROM players
+            WHERE username is ?
+        """
+        # Return the first table row of a Player object matching a username
+        row = CURSOR.execute(sql, (username,)).fetchone()
+        return cls.instance_from_db(row) if row else None
 
 
     @classmethod
     def is_username_unique(cls, username):
-        # Search in db or in-memory
-        # if a result, return False
-        # else: return True
-        pass
+        # Search in-memory
+        is_unique_in_memory = not any(player.username == username for player in cls.ALL.values())
+
+        # Search in database
+        sql = """
+            SELECT * 
+            FROM players
+            WHERE username is ?
+        """
+        row = CURSOR.execute(sql, (username,)).fetchone()
+        is_unique_in_db = row is None
+
+        # if a result, return False; else: return True
+        return is_unique_in_db and is_unique_in_memory
 
     @classmethod
     def is_email_unique(cls, email):
-        # Search in db or in-memory
-        # if a result, return False
-        # else: return True
-        pass
-    
+        # Search in-memory
+        is_unique_in_memory = not any(player.username == email for player in cls.ALL.values())
+
+        # Search in database
+        sql = """
+            SELECT * 
+            FROM players
+            WHERE email is ?
+        """
+        row = CURSOR.execute(sql, (email,)).fetchone()
+        is_unique_in_db = row is None
+
+        # if a result, return False (not unique); else: return True
+        return is_unique_in_db and is_unique_in_memory

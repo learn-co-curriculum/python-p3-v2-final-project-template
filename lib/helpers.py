@@ -60,14 +60,14 @@ def delete_trip():
 
 
 def create_activity():
-    activity = input("Enter activity: ")
-    description = input("Enter description: ")
-    day = input("Enter day: ")
+    activity = input("\033[34mEnter activity:  \033[0m")
+    description = input("\033[34mEnter description:  \033[0m")
+    day = input("\033[34mEnter day:  \033[0m")
 
     try:
-        price = float(input("Enter price: "))
+        price = float(input("\033[34mEnter price:  \033[0m"))
     except ValueError:
-        print("Invalid price. Please enter a valid price.")
+        print("\033[31mInvalid price. Please enter a valid price. \033[0m")
         return None
 
     try:
@@ -85,39 +85,50 @@ def list_activities():
 
 
 def find_activity_by_name():
-    activity_name = input("Enter activity: ")
+    activity_name = input("\033[34mEnter activity name:  \033[0m")
     activity = Activity.get_by_name(activity_name)
     print(activity) if activity else print(
-        f'Activity {activity_name} not found. Please verify the entry matches a valid activity.')
+        f"\033[31mActivity {activity_name} not found. Please verify the entry matches a valid activity. \033[0m")
 
 
 def find_activity_by_id():
-    id_ = input("Enter activity id: ")
+    id_ = input("\033[34mEnter activity id:  \033[0m")
     activity = Activity.find_by_id(id_)
     print(activity) if activity else print(
-        f'Activity id {id_} not found. Please verify id matches a valid activity.')
+        f"\033[31mActivity id {id_} not found. Please verify id matches a valid activity. \033[0m")
 
 
 def update_activity():
-    id_ = input("Enter activity id: ")
+    id_ = input("\033[34m \033[0m"     "Enter activity id: ")
     if activity := Activity.find_by_id(id_):
         try:
-            activity_name = input("Enter activity's new name: ")
+            activity_name = input("\033[34mEnter activity's new name:  \033[0m")
             activity.activity_name = activity_name
-            description = input("Enter activity's new description: ")
+            description = input("\033[34mEnter activity's new description:  \033[0m")
             activity.description = description
-            price = float(input("Enter new price of activity: "))
+            price = float(input("\033[34mEnter new price of activity:  \033[0m"))
             activity.price = price
-            day = input("Enter new day: ")
+            day = input("\033[34mEnter new day:  \033[0m")
             activity.day = day
 
             activity.update()
-            print("Activity updated successfully.")
+            print("\033[32mActivity updated successfully! \033[0m")
 
         except ValueError as exc:
-            print(f"Error updating activity: {exc}")
+            print(f"\033[31mError updating activity: {exc} \033[0m")
         except Exception as exc:
-            print(f"Error updating activity: {exc}")
+            print(f"\033[31mError updating activity: {exc} \033[0m")
 
     else:
-        print(f"Activity {id_} not found.")
+        print(f"\033[31mActivity {id_} not found. \033[0m")
+
+
+def delete_activity():
+    id_ = input("\033[34m \033[0m"    "Enter activity id: ")
+    if activity := Activity.find_by_id(id_):
+        activity.delete()
+        print(f"\033[32m \033[0m"   "Activity id {id_} deleted.")
+    else:
+        print(f"\033[31m \033[0m"    "Activity id {id_} not found.")
+
+# "\033[32m \033[0m"

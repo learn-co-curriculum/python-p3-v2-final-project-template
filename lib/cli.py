@@ -29,7 +29,7 @@ def main():
         elif choice == "5":
             find_trip_by_id()
         elif choice == "6":
-            find_trip_by_name
+            find_trip_by_name()
         elif choice == "7":
             create_activity()
         else:

@@ -159,12 +159,24 @@ class Activity:
     VALID_DAYS = ["Monday", "Tuesday", "Wednesday",
                   "Thursday", "Friday", "Saturday", "Sunday"]
 
-    def __init__(self, activity_name, description, price, day, id=None):
+    def __init__(self, activity_name, description, price, day, trip_id, id=None):
         self.day = day
         self.activity_name = activity_name
         self.description = description
         self.price = price
         self.id = id
+        self.trip_id = trip_id
+
+    @property
+    def trip_id(self):
+        return self._trip_id
+
+    @trip_id.setter
+    def trip_id(self, trip_id):
+        if isinstance(trip_id, Trip):
+            self._trip_id = trip_id
+        else:
+            raise Exception("trip_id must be an instance in Trip")
 
     @property
     def day(self):
@@ -229,15 +241,15 @@ class Activity:
         VALUES (?,?,?,?)"""
 
         CURSOR.execute(sql, self.activity_name, self.description,
-                       self.price, self.day)
+                       self.price, self.day, self.trip_id)
         CONN.commit()
 
         self.id = CURSOR.lastrowid
         type(self).all[self.id] = self
 
     @classmethod
-    def create(cls, activity_name, description, price, day):
-        activity = cls(activity_name, description, price, day)
+    def create(cls, activity_name, description, price, day, trip_id):
+        activity = cls(activity_name, description, price, day, trip_id)
         activity.save()
         return activity
 
@@ -245,7 +257,7 @@ class Activity:
         """Update the table row corresponding to the current Activity instance."""
         sql = """UPDATE activities SET activity = ?, description = ?, price = ?, day =? WHERE id = ?"""
         CURSOR.execute(sql, (self.activity_name, self.description,
-                       self.price, self.day, self.id))
+                       self.price, self.day, self.id, self.trip_id))
         CONN.commit()
 
     def delete(self):

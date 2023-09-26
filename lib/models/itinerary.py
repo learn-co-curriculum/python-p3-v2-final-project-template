@@ -275,3 +275,10 @@ class Activity:
             activity = cls(row[1], row[2], row[3], row[4])
             activity.id = row[0]
             cls.all[activity.id] = activity
+
+    @classmethod
+    def get_all(cls):
+        """Return a list containing an Activity object per row in table."""
+        sql = """SELECT * FROM activities"""
+        rows = CURSOR.execute(sql).fetchall()
+        return [cls.instance_from_db(row) for row in rows in rows]

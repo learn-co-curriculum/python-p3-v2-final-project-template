@@ -1,7 +1,7 @@
 from models.__init__ import CURSOR, CONN
 from models.player import Player
 import re
-
+from models.__init__ import sqlite3
 class Character:
     ALL = {}
 
@@ -80,23 +80,22 @@ class Character:
     def name(self, name):
         if not isinstance(name, str):
             raise ValueError("The character name must be a string.")
-        
+
         if not 3 <= len(name) <= 20:
             raise ValueError(
                 "The character name's length must be between 3 and 20 characters."
                 )
-        
+
         if not name[0].isalpha():
             raise ValueError(
                 "The character's name must start with an alphabetic letter."
                 )
-        
+
         if not re.match("^[a-zA-Z_]*$", name):
             raise ValueError(
                 "The character's name can only contain letters and underscores."
                 )
-        
-        
+
         if not self.is_name_unique(name):
             raise ValueError("The character name must be unique.")
 
@@ -123,7 +122,7 @@ class Character:
             self._xp = xp
         else:
             raise ValueError("XP must be a positive integer.")
-        
+
     @property
     def hp(self):
         return self._hp
@@ -134,11 +133,11 @@ class Character:
             self._hp = hp
         else:
             raise ValueError("HP must be a positive integer.")
-        
+
     @property
     def mp(self):
         return self._mp
-    
+
     @mp.setter
     def mp(self, mp):
         if isinstance(mp, int) and mp >= 0:

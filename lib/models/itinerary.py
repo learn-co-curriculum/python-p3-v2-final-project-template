@@ -263,3 +263,15 @@ class Activity:
         CURSOR.execute(sql, (self.activity, self.description,
                        self.price, self.day, self.id))
         CONN.commit()
+
+    def delete(self):
+        """Delete the table row corresponding to the current Activity instance."""
+
+        sql = """DELETE FROM activities WHERE id = ?"""
+
+        CURSOR.execute(sql, (self.id))
+        CONN.commit()
+
+        del type(self).all[self.id]
+
+        self.id = None

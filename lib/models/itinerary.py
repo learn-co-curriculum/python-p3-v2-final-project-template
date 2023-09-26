@@ -250,3 +250,9 @@ class Activity:
 
         self.id = CURSOR.lastrowid
         type(self).all[self.id] = self
+
+    @classmethod
+    def create(cls, activity, description, price, day):
+        activity = cls(activity, description, price, day)
+        activity.save()
+        return activity

@@ -1,13 +1,13 @@
-from models.monster import Monster
-from models.character import Character
+import sqlite3
+import random
+from models.monster import Monster, select_random_monster, remove_monster
 from models.player import Player
-from models.__init__ import sqlite3
 
 def main():
     conn = sqlite3.connect('game.db')
 
     while True:
-        print("Choose a scenario:")
+        print("\nChoose a scenario:")
         print("1. Scenario One")
         print("2. Scenario Two")
         print("3. Exit")
@@ -15,9 +15,13 @@ def main():
         scenario_choice = input("Choose an option: ")
 
         if scenario_choice == "3":
+            print("Thanks for playing!")
             break
 
-        player = Player("Hero")
+        # Taking user's name input
+        player_name = input("Enter your name: ")
+        player = Player(player_name)
+        print(f"Welcome, {player_name}! Good luck on your adventure!")
 
         for step in range(1, 6):
             print(f"\nStep {step}")
@@ -72,11 +76,7 @@ def main():
                 elif choice == "2":
                     print(player)
 
-                elif choice == "3":
-                    print("You ran away!")
-                    break
-
-                elif choice == "4" and current_monster.has_healing_item and not current_monster.healing_item_used:
+                elif choice == "3" and current_monster.has_healing_item and not current_monster.healing_item_used:
                     healing_amount = 30
                     player.hit_points = min(player.hit_points + healing_amount, player.max_hit_points)
                     current_monster.healing_item_used = True
@@ -89,10 +89,10 @@ def main():
 
         play_again = input("Scenario ended. Do you want to play again? (y/n): ").lower()
         if play_again != 'y':
+            print("Thanks for playing! See you next time.")
             break
 
     conn.close()
-
 
 if __name__ == "__main__":
     main()

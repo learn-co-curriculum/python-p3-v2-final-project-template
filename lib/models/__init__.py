@@ -24,16 +24,9 @@ monsters = [
     ("Drunken man", 90, True),
     ("Cunning witch", 85, True),
     ("Large spider", 100, False),
-    ("Godzilla", 175, False),
-    ("Mothra", 175, False),
 ]
 
 CURSOR.executemany('INSERT INTO monsters (name, hit_points, has_healing_item) VALUES (?, ?, ?)', monsters)
 CONN.commit()
-
-CURSOR.execute('SELECT * FROM monsters')
-rows = CURSOR.fetchall()
-for row in rows:
-    print(row)
 
 CONN.close()

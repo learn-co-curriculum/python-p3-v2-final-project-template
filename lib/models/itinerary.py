@@ -237,7 +237,7 @@ class Activity:
         CONN.commit()
 
     def save(self):
-        sql = """ INSERT INTO activities (activity, description, price, day, trip_id.id)
+        sql = """ INSERT INTO activities (activity, description, price, day, trip_id)
         VALUES (?,?,?,?,?)"""
 
         CURSOR.execute(sql, self.activity_name, self.description,
@@ -308,7 +308,7 @@ class Activity:
     def find_by_activity_name(cls, activity_name):
         """Return an Activity object corresponding to first table row matching the specified name"""
 
-        sql = """SELECT * FROM activities WHERE name is ?"""
+        sql = """SELECT * FROM activities WHERE name is = ?"""
 
         row = CURSOR.execute(sql, (activity_name,)).fetchone()
         return cls.instance_from_db(row) if row else None

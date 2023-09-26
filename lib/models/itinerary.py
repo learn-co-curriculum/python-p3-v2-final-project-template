@@ -12,7 +12,7 @@ class Trip:
         self.id = id
 
     def __repr__(self):
-        return f"<Trip {self.id}: {self.name}, {self.location}>"
+        return f"\033[36m<Trip {self.id}: {self.name}, {self.location}>\033[0m"
 
     @property
     def name(self):

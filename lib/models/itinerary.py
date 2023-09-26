@@ -256,3 +256,10 @@ class Activity:
         activity = cls(activity, description, price, day)
         activity.save()
         return activity
+
+    def update(self):
+        """Update the table row corresponding to the current Activity instance."""
+        sql = """UPDATE activities SET activity = ?, description = ?, price = ?, day =? WHERE id = ?"""
+        CURSOR.execute(sql, (self.activity, self.description,
+                       self.price, self.day, self.id))
+        CONN.commit()

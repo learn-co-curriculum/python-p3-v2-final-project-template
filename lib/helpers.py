@@ -31,13 +31,15 @@ def list_trips():
 def find_trip_by_name():
     name = input("Enter the trip name: ")
     trip = Trip.find_by_name(name)
-    print(trip) if trip else print(f'Trip {name} not found. Please verify the name matches a valid trip')
+    print(trip) if trip else print(
+        f'Trip {name} not found. Please verify the name matches a valid trip')
 
 
 def find_trip_by_id():
     id_ = input("Enter the trip id: ")
     trip = Trip.find_by_id(id_)
-    print(trip) if trip else print(f'Trip id {id_} not found. Please verify the id is a number that matches a valid trip')
+    print(trip) if trip else print(
+        f'Trip id {id_} not found. Please verify the id is a number that matches a valid trip')
 
 
 def update_trip():
@@ -83,3 +85,13 @@ def create_activity():
     except ValueError as e:
         print(str(e))
         return None
+
+
+def list_activities():
+    activities = Activity.get_all()
+    for activity in activities:
+        print(activity)
+
+
+def find_activity_by_name():
+    activity = input("Enter activity: ")

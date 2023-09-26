@@ -115,13 +115,18 @@ def update_activity():
             activity.activity_name = activity_name
             description = input("Enter activity's new description: ")
             activity.description = description
-            price = input("Enter new price of activity: ")
+            price = float(input("Enter new price of activity: "))
             activity.price = price
             day = input("Enter new day: ")
             activity.day = day
 
+            activity.update()
+            print("Activity updated successfully.")
+
+        except ValueError as exc:
+            print(f"Error updating activity: {exc}")
         except Exception as exc:
-            print("Error updating activity...", exc)
+            print(f"Error updating activity: {exc}")
 
     else:
-        print(f"Activity {id} not found.")
+        print(f"Activity {id_} not found.")

@@ -1,3 +1,4 @@
+from xml.sax import make_parser
 from models.__init__ import CURSOR, CONN
 from models.player import Player
 import re
@@ -132,6 +133,17 @@ class Character:
             self._hp = hp
         else:
             raise ValueError("HP must be a positive integer.")
+        
+    @property
+    def mp(self):
+        return self._mp
+    
+    @mp.setter
+    def mp(self, hp):
+        if isinstance(mp, int) and mp >= 0:
+            self._mp = mp
+        else:
+            raise ValueError("MP must be a positive integer.")
 
     @property
     def player_id(self):

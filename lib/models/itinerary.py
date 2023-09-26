@@ -237,8 +237,8 @@ class Activity:
         CONN.commit()
 
     def save(self):
-        sql = """ INSERT INTO activities (activity, description, price, day)
-        VALUES (?,?,?,?)"""
+        sql = """ INSERT INTO activities (activity, description, price, day, trip_id.id)
+        VALUES (?,?,?,?,?)"""
 
         CURSOR.execute(sql, self.activity_name, self.description,
                        self.price, self.day, self.trip_id)

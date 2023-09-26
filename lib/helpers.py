@@ -70,7 +70,6 @@ def create_activity():
     day = input("\033[34mEnter day:  \033[0m")
     trip_id = input("\033[34mEnter trip id: \033[0m")
 
-
     try:
         price = float(input("\033[34mEnter price:  \033[0m"))
     except ValueError:
@@ -78,7 +77,7 @@ def create_activity():
         return None
 
     try:
-        activity = Activity(activity, description, price, day, trip_id)
+        activity = Activity.create(activity, description, price, day, trip_id)
         return activity
     except ValueError as e:
         print(str(e))
@@ -109,11 +108,14 @@ def update_activity():
     id_ = input("\033[34m \033[0m"     "Enter activity id: ")
     if activity := Activity.find_by_id(id_):
         try:
-            activity_name = input("\033[34mEnter activity's new name:  \033[0m")
+            activity_name = input(
+                "\033[34mEnter activity's new name:  \033[0m")
             activity.activity_name = activity_name
-            description = input("\033[34mEnter activity's new description:  \033[0m")
+            description = input(
+                "\033[34mEnter activity's new description:  \033[0m")
             activity.description = description
-            price = float(input("\033[34mEnter new price of activity:  \033[0m"))
+            price = float(
+                input("\033[34mEnter new price of activity:  \033[0m"))
             activity.price = price
             day = input("\033[34mEnter new day:  \033[0m")
             activity.day = day

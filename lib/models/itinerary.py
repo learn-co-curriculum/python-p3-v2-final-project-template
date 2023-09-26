@@ -178,11 +178,11 @@ class Activity:
             raise Exception("Day must be a valid day of the week.")
 
     @property
-    def activity(self):
+    def activity_name(self):
         return self._activity_name
 
-    @activity.setter
-    def activity(self, activity_name):
+    @activity_name.setter
+    def activity_name(self, activity_name):
         if isinstance(activity_name, str) and len(activity_name) in range(1, 25):
             self._activity_name = activity_name
         else:

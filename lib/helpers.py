@@ -98,3 +98,10 @@ def find_activity_by_name():
     activity = Activity.get_by_name(activity_name)
     print(activity) if activity else print(
         f'Activity {activity_name} not found. Please verify the entry matches a valid activity.')
+
+
+def find_activity_by_id():
+    id_ = input("Enter activity id: ")
+    activity = Activity.find_by_id(id_)
+    print(activity) if activity else print(
+        f'Activity id {id_} not found. Please verify id matches a valid activity.')

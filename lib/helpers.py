@@ -116,6 +116,8 @@ def update_activity():
             activity.price = price
             day = input("Enter new day: ")
             activity.day = day
+            trip_id = input("Enter new trip id: ")
+            activity.trip_id = trip_id
 
             activity.update()
             print("Activity updated successfully.")

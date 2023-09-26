@@ -10,20 +10,21 @@ class Trip:
         self.name = name
         self.location = location
         self.id = id
-        
+
     def __repr__(self):
         return f"<Trip {self.id}: {self.name}, {self.location}>"
 
     @property
     def name(self):
         return self._name
-    
+
     @name.setter
     def name(self, name):
-        if isinstance(name, str) and len(name) in range(3,31) and not hasattr(self, "name"):
+        if isinstance(name, str) and len(name) in range(3, 31) and not hasattr(self, "name"):
             self._name = name
         else:
-            raise Exception("Trip name must be unique string between 3-30 characters.")
+            raise Exception(
+                "Trip name must be unique string between 3-30 characters.")
 
     @property
     def location(self):
@@ -40,7 +41,6 @@ class Trip:
     def activity(self):
         return self._activity
 
-        
     @classmethod
     def create_table(cls):
         sql = """
@@ -73,11 +73,11 @@ class Trip:
         type(self).all[self.id] = self
 
     @classmethod
-    def create(cls, name, location): 
+    def create(cls, name, location):
         trip = cls(name, location)
         trip.save()
         return trip
-    
+
     def update(self):
         """Update the table row corresponding to the current Trip instance."""
         sql = """
@@ -156,6 +156,9 @@ class Trip:
 
 
 class Activity:
+    VALID_DAYS = ["Monday", "Tuesday", "Wednesday",
+                  "Thursday", "Friday", "Saturday", "Sunday"]
+
     def __init__(self, activity, description, price, day, id=None):
         self.day = day
         self.activity = activity
@@ -168,10 +171,10 @@ class Activity:
 
     @day.setter
     def day(self, day):
-        if isinstance(day, str):
+        if day in self.VALID_DAYS:
             self._day = day
         else:
-            raise Exception("Day must be a string that is a weekday")
+            raise Exception("Day must be a valid day of the week.")
 
     @property
     def activity(self):

@@ -244,7 +244,8 @@ class Activity:
         sql = """ INSERT INTO activities (activity, description, price, day)
         VALUES (?,?,?,?)"""
 
-        CURSOR.execute(sql, self.activity, self.description, self.price)
+        CURSOR.execute(sql, self.activity, self.description,
+                       self.price, self.day)
         CONN.commit()
 
         self.id = CURSOR.lastrowid

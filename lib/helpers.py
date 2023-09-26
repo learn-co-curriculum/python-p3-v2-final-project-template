@@ -105,3 +105,23 @@ def find_activity_by_id():
     activity = Activity.find_by_id(id_)
     print(activity) if activity else print(
         f'Activity id {id_} not found. Please verify id matches a valid activity.')
+
+
+def update_activity():
+    id_ = input("Enter activity id: ")
+    if activity := Activity.find_by_id(id_):
+        try:
+            activity_name = input("Enter activity's new name: ")
+            activity.activity_name = activity_name
+            description = input("Enter activity's new description: ")
+            activity.description = description
+            price = input("Enter new price of activity: ")
+            activity.price = price
+            day = input("Enter new day: ")
+            activity.day = day
+
+        except Exception as exc:
+            print("Error updating activity...", exc)
+
+    else:
+        print(f"Activity {id} not found.")

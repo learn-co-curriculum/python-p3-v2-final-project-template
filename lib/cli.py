@@ -11,7 +11,8 @@ from helpers import (
     create_activity,
     list_activities,
     find_activity_by_name,
-    find_activity_by_id
+    find_activity_by_id,
+    update_activity
 )
 
 
@@ -41,6 +42,8 @@ def main():
             find_activity_by_name()
         elif choice == "10":
             find_activity_by_id()
+        elif choice == "11":
+            update_activity()
         else:
             print("\033[31mInvalid choice\033[0m")
 
@@ -58,6 +61,7 @@ def menu():
     print("8. List activities")
     print("9. Find activity by id")
     print("10. Find activity by name")
+    print("11. Update an activity")
 
 
 if __name__ == "__main__":

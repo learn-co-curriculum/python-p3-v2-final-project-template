@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 
 from models.__init__ import CONN, CURSOR
-from models.itinerary import Trip
-from models.itinerary import Activity
+from models.itinerary import Trip, Activity
 
 
 def seed_database():

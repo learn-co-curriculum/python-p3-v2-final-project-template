@@ -10,11 +10,10 @@ def seed_database():
     Trip.create_table()
     Activity.drop_table()
     Activity.create_table()
-    
 
     summer = Trip.create("Summer Break", "Cancun")
-    swimming = Trip.create(
-        "Swimming", "Swimming at the Infinity Pool", 0.00, "Thursday")
+    swimming = Activity.create(
+        "Swimming", "Swimming at the Infinity Pool", 0.00, "Thursday", summer)
 
 
 seed_database()

@@ -68,6 +68,7 @@ def create_activity():
     activity = input("Enter activity: ")
     description = input("Enter description: ")
     day = input("Enter day: ")
+    trip_id = input("Enter trip id: ")
 
     try:
         price = float(input("Enter price: "))
@@ -76,7 +77,7 @@ def create_activity():
         return None
 
     try:
-        activity = Activity(activity, description, price, day)
+        activity = Activity(activity, description, price, day, trip_id)
         return activity
     except ValueError as e:
         print(str(e))
@@ -115,6 +116,8 @@ def update_activity():
             activity.price = price
             day = input("Enter new day: ")
             activity.day = day
+            trip_id = input("Enter new trip id: ")
+            activity.trip_id = trip_id
 
             activity.update()
             print("Activity updated successfully.")

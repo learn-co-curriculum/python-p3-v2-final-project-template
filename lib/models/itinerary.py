@@ -159,9 +159,9 @@ class Activity:
     VALID_DAYS = ["Monday", "Tuesday", "Wednesday",
                   "Thursday", "Friday", "Saturday", "Sunday"]
 
-    def __init__(self, activity, description, price, day, id=None):
+    def __init__(self, activity_name, description, price, day, id=None):
         self.day = day
-        self.activity = activity
+        self.activity_name = activity_name
         self.description = description
         self.price = price
         self.id = id
@@ -179,12 +179,12 @@ class Activity:
 
     @property
     def activity(self):
-        return self._activity
+        return self._activity_name
 
     @activity.setter
-    def activity(self, activity):
-        if isinstance(activity, str) and len(activity) in range(1, 25):
-            self._activity = activity
+    def activity(self, activity_name):
+        if isinstance(activity_name, str) and len(activity_name) in range(1, 25):
+            self._activity_name = activity_name
         else:
             raise Exception("Activity must be a string.")
 
@@ -228,7 +228,7 @@ class Activity:
         sql = """ INSERT INTO activities (activity, description, price, day)
         VALUES (?,?,?,?)"""
 
-        CURSOR.execute(sql, self.activity, self.description,
+        CURSOR.execute(sql, self.activity_name, self.description,
                        self.price, self.day)
         CONN.commit()
 
@@ -236,15 +236,15 @@ class Activity:
         type(self).all[self.id] = self
 
     @classmethod
-    def create(cls, activity, description, price, day):
-        activity = cls(activity, description, price, day)
+    def create(cls, activity_name, description, price, day):
+        activity = cls(activity_name, description, price, day)
         activity.save()
         return activity
 
     def update(self):
         """Update the table row corresponding to the current Activity instance."""
         sql = """UPDATE activities SET activity = ?, description = ?, price = ?, day =? WHERE id = ?"""
-        CURSOR.execute(sql, (self.activity, self.description,
+        CURSOR.execute(sql, (self.activity_name, self.description,
                        self.price, self.day, self.id))
         CONN.commit()
 
@@ -266,7 +266,7 @@ class Activity:
 
         activity = cls.all.get(row[0])
         if activity:
-            activity.activity = row[1]
+            activity.activity_name = row[1]
             activity.description = row[2]
             activity.price = row[3]
             activity.day = row[4]
@@ -293,10 +293,10 @@ class Activity:
         return cls.instance_from_db(row) if row else None
 
     @classmethod
-    def find_by_activity(cls, activity):
+    def find_by_activity_name(cls, activity_name):
         """Return an Activity object corresponding to first table row matching the specified name"""
 
         sql = """SELECT * FROM activities WHERE name is ?"""
 
-        row = CURSOR.execute(sql, (activity,)).fetchone()
+        row = CURSOR.execute(sql, (activity_name,)).fetchone()
         return cls.instance_from_db(row) if row else None

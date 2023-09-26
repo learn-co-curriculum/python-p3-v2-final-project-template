@@ -94,4 +94,7 @@ def list_activities():
 
 
 def find_activity_by_name():
-    activity = input("Enter activity: ")
+    activity_name = input("Enter activity: ")
+    activity = Activity.get_by_name(activity_name)
+    print(activity) if activity else print(
+        f'Activity {activity_name} not found. Please verify the entry matches a valid activity.')

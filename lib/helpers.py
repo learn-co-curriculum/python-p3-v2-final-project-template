@@ -27,10 +27,12 @@ def find_trip_by_name():
     trip = Trip.find_by_name(name)
     print(trip) if trip else print(f'\033[31mTrip {name} not found. Please verify the name matches a valid trip. \033[0m')
 
+
 def find_trip_by_id():
     id_ = input("\033[34mEnter the trip id:  \033[0m")
     trip = Trip.find_by_id(id_)
     print(trip) if trip else print(f'\033[31mTrip id {id_} not found. Please verify the id is a number that matches a valid trip \033[0m')
+
 
 def update_trip():
     id_ = input("\033[34mEnter the trip id:  \033[0m")
@@ -74,3 +76,48 @@ def create_activity():
     except ValueError as e:
         print(str(e))
         return None
+
+
+def list_activities():
+    activities = Activity.get_all()
+    for activity in activities:
+        print(activity)
+
+
+def find_activity_by_name():
+    activity_name = input("Enter activity: ")
+    activity = Activity.get_by_name(activity_name)
+    print(activity) if activity else print(
+        f'Activity {activity_name} not found. Please verify the entry matches a valid activity.')
+
+
+def find_activity_by_id():
+    id_ = input("Enter activity id: ")
+    activity = Activity.find_by_id(id_)
+    print(activity) if activity else print(
+        f'Activity id {id_} not found. Please verify id matches a valid activity.')
+
+
+def update_activity():
+    id_ = input("Enter activity id: ")
+    if activity := Activity.find_by_id(id_):
+        try:
+            activity_name = input("Enter activity's new name: ")
+            activity.activity_name = activity_name
+            description = input("Enter activity's new description: ")
+            activity.description = description
+            price = float(input("Enter new price of activity: "))
+            activity.price = price
+            day = input("Enter new day: ")
+            activity.day = day
+
+            activity.update()
+            print("Activity updated successfully.")
+
+        except ValueError as exc:
+            print(f"Error updating activity: {exc}")
+        except Exception as exc:
+            print(f"Error updating activity: {exc}")
+
+    else:
+        print(f"Activity {id_} not found.")

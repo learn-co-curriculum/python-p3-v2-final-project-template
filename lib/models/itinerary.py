@@ -241,7 +241,7 @@ class Activity:
         VALUES (?,?,?,?,?)"""
 
         CURSOR.execute(sql, self.activity_name, self.description,
-                       self.price, self.day, self.trip_id)
+                       self.price, self.day, self.trip_id.id)
         CONN.commit()
 
         self.id = CURSOR.lastrowid

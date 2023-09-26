@@ -20,7 +20,7 @@ class Trip:
 
     @name.setter
     def name(self, name):
-        if isinstance(name, str) and len(name) in range(3,31):
+        if isinstance(name, str) and len(name) in range(3, 31):
             self._name = name
         else:
             raise Exception(
@@ -259,3 +259,19 @@ class Activity:
         del type(self).all[self.id]
 
         self.id = None
+
+    @classmethod
+    def instance_from_db(cls, row):
+        """Return a Activity object having the attribute values from table row."""
+
+        activity = cls.all.get(row[0])
+        if activity:
+            activity.activity = row[1]
+            activity.description = row[2]
+            activity.price = row[3]
+            activity.day = row[4]
+
+        else:
+            activity = cls(row[1], row[2], row[3], row[4])
+            activity.id = row[0]
+            cls.all[activity.id] = activity

@@ -210,22 +210,6 @@ class Activity:
         else:
             raise Exception("Invalid price.")
 
-    def create_activity():
-        activity = input("Enter activity: ")
-        description = input("Enter description: ")
-        try:
-            price = float(input("Enter price: "))
-        except ValueError:
-            print("Invalid price. Please enter a valid price.")
-            return None
-
-        try:
-            activity = Activity(activity, description, price)
-            return activity
-        except ValueError as e:
-            print(str(e))
-            return None
-
     @classmethod
     def create_table(cls):
         sql = """ CREATE TABLE IF NOT EXISTS activities (

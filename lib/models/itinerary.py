@@ -308,7 +308,7 @@ class Activity:
     def find_by_activity_name(cls, activity_name):
         """Return an Activity object corresponding to first table row matching the specified name"""
 
-        sql = """SELECT * FROM activities WHERE name is = ?"""
+        sql = """SELECT * FROM activities WHERE activity_name = ?"""
 
         row = CURSOR.execute(sql, (activity_name,)).fetchone()
         return cls.instance_from_db(row) if row else None

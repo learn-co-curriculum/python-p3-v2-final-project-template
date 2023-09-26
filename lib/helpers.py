@@ -2,6 +2,7 @@
 from models.itinerary import Trip
 from models.itinerary import Activity
 
+
 def helper_1():
     print("Performing useful function#1.")
 
@@ -20,20 +21,24 @@ def create_trip():
     except Exception as exc:
         print("Error creating trip: ", exc)
 
+
 def list_trips():
     trips = Trip.get_all()
     for trip in trips:
         print(trip)
+
 
 def find_trip_by_name():
     name = input("Enter the trip name: ")
     trip = Trip.find_by_name(name)
     print(trip) if trip else print(f'Trip {name} not found. Please verify the name matches a valid trip')
 
+
 def find_trip_by_id():
     id_ = input("Enter the trip id: ")
     trip = Trip.find_by_id(id_)
     print(trip) if trip else print(f'Trip id {id_} not found. Please verify the id is a number that matches a valid trip')
+
 
 def update_trip():
     id_ = input("Enter trip id: ")
@@ -51,6 +56,7 @@ def update_trip():
     else:
         print(f'Trip {id_} not found.')
 
+
 def delete_trip():
     id_ = input("Enter trip id: ")
     if trip := Trip.find_by_id(id_):
@@ -58,3 +64,22 @@ def delete_trip():
         print(f'Trip id {id_} deleted.')
     else:
         print("Trip id {id_} not found.")
+
+
+def create_activity():
+    activity = input("Enter activity: ")
+    description = input("Enter description: ")
+    day = input("Enter day: ")
+
+    try:
+        price = float(input("Enter price: "))
+    except ValueError:
+        print("Invalid price. Please enter a valid price.")
+        return None
+
+    try:
+        activity = Activity(activity, description, price, day)
+        return activity
+    except ValueError as e:
+        print(str(e))
+        return None

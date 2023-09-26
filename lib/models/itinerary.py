@@ -20,7 +20,7 @@ class Trip:
     
     @name.setter
     def name(self, name):
-        if isinstance(name, str) and len(name) in range(3,31) and not hasattr(self, "name"):
+        if isinstance(name, str) and len(name) in range(3,31):
             self._name = name
         else:
             raise Exception("Trip name must be unique string between 3-30 characters.")

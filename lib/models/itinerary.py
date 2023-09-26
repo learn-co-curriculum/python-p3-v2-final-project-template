@@ -282,10 +282,12 @@ class Activity:
             activity.description = row[2]
             activity.price = row[3]
             activity.day = row[4]
+            activity.trip_id = row[5]
 
         else:
-            activity = cls(row[1], row[2], row[3], row[4])
+            activity = cls(row[1], row[2], row[3], row[4], row[5])
             activity.id = row[0]
+            activity.trip_id = row[5]
             cls.all[activity.id] = activity
 
     @classmethod

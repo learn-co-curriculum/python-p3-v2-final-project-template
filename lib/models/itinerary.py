@@ -164,6 +164,7 @@ class Activity:
         self.activity = activity
         self.description = description
         self.price = price
+        self.id = id
 
     @property
     def day(self):

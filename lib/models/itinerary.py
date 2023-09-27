@@ -246,9 +246,6 @@ class Activity:
                        self.price, self.day, self.trip_id.id))
         CONN.commit()
 
-        self.id = CURSOR.lastrowid
-        type(self).all[self.id] = self
-
     @classmethod
     def create(cls, activity_name, description, price, day, trip_id):
         activity = cls(activity_name, description, price, day, trip_id)

@@ -156,6 +156,7 @@ class Trip:
 
 
 class Activity:
+    all = {}
     VALID_DAYS = ["Monday", "Tuesday", "Wednesday",
                   "Thursday", "Friday", "Saturday", "Sunday"]
 
@@ -173,10 +174,10 @@ class Activity:
 
     @trip_id.setter
     def trip_id(self, trip_id):
-        if isinstance(trip_id, Trip):
+        if isinstance(trip_id, int):
             self._trip_id = trip_id
         else:
-            raise Exception("trip_id must be an instance in Trip")
+            raise Exception("trip_id must be an integer")
 
     @property
     def day(self):
@@ -226,7 +227,8 @@ class Activity:
     def create_table(cls):
         sql = """ CREATE TABLE IF NOT EXISTS activities (
             id INTEGER PRIMARY KEY AUTOINCREMENT, activity TEXT NOT NULL, 
-            description TEXT NOT NULL, price REAL NOT NULL)"""
+            description TEXT NOT NULL, price REAL NOT NULL, 
+            day TEXT NOT NULL, trip_id INTEGER NOT NULL)"""
         CURSOR.execute(sql)
         CONN.commit()
 
@@ -240,12 +242,12 @@ class Activity:
         sql = """ INSERT INTO activities (activity, description, price, day, trip_id)
         VALUES (?,?,?,?,?)"""
 
-        CURSOR.execute(sql, (self.activity_name, self.description,
-                       self.price, self.day, self.trip_id.id))
-        CONN.commit()
-
-        self.id = CURSOR.lastrowid
-        type(self).all[self.id] = self
+        try:
+            CURSOR.execute(sql, (self.activity_name, self.description,
+                           self.price, self.day, self.trip_id))
+            CONN.commit()
+        except Exception as e:
+            print(f"Error saving activity: {e}")
 
     @classmethod
     def create(cls, activity_name, description, price, day, trip_id):
@@ -295,7 +297,13 @@ class Activity:
         """Return a list containing an Activity object per row in table."""
         sql = """SELECT * FROM activities"""
         rows = CURSOR.execute(sql).fetchall()
-        return [cls.instance_from_db(row) for row in rows in rows]
+
+        activities = []
+        for row in rows:
+            activity = cls.instance_from_db(row)
+            if activity:
+                activities.append(activity)
+        return activities
 
     @classmethod
     def find_by_id(cls, id):

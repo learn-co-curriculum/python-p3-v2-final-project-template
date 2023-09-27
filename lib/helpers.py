@@ -1,6 +1,5 @@
 # lib/helpers.py
-from models.itinerary import Trip
-from models.itinerary import Activity
+from models.itinerary import Trip, Activity
 
 
 def exit_program():
@@ -66,20 +65,30 @@ def delete_trip():
 
 def create_activity():
     while True:
-        activity = input("\033[34mEnter activity:  \033[0m")
+        activity_name = input("\033[34mEnter activity:  \033[0m")
         description = input("\033[34mEnter description:  \033[0m")
         day = input("\033[34mEnter day:  \033[0m")
-        trip_id = input("\033[34mEnter trip id: \033[0m")
 
         try:
+            trip_id = int(input("\033[34mEnter trip id: \033[0m"))
+            print("trip_id: ", trip_id)
             price = float(input("\033[34mEnter price:  \033[0m"))
             break
         except ValueError:
             print("\033[31mInvalid price. Please enter a valid price. \033[0m")
 
     try:
-        activity = Activity.create(activity, description, price, day, trip_id)
-        return activity
+        trip_instance = Trip.find_by_id(trip_id)
+
+        if trip_instance:
+            activity = Activity.create(
+                activity_name, description, price, day, trip_id)
+            activity.save()
+            return activity
+        else:
+            print(
+                "\033[31mTrip with the specified ID does not exist. Please choose a valid trip ID. \033[0m")
+            return None
     except ValueError as e:
         print(str(e))
         return None
@@ -88,7 +97,14 @@ def create_activity():
 def list_activities():
     activities = Activity.get_all()
     for activity in activities:
-        print(activity)
+        print(f"Activity Name: {activity.activity_name}")
+        print(f"Description: {activity.description}")
+        print(f"Day: {activity.day}")
+        print(f"Price: {activity.price}")
+        print(f"Trip ID: {activity.trip_id}")
+        print()
+    else:
+        print("No activities found.")
 
 
 def find_activity_by_name():

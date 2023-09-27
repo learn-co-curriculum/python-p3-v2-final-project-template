@@ -1,6 +1,5 @@
 # lib/helpers.py
-from models.itinerary import Trip
-from models.itinerary import Activity
+from models.itinerary import Trip, Activity
 
 
 def exit_program():
@@ -84,6 +83,7 @@ def create_activity():
         if trip_instance:
             activity = Activity.create(
                 activity_name, description, price, day, trip_id)
+            activity.save()
             return activity
         else:
             print(

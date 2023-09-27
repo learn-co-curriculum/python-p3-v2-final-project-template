@@ -242,9 +242,12 @@ class Activity:
         sql = """ INSERT INTO activities (activity, description, price, day, trip_id)
         VALUES (?,?,?,?,?)"""
 
-        CURSOR.execute(sql, (self.activity_name, self.description,
-                       self.price, self.day, self.trip_id))
-        CONN.commit()
+        try:
+            CURSOR.execute(sql, (self.activity_name, self.description,
+                           self.price, self.day, self.trip_id))
+            CONN.commit()
+        except Exception as e:
+            print(f"Error saving activity: {e}")
 
     @classmethod
     def create(cls, activity_name, description, price, day, trip_id):

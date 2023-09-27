@@ -226,7 +226,8 @@ class Activity:
     def create_table(cls):
         sql = """ CREATE TABLE IF NOT EXISTS activities (
             id INTEGER PRIMARY KEY AUTOINCREMENT, activity TEXT NOT NULL, 
-            description TEXT NOT NULL, price REAL NOT NULL)"""
+            description TEXT NOT NULL, price REAL NOT NULL, 
+            day TEXT NOT NULL)"""
         CURSOR.execute(sql)
         CONN.commit()
 

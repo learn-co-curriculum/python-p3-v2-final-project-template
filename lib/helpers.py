@@ -69,7 +69,7 @@ def create_activity():
         activity = input("\033[34mEnter activity:  \033[0m")
         description = input("\033[34mEnter description:  \033[0m")
         day = input("\033[34mEnter day:  \033[0m")
-        trip_id = input("\033[34mEnter trip id: \033[0m")
+        trip_id = int(input("\033[34mEnter trip id: \033[0m"))
 
         try:
             price = float(input("\033[34mEnter price:  \033[0m"))

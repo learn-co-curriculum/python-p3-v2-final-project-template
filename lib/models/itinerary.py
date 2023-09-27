@@ -173,9 +173,9 @@ class Activity:
         return self._trip_id
 
     @trip_id.setter
-    def trip_id(self, trip_id):
-        if isinstance(trip_id, Trip):
-            self._trip_id = trip_id
+    def trip_id(self, trip):
+        if isinstance(trip, Trip):
+            self._trip_id = trip
         else:
             raise Exception("trip_id must be an instance in Trip")
 

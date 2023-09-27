@@ -7,13 +7,13 @@ from models.itinerary import Trip, Activity
 def seed_database():
     Trip.drop_table()
     Trip.create_table()
+
     Activity.drop_table()
     Activity.create_table()
 
     summer = Trip.create("Summer Break", "Cancun")
-
     swimming = Activity.create(
-        "Swimming", "Swimming at the Infinity Pool", 0.00, "Thursday", 1)
+        "Swimming", "Swimming in pool", 9.00, "Thursday", 1)
 
 
 seed_database()

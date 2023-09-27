@@ -230,7 +230,7 @@ class Activity:
     @classmethod
     def create_table(cls):
         sql = """ CREATE TABLE IF NOT EXISTS activities (
-            id INTEGER PRIMARY KEY AUTOINCREMENT, activity TEXT NOT NULL, 
+            id INTEGER PRIMARY KEY AUTOINCREMENT, activity_name TEXT NOT NULL, 
             description TEXT NOT NULL, price REAL NOT NULL, 
             day TEXT NOT NULL, trip_id INTEGER NOT NULL)"""
         CURSOR.execute(sql)
@@ -243,7 +243,7 @@ class Activity:
         CONN.commit()
 
     def save(self):
-        sql = """ INSERT INTO activities (activity, description, price, day, trip_id)
+        sql = """ INSERT INTO activities (activity_name, description, price, day, trip_id)
         VALUES (?,?,?,?,?)"""
 
         # try:

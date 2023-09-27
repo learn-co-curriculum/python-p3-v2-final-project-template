@@ -62,8 +62,8 @@ def menu():
     print("6. Find trip by name")
     print("7. Create new activity")
     print("8. List activities")
-    print("9. Find activity by id")
-    print("10. Find activity by name")
+    print("9. Find activity by name")
+    print("10. Find activity by id")
     print("11. Update an activity")
     print("12. Delete an activity")
 

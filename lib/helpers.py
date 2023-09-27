@@ -82,7 +82,7 @@ def create_activity():
 
         if trip_instance:
             activity = Activity.create(
-                activity, description, price, day, trip_id)
+                activity, description, price, day, trip_instance)
             return activity
         else:
             print(

@@ -168,6 +168,10 @@ class Activity:
         self.id = id
         self.trip_id = trip_id
 
+    def __repr__(self):
+        return f"\033[36m<Trip {self.id}, {self.day}: {self.activity_name}, {self.description}, {self.price}, {self.trip_id}>\033[0m"
+
+
     @property
     def trip_id(self):
         return self._trip_id
@@ -242,12 +246,18 @@ class Activity:
         sql = """ INSERT INTO activities (activity, description, price, day, trip_id)
         VALUES (?,?,?,?,?)"""
 
-        try:
-            CURSOR.execute(sql, (self.activity_name, self.description,
+        # try:
+        CURSOR.execute(sql, (self.activity_name, self.description,
                            self.price, self.day, self.trip_id))
-            CONN.commit()
-        except Exception as e:
-            print(f"Error saving activity: {e}")
+        CONN.commit()
+
+        self.id = CURSOR.lastrowid
+        type(self).all[self.id] = self
+
+        # except Exception as e:
+        #     print(f"Error saving activity: {e}")
+
+
 
     @classmethod
     def create(cls, activity_name, description, price, day, trip_id):
@@ -289,21 +299,16 @@ class Activity:
         else:
             activity = cls(row[1], row[2], row[3], row[4], row[5])
             activity.id = row[0]
-            activity.trip_id = row[5]
             cls.all[activity.id] = activity
+        return activity
 
     @classmethod
     def get_all(cls):
         """Return a list containing an Activity object per row in table."""
         sql = """SELECT * FROM activities"""
-        rows = CURSOR.execute(sql).fetchall()
 
-        activities = []
-        for row in rows:
-            activity = cls.instance_from_db(row)
-            if activity:
-                activities.append(activity)
-        return activities
+        rows = CURSOR.execute(sql).fetchall()
+        return [cls.instance_from_db(row) for row in rows]
 
     @classmethod
     def find_by_id(cls, id):

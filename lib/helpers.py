@@ -71,7 +71,6 @@ def create_activity():
 
         try:
             trip_id = int(input("\033[34mEnter trip id: \033[0m"))
-            print("trip_id: ", trip_id)
             price = float(input("\033[34mEnter price:  \033[0m"))
             break
         except ValueError:
@@ -83,7 +82,6 @@ def create_activity():
         if trip_instance:
             activity = Activity.create(
                 activity_name, description, price, day, trip_id)
-            activity.save()
             return activity
         else:
             print(
@@ -94,15 +92,12 @@ def create_activity():
         return None
 
 
+
+
 def list_activities():
     activities = Activity.get_all()
     for activity in activities:
-        print(f"Activity Name: {activity.activity_name}")
-        print(f"Description: {activity.description}")
-        print(f"Day: {activity.day}")
-        print(f"Price: {activity.price}")
-        print(f"Trip ID: {activity.trip_id}")
-        print()
+        print(activity)
     else:
         print("No activities found.")
 

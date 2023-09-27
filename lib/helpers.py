@@ -78,8 +78,16 @@ def create_activity():
             print("\033[31mInvalid price. Please enter a valid price. \033[0m")
 
     try:
-        activity = Activity.create(activity, description, price, day, trip_id)
-        return activity
+        trip_instance = Trip.find_by_id(trip_id)
+
+        if trip_instance:
+            activity = Activity.create(
+                activity, description, price, day, trip_id)
+            return activity
+        else:
+            print(
+                "\033[31mTrip with the specified ID does not exist. Please choose a valid trip ID. \033[0m")
+            return None
     except ValueError as e:
         print(str(e))
         return None

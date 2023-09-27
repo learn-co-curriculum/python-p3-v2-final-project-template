@@ -294,7 +294,13 @@ class Activity:
         """Return a list containing an Activity object per row in table."""
         sql = """SELECT * FROM activities"""
         rows = CURSOR.execute(sql).fetchall()
-        return [cls.instance_from_db(row) for row in rows]
+
+        activities = []
+        for row in rows:
+            activity = cls.instance_from_db(row)
+            if activity:
+                activities.append(activity)
+        return activities
 
     @classmethod
     def find_by_id(cls, id):

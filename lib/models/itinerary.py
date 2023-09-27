@@ -243,7 +243,7 @@ class Activity:
         VALUES (?,?,?,?,?)"""
 
         CURSOR.execute(sql, (self.activity_name, self.description,
-                       self.price, self.day, self.trip_id.id))
+                       self.price, self.day, self.trip_id))
         CONN.commit()
 
     @classmethod

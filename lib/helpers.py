@@ -66,12 +66,13 @@ def delete_trip():
 
 def create_activity():
     while True:
-        activity = input("\033[34mEnter activity:  \033[0m")
+        activity_name = input("\033[34mEnter activity:  \033[0m")
         description = input("\033[34mEnter description:  \033[0m")
         day = input("\033[34mEnter day:  \033[0m")
-        trip_id = int(input("\033[34mEnter trip id: \033[0m"))
 
         try:
+            trip_id = int(input("\033[34mEnter trip id: \033[0m"))
+            print("trip_id: ", trip_id)
             price = float(input("\033[34mEnter price:  \033[0m"))
             break
         except ValueError:
@@ -82,7 +83,7 @@ def create_activity():
 
         if trip_instance:
             activity = Activity.create(
-                activity, description, price, day, trip_instance)
+                activity_name, description, price, day, trip_id)
             return activity
         else:
             print(

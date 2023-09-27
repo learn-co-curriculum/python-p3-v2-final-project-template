@@ -169,8 +169,7 @@ class Activity:
         self.trip_id = trip_id
 
     def __repr__(self):
-        return f"\033[36m<Trip {self.id}, {self.day}: {self.activity_name}, {self.description}, {self.price}, {self.trip_id}>\033[0m"
-
+        return f"\033[36m<Trip {self.trip_id}, {self.day}: {self.activity_name}, {self.description}, {self.price} >\033[0m"
 
     @property
     def trip_id(self):
@@ -248,7 +247,7 @@ class Activity:
 
         # try:
         CURSOR.execute(sql, (self.activity_name, self.description,
-                           self.price, self.day, self.trip_id))
+                             self.price, self.day, self.trip_id))
         CONN.commit()
 
         self.id = CURSOR.lastrowid
@@ -256,8 +255,6 @@ class Activity:
 
         # except Exception as e:
         #     print(f"Error saving activity: {e}")
-
-
 
     @classmethod
     def create(cls, activity_name, description, price, day, trip_id):

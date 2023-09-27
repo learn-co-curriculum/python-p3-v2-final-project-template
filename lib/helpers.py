@@ -97,7 +97,14 @@ def create_activity():
 def list_activities():
     activities = Activity.get_all()
     for activity in activities:
-        print(activity)
+        print(f"Activity Name: {activity.activity_name}")
+        print(f"Description: {activity.description}")
+        print(f"Day: {activity.day}")
+        print(f"Price: {activity.price}")
+        print(f"Trip ID: {activity.trip_id}")
+        print()
+    else:
+        print("No activities found.")
 
 
 def find_activity_by_name():

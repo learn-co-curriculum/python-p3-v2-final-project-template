@@ -169,7 +169,7 @@ class Activity:
         self.trip_id = trip_id
 
     def __repr__(self):
-        return f"\033[36m<Trip {self.trip_id}, {self.day}: {self.activity_name}, {self.description}, {self.price} >\033[0m"
+        return f"\033[36m<Trip {self.trip_id}, {self.day}: {self.activity_name}, {self.description}, {self.price}, Activity Id: {self.id} >\033[0m"
 
     @property
     def trip_id(self):

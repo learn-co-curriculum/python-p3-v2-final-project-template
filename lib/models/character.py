@@ -1,7 +1,7 @@
 from models.__init__ import CURSOR, CONN
 from models.player import Player
 import re
-from models.__init__ import sqlite3
+import sqlite3
 class Character:
     ALL = {}
 
@@ -54,7 +54,7 @@ class Character:
     def __init__(self, name, character_class, xp, hp, mp, player_id, id=None):
         self.id = id
         self.name = name
-        self.character_class = character_class
+        self._character_class = character_class
         self.xp = xp
         self.hp = hp
         self.mp = mp
@@ -62,14 +62,14 @@ class Character:
 
     def __repr__(self):
         player = Player.find_by_id(self.player_id)
-        playerUsername = player.name if player else "None"
+        player_username = player.name if player else "None"
         return (
             f"<Character {self.id}: {self.name}, "
             f"Class: {self.character_class}, "
             f"XP: {self.xp}, "
             f"HP: {self.hp}, "
             f"MP: {self.mp}, "
-            f"Owned by: {playerUsername} with id: {self.player_id}>"
+            f"Owned by: {player_username} with id: {self.player_id}>"
             )
 
     @property
@@ -96,15 +96,15 @@ class Character:
                 "The character's name can only contain letters and underscores."
                 )
 
-        if not self.is_name_unique(name):
+        if not self.is_username_unique(name):
             raise ValueError("The character name must be unique.")
 
         self._name = name
 
     @property
     def character_class(self):
-        return self._class
-    
+        return self._character_class
+
     @character_class.setter
     def character_class(self, character_class):
         if isinstance(character_class, str):
@@ -289,13 +289,13 @@ class Character:
         return cls.instance_from_db(row) if row else None
 
     @classmethod
-    def is_name_unique(cls, name):
+    def is_username_unique(cls, name):
         # Search in-memory
         is_unique_in_memory = not any(player.name == name for player in cls.ALL.values())
 
         # Search in database
         sql = """
-            SELECT * 
+            SELECT *
             FROM characters
             WHERE name is ?
         """

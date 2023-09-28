@@ -30,14 +30,14 @@ def remove_monster(conn, monster):
     conn.commit()
 
 
-def attack(player, monster):
+def attack(username, monster):
     damage = 10
     monster.hit_points -= damage
-    print(f"{player.name} attacked {monster.name} for {damage} damage!")
+    print(f"{username} attacked {monster.name} for {damage} damage!")
 
     if random.choice([True, False]):
         damage = 5
-        player.hit_points -= damage
-        print(f"{monster.name} attacked back {player.name} for {damage} damage!")
+        username.hit_points -= damage
+        print(f"{monster.name} attacked back {username} for {damage} damage!")
 
-    return player.hit_points <= 0
+    return username.hit_points <= 0

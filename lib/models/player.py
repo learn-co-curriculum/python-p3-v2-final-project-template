@@ -6,8 +6,8 @@ class Player:
 
     def __init__(self, username, email, id=None, hit_points=150):
         self.id = id
-        self.username = username
-        self.email = email
+        self._username = username
+        self._email = email
         self.hit_points = hit_points
         self.max_hit_points = 150
 
@@ -185,7 +185,7 @@ class Player:
 
         # Search in database
         sql = """
-            SELECT * 
+            SELECT *
             FROM players
             WHERE username is ?
         """
@@ -202,7 +202,7 @@ class Player:
 
         # Search in database
         sql = """
-            SELECT * 
+            SELECT *
             FROM players
             WHERE email is ?
         """

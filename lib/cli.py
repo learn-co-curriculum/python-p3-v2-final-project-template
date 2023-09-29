@@ -16,7 +16,7 @@ def play_scenario(character, conn):
         scenario = Scenario.get_random_scenarios(cursor, 1)[0]
         print(f"{scenario.name}: {scenario.description}")
 
-# Extract the monster name from the scenario description
+        # Extract the monster name from the scenario description
         monster_name = next(
             (monster_data[0] for monster_data in Monster.MONSTERS_DATA if monster_data[0] in scenario.description), None)
 
@@ -27,7 +27,6 @@ def play_scenario(character, conn):
         # Fetch the monster associated with the scenario using monster name
         monster = Monster.get_monster_by_name(conn, monster_name)
 
-
         # Check if monster is not None before proceeding
         if monster is None:
             print("No monster found in the database. Skipping to next step.")
@@ -36,16 +35,36 @@ def play_scenario(character, conn):
         print(f"You encounter a {monster.name}!")
 
         while monster.hit_points > 0:
-            input("Press enter to attack!")
-            player_defeated = attack(character, monster)
+            if "Healing Item" in character.inventory:
+                use_item = input(
+                    "You have a Healing Item! Do you want to use it? (y/n): ").lower()
+                if use_item == 'y':
+                    character.use_healing_item()
 
-            if player_defeated:
-                print(f"{character.name} has been defeated by {monster.name}!")
-                return False
+            # Provide the user with an option to either attack or check their HP
+            action = input("Press 1 to attack or 2 to check your HP: ")
+
+            if action == "2":
+                print(f"Your current HP is {character.hp}")
+                continue  # Skip the rest of the loop, prompting the user again
+
+            elif action == "1":
+                input("Press enter to attack!")
+                player_defeated = attack(character, monster)
+
+                if player_defeated:
+                    print(f"{character.name} has been defeated by {monster.name}!")
+                    return False
+
+            else:
+                print("Invalid action! Please press 1 to attack or 2 to check.")
+                continue
 
             if monster.hit_points <= 0:
                 print(f"{monster.name} has been defeated!")
-                break
+                if monster.has_healing_item and not monster.healing_item_used:
+                    character.add_to_inventory("Healing Item")
+                    print("You have found a Healing Item!")
 
     play_again = input(
         "Scenario ended. Do you want to play again? (y/n): ").lower()

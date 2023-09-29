@@ -10,7 +10,7 @@ def play_scenario(character, conn):
     cursor = conn.cursor()
 
     for step in range(1, 6):
-        print(f"\nStep {step}")
+        print(f"\nPart {step}")
 
         # Assign a random scenario
         scenario = Scenario.get_random_scenarios(cursor, 1)[0]
@@ -21,7 +21,7 @@ def play_scenario(character, conn):
             (monster_data[0] for monster_data in Monster.MONSTERS_DATA if monster_data[0] in scenario.description), None)
 
         if not monster_name:
-            print("No matching monster found for the scenario. Skipping to next step.")
+            print("Hmmm, where are they?")
             continue
 
         # Fetch the monster associated with the scenario using monster name

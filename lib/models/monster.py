@@ -75,7 +75,7 @@ class Monster:
             return cls(*row)
         else:
             print(
-                f"The monster {monster_name} has been defeated previously, recreating it...")
+                f"The monster {monster_name} is headed toward you...")
             # Find the original monster data
             for original_monster in cls.MONSTERS_DATA:
                 if original_monster[0] == monster_name:

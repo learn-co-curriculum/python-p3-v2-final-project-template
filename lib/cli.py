@@ -49,22 +49,21 @@ def play_scenario(character, conn):
                 continue  # Skip the rest of the loop, prompting the user again
 
             elif action == "1":
-                input("Press enter to attack!")
                 player_defeated = attack(character, monster)
 
-                if player_defeated:
-                    print(f"{character.name} has been defeated by {monster.name}!")
-                    return False
-
-            else:
-                print("Invalid action! Please press 1 to attack or 2 to check.")
-                continue
+            if player_defeated:
+                print(f"{character.name} has been defeated by {monster.name}!")
+                character.delete(cursor, conn)
+                return False
 
             if monster.hit_points <= 0:
                 print(f"{monster.name} has been defeated!")
+                remove_monster(cursor, monster.id)
+                conn.commit()
                 if monster.has_healing_item and not monster.healing_item_used:
                     character.add_to_inventory("Healing Item")
                     print("You have found a Healing Item!")
+                break
 
     play_again = input(
         "Scenario ended. Do you want to play again? (y/n): ").lower()

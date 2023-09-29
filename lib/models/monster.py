@@ -88,10 +88,12 @@ class Monster:
             raise ValueError("Original monster data not found.")
 
 
-def remove_monster(conn, monster):
-    cursor = conn.cursor()
-    cursor.execute('DELETE FROM monsters WHERE id = ?', (monster.id,))
-    conn.commit()
+def remove_monster(cursor, monster_id):
+    sql = """
+        DELETE FROM monsters
+        WHERE id = ?
+    """
+    cursor.execute(sql, (monster_id,))
 
 
 def attack(character, monster):

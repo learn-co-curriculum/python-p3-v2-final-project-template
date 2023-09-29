@@ -46,12 +46,14 @@ class Monster:
         conn.commit()
 
         # Check if the monsters already exist in the table
-        existing_monsters = cursor.execute('SELECT name FROM monsters').fetchall()
+        existing_monsters = cursor.execute(
+            'SELECT name FROM monsters').fetchall()
         existing_monsters = [monster[0] for monster in existing_monsters]
 
         for monster in cls.MONSTERS_DATA:
             if monster[0] not in existing_monsters:
-                cursor.execute('INSERT INTO monsters (name, hit_points, has_healing_item) VALUES (?, ?, ?)', monster)
+                cursor.execute(
+                    'INSERT INTO monsters (name, hit_points, has_healing_item) VALUES (?, ?, ?)', monster)
                 conn.commit()
 
     @classmethod
@@ -72,17 +74,18 @@ class Monster:
         if row:
             return cls(*row)
         else:
-            print(f"The monster {monster_name} has been defeated previously, recreating it...")
+            print(
+                f"The monster {monster_name} has been defeated previously, recreating it...")
             # Find the original monster data
             for original_monster in cls.MONSTERS_DATA:
                 if original_monster[0] == monster_name:
-                    cursor.execute('INSERT INTO monsters (name, hit_points, has_healing_item) VALUES (?, ?, ?)', original_monster)
+                    cursor.execute(
+                        'INSERT INTO monsters (name, hit_points, has_healing_item) VALUES (?, ?, ?)', original_monster)
                     conn.commit()
                     row = cursor.execute(sql, (monster_name,)).fetchone()
                     return cls(*row)
             # If the monster data is not found
             raise ValueError("Original monster data not found.")
-
 
 
 def remove_monster(conn, monster):

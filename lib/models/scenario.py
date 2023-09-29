@@ -1,6 +1,7 @@
 from models.monster import Monster
 import sqlite3
 
+
 class Scenario:
     def __init__(self, name, description, monster_id):
         self.name = name
@@ -11,8 +12,10 @@ class Scenario:
     scenario_descriptions = [
         ("Enchanted Cavern", "You stumble upon the mesmerizing Glowworm Guardian."),
         ("Haunted Mansion", "As you explore the eerie mansion, you encounter the ghostly Apparition of Lady Eliza."),
-        ("Crystaline Glacier", "While traversing the icy terrain, you cross paths with Frostbite, the Ice Elemental."),
-        ("Abandoned Lighthouse", "Inside the creaky lighthouse, you face the vengeful spirit known as Captain Blackbeard's Shadow."),
+        ("Crystaline Glacier",
+         "While traversing the icy terrain, you cross paths with Frostbite, the Ice Elemental."),
+        ("Abandoned Lighthouse",
+         "Inside the creaky lighthouse, you face the vengeful spirit known as Captain Blackbeard's Shadow."),
         ("Volcanic Crater", "Amidst the molten lava flows, you confront the Fireborn Drake, a fearsome fire-breathing serpent."),
         ("Whispering Caves", "Deep within the caverns, you're confronted by the enigmatic Echo Harvester, a creature that feeds on sound."),
         ("Sunken Shipwreck", "Exploring the depths of the ocean, you encounter the spectral Captain Barnacle, cursed to protect his sunken ship."),
@@ -43,11 +46,13 @@ class Scenario:
         conn.commit()
 
         # Fetch all monsters from the monster table
-        monsters = {name: id for id, name in cursor.execute('SELECT id, name FROM monsters').fetchall()}
+        monsters = {name: id for id, name in cursor.execute(
+            'SELECT id, name FROM monsters').fetchall()}
 
         # Iterate through each scenario description and find the corresponding monster id
         for name, description in cls.scenario_descriptions:
-            matched_monster_name = next((monster_name for monster_name in monsters if monster_name in description), None)
+            matched_monster_name = next(
+                (monster_name for monster_name in monsters if monster_name in description), None)
 
             if matched_monster_name:
                 monster_id = monsters[matched_monster_name]

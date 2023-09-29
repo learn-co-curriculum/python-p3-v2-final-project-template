@@ -1,7 +1,26 @@
 import sqlite3
 import random
 
+
 class Monster:
+    # Original Monster Data
+    MONSTERS_DATA = [
+        ("Glowworm Guardian", 100, False),
+        ("Apparition of Lady Eliza", 80, True),
+        ("Frostbite", 120, True),
+        ("Captain Blackbeard's Shadow", 140, False),
+        ("Fireborn Drake", 160, True),
+        ("Echo Harvester", 90, False),
+        ("Captain Barnacle", 110, False),
+        ("Sprite Sylph", 70, True),
+        ("Stone Golem", 200, True),
+        ("Sea Wraith", 130, False),
+        ("Bog Whisperer", 95, True),
+        ("Spectral Legionnaire", 150, False),
+        ("Aethereal Harbinger", 170, True),
+        ("Lunarchid", 80, False),
+    ]
+
     def __init__(self, id, name, hit_points, has_healing_item):
         self.id = id
         self.name = name
@@ -26,22 +45,11 @@ class Monster:
         cursor.execute(sql)
         conn.commit()
 
-        # Define monsters
-        monsters_data = [
-            ("Wolf", 75, True),
-            ("Orc", 125, False),
-            ("Spooky Skeleton", 85, True),
-            ("Silver wolf", 65, False),
-            ("Drunken man", 90, True),
-            ("Cunning witch", 85, True),
-            ("Large spider", 100, False),
-        ]
-
         # Check if the monsters already exist in the table
         existing_monsters = cursor.execute('SELECT name FROM monsters').fetchall()
         existing_monsters = [monster[0] for monster in existing_monsters]
 
-        for monster in monsters_data:
+        for monster in cls.MONSTERS_DATA:
             if monster[0] not in existing_monsters:
                 cursor.execute('INSERT INTO monsters (name, hit_points, has_healing_item) VALUES (?, ?, ?)', monster)
                 conn.commit()
@@ -53,6 +61,28 @@ class Monster:
         monsters = cursor.fetchall()
         monster_data = random.choice(monsters)
         return cls(*monster_data)
+
+    @classmethod
+    def get_monster_by_name(cls, conn, monster_name):
+        sql = """
+            SELECT * FROM monsters WHERE name = ?
+        """
+        cursor = conn.cursor()
+        row = cursor.execute(sql, (monster_name,)).fetchone()
+        if row:
+            return cls(*row)
+        else:
+            print(f"The monster {monster_name} has been defeated previously, recreating it...")
+            # Find the original monster data
+            for original_monster in cls.MONSTERS_DATA:
+                if original_monster[0] == monster_name:
+                    cursor.execute('INSERT INTO monsters (name, hit_points, has_healing_item) VALUES (?, ?, ?)', original_monster)
+                    conn.commit()
+                    row = cursor.execute(sql, (monster_name,)).fetchone()
+                    return cls(*row)
+            # If the monster data is not found
+            raise ValueError("Original monster data not found.")
+
 
 
 def remove_monster(conn, monster):

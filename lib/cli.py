@@ -82,6 +82,8 @@ def main():
 
                 elif choice == "2":
                     print(player)
+                    print(f"{player_username}, your current hitpoints are: {player.hit_points}")
+
 
                 elif choice == "3" and current_monster.has_healing_item and not current_monster.healing_item_used:
                     healing_amount = 30

@@ -14,11 +14,11 @@ class Player:
     def __repr__(self):
         return f"{self.username} (HP: {self.hit_points})"
 
-    def __repr__(self):
-        return (
-            f"<Player {self.id}: {self.username}, "
-            f"Email: {self.email}>"
-        )
+    # def __repr__(self):
+    #     return (
+    #         f"<Player {self.id}: {self.username}, "
+    #         f"Email: {self.email}>"
+    #     )
 
     @property
     def username(self):

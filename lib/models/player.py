@@ -90,14 +90,17 @@ class Player:
 
     #     # Save the object in local dictionary using table row's PK as dictionary key
     #     self.id = CURSOR.lastrowid
-    #     type(self).ALL[self.id] = self
-    def save(self, cursor):
+        #     type(self).ALL[self.id] = self
+    def save(self):
         data = (self.username, self.email)
         sql = """
             INSERT INTO players (username, email)
             VALUES (?, ?)
         """
-        cursor.execute(sql, data)
+        CURSOR.execute(sql, data)
+        CONN.commit()
+        self.id = CURSOR.lastrowid
+
 
     def update(self):
         # Update this player's table row corresponding to the current Player instance
@@ -126,10 +129,10 @@ class Player:
 
     @classmethod
     def create(cls, username, email):
-        # Create a new player instance and save it to database row
         player = cls(username, email)
         player.save()
         return player
+
 
     @classmethod
     def instance_from_db(cls, row):
@@ -205,7 +208,8 @@ class Player:
     @classmethod
     def is_email_unique(cls, email):
         # Search in-memory
-        is_unique_in_memory = not any(player.username == email for player in cls.ALL.values())
+        is_unique_in_memory = not any(player.email == email for player in cls.ALL.values())
+
 
         # Search in database
         sql = """

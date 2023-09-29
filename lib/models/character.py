@@ -2,6 +2,8 @@ from models.__init__ import CURSOR, CONN
 from models.player import Player
 import re
 import sqlite3
+
+
 class Character:
     ALL = {}
 
@@ -9,42 +11,42 @@ class Character:
         {
             "Class": "Wizard",
             "XP": 0,
-            "HP": 60,
+            "hp": 60,
             "MP": 150,
             "Description": "The classic master of arcane magic."
         },
         {
             "Class": "Fighter",
             "XP": 0,
-            "HP": 120,
+            "hp": 120,
             "MP": 0,
             "Description": "A versatile, melee warrior that specializes in weapons and armor."
-            },
+        },
         {
             "Class": "Ranger",
             "XP": 0,
-            "HP": 100,
+            "hp": 100,
             "MP": 30,
             "Description": "Both a hunter and a tracker with great survival skills and nature magic."
         },
         {
             "Class": "Rogue",
             "XP": 0,
-            "HP": 80,
+            "hp": 80,
             "MP": 0,
             "Description": "An expert in stealth, precision, and cunning."
         },
         {
             "Class": "Paladin",
             "XP": 0,
-            "HP": 100,
+            "hp": 100,
             "MP": 30,
             "Description": "A holy knight with melee skills and magical abilities."
         },
         {
             "Class": "Bard",
             "XP": 0,
-            "HP": 80,
+            "hp": 80,
             "MP": 60,
             "Description": "A jack of many trades that uses performance skills and magic."
         },
@@ -67,10 +69,10 @@ class Character:
             f"<Character {self.id}: {self.name}, "
             f"Class: {self.character_class}, "
             f"XP: {self.xp}, "
-            f"HP: {self.hp}, "
+            f"hp: {self.hp}, "
             f"MP: {self.mp}, "
             f"Owned by: {player_username} with id: {self.player_id}>"
-            )
+        )
 
     @property
     def name(self):
@@ -84,17 +86,17 @@ class Character:
         if not 3 <= len(name) <= 20:
             raise ValueError(
                 "The character name's length must be between 3 and 20 characters."
-                )
+            )
 
         if not name[0].isalpha():
             raise ValueError(
                 "The character's name must start with an alphabetic letter."
-                )
+            )
 
         if not re.match("^[a-zA-Z_]*$", name):
             raise ValueError(
                 "The character's name can only contain letters and underscores."
-                )
+            )
 
         if not self.is_username_unique(name):
             raise ValueError("The character name must be unique.")
@@ -132,7 +134,7 @@ class Character:
         if isinstance(hp, int) and hp >= 0:
             self._hp = hp
         else:
-            raise ValueError("HP must be a positive integer.")
+            raise ValueError("hp must be a positive integer.")
 
     @property
     def mp(self):
@@ -155,9 +157,10 @@ class Character:
             self._player_id = player_id
         else:
             raise ValueError("Player Id must be a positive integer.")
+
     @classmethod
-    def create_table(cls):
-        # SQL command to create new Character table to persist attribute's character instance
+    def create_table(cls, conn):
+        cursor = conn.cursor()
         sql = """
             CREATE TABLE IF NOT EXISTS characters (
             id INTEGER PRIMARY KEY,
@@ -166,9 +169,7 @@ class Character:
             xp INTEGER,
             hp INTEGER,
             mp INTEGER,
-            player_id INTEGER,
-            FOREIGN KEY (player_id) REFERENCES players(id) ON DELETE CASCADE
-            )
+            player_id INTEGER)
         """
         CURSOR.execute(sql)
         CONN.commit()
@@ -192,7 +193,7 @@ class Character:
         # Update object id attribute using the primary key value of new row
         CURSOR.execute(sql, (
             self.name, self.character_class, self.xp, self.hp, self.mp, self.player_id
-            ))
+        ))
         CONN.commit()
 
         # Save the object in local dictionary using table row's PK as dictionary key
@@ -206,7 +207,8 @@ class Character:
             SET name = ?, character_class = ?, xp = ?, hp = ?, mp = ?, player_id = ?
             WHERE id = ?
         """
-        CURSOR.execute(sql, (self.name, self.character_class, self.xp, self.hp, self.mp, self.player_id))
+        CURSOR.execute(sql, (self.name, self.character_class,
+                       self.xp, self.hp, self.mp, self.player_id))
         CONN.commit()
 
     def delete(self):
@@ -291,7 +293,8 @@ class Character:
     @classmethod
     def is_username_unique(cls, name):
         # Search in-memory
-        is_unique_in_memory = not any(player.name == name for player in cls.ALL.values())
+        is_unique_in_memory = not any(
+            character.name == name for character in cls.ALL.values())
 
         # Search in database
         sql = """

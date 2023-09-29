@@ -75,7 +75,7 @@ class Monster:
             return cls(*row)
         else:
             print(
-                f"The monster {monster_name} has been defeated previously, recreating it...")
+                f"The monster {monster_name} is headed toward you...")
             # Find the original monster data
             for original_monster in cls.MONSTERS_DATA:
                 if original_monster[0] == monster_name:
@@ -88,10 +88,12 @@ class Monster:
             raise ValueError("Original monster data not found.")
 
 
-def remove_monster(conn, monster):
-    cursor = conn.cursor()
-    cursor.execute('DELETE FROM monsters WHERE id = ?', (monster.id,))
-    conn.commit()
+def remove_monster(cursor, monster_id):
+    sql = """
+        DELETE FROM monsters
+        WHERE id = ?
+    """
+    cursor.execute(sql, (monster_id,))
 
 
 def attack(character, monster):

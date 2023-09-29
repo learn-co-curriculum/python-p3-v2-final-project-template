@@ -221,20 +221,21 @@ class Character:
                        self.xp, self.hp, self.mp, self.player_id))
         CONN.commit()
 
-    def delete(self):
-        # Delete this character from database
+    def delete(self, cursor, conn):
+        # Delete this character from the database
         sql = """
             DELETE FROM characters
             WHERE id = ?
         """
-        CURSOR.execute(sql, (self.id,))
-        CONN.commit()
+        cursor.execute(sql, (self.id,))
+        conn.commit()
 
         # Delete the dictionary entry using id as the key
         del type(self).ALL[self.id]
 
         # Set id to None
         self.id = None
+
 
     @classmethod
     def create(cls, name, character_class, xp, hp, mp, player_id):

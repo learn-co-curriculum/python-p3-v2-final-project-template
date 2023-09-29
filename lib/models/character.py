@@ -11,42 +11,42 @@ class Character:
         {
             "Class": "Wizard",
             "XP": 0,
-            "HP": 60,
+            "hp": 60,
             "MP": 150,
             "Description": "The classic master of arcane magic."
         },
         {
             "Class": "Fighter",
             "XP": 0,
-            "HP": 120,
+            "hp": 120,
             "MP": 0,
             "Description": "A versatile, melee warrior that specializes in weapons and armor."
         },
         {
             "Class": "Ranger",
             "XP": 0,
-            "HP": 100,
+            "hp": 100,
             "MP": 30,
             "Description": "Both a hunter and a tracker with great survival skills and nature magic."
         },
         {
             "Class": "Rogue",
             "XP": 0,
-            "HP": 80,
+            "hp": 80,
             "MP": 0,
             "Description": "An expert in stealth, precision, and cunning."
         },
         {
             "Class": "Paladin",
             "XP": 0,
-            "HP": 100,
+            "hp": 100,
             "MP": 30,
             "Description": "A holy knight with melee skills and magical abilities."
         },
         {
             "Class": "Bard",
             "XP": 0,
-            "HP": 80,
+            "hp": 80,
             "MP": 60,
             "Description": "A jack of many trades that uses performance skills and magic."
         },
@@ -69,7 +69,7 @@ class Character:
             f"<Character {self.id}: {self.name}, "
             f"Class: {self.character_class}, "
             f"XP: {self.xp}, "
-            f"HP: {self.hp}, "
+            f"hp: {self.hp}, "
             f"MP: {self.mp}, "
             f"Owned by: {player_username} with id: {self.player_id}>"
         )
@@ -134,7 +134,7 @@ class Character:
         if isinstance(hp, int) and hp >= 0:
             self._hp = hp
         else:
-            raise ValueError("HP must be a positive integer.")
+            raise ValueError("hp must be a positive integer.")
 
     @property
     def mp(self):

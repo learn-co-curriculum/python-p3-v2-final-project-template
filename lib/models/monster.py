@@ -68,7 +68,7 @@ def attack(character, monster):
 
     if random.choice([True, False]):
         damage = 5
-        character.hit_points -= damage
+        character.hp -= damage
         print(f"{monster.name} attacked back {character.name} for {damage} damage!")
 
-    return character.hit_points <= 0
+    return character.hp <= 0

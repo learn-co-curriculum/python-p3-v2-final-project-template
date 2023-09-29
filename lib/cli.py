@@ -72,7 +72,7 @@ def main():
         # Create Character
         character_name = input("Enter a name for your character: ")
         character = Character.create(character_name, character_info['Class'], character_info['XP'],
-                                      character_info['HP'], character_info['MP'], player.id)
+                                      character_info['hp'], character_info['MP'], player.id)
 
         print(f"Welcome, {character_name} the {character.character_class}! Good luck on your adventure!")
 

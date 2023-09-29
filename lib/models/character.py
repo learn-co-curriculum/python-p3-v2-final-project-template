@@ -61,6 +61,16 @@ class Character:
         self.hp = hp
         self.mp = mp
         self.player_id = player_id
+        self.inventory = []
+
+    def add_to_inventory(self, item):
+        self.inventory.append(item)
+
+    def use_healing_item(self):
+        if "Healing Item" in self.inventory:
+            self.hp += 30
+            self.inventory.remove("Healing Item")
+            print(f"{self.name} used a Healing Item and restored 30 HP!")
 
     def __repr__(self):
         player = Player.find_by_id(self.player_id)

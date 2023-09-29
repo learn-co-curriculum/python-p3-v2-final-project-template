@@ -1,6 +1,7 @@
 from models.__init__ import CURSOR, CONN
 import re
 
+
 class Player:
     ALL = {}
 
@@ -35,7 +36,7 @@ class Player:
         if not re.match("^[a-zA-Z0-9_]*$", username):
             raise ValueError(
                 "Username can only contain letters, numbers, and underscores."
-                )
+            )
 
         if not is_username_unique(username):
             raise ValueError("This username is already taken. Sowie.")
@@ -101,7 +102,6 @@ class Player:
         CONN.commit()
         self.id = CURSOR.lastrowid
 
-
     def update(self):
         # Update this player's table row corresponding to the current Player instance
         sql = """
@@ -132,7 +132,6 @@ class Player:
         player = cls(username, email)
         player.save()
         return player
-
 
     @classmethod
     def instance_from_db(cls, row):
@@ -187,11 +186,11 @@ class Player:
         row = CURSOR.execute(sql, (username,)).fetchone()
         return cls.instance_from_db(row) if row else None
 
-
     @classmethod
     def is_username_unique(cls, username):
         # Search in-memory
-        is_unique_in_memory = not any(player.username == username for player in cls.ALL.values())
+        is_unique_in_memory = not any(
+            player.username == username for player in cls.ALL.values())
 
         # Search in database
         sql = """
@@ -208,8 +207,8 @@ class Player:
     @classmethod
     def is_email_unique(cls, email):
         # Search in-memory
-        is_unique_in_memory = not any(player.email == email for player in cls.ALL.values())
-
+        is_unique_in_memory = not any(
+            player.email == email for player in cls.ALL.values())
 
         # Search in database
         sql = """

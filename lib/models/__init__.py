@@ -3,6 +3,17 @@ import sqlite3
 CONN = sqlite3.connect('game.db')
 CURSOR = CONN.cursor()
 
+# Try to create the monsters table if it doesn't exist
+CURSOR.execute('''
+    CREATE TABLE IF NOT EXISTS monsters (
+        id INTEGER PRIMARY KEY,
+        name TEXT NOT NULL,
+        hit_points INTEGER NOT NULL
+    )
+''')
+CONN.commit()
+
+
 # Try to add the has_healing_item column if it doesn't exist
 try:
     CURSOR.execute('''

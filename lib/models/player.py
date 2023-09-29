@@ -77,20 +77,27 @@ class Player:
         CURSOR.execute(sql)
         CONN.commit()
 
-    def save(self):
-        # Save player instance to new database row
+    # def save(self):
+    #     # Save player instance to new database row
+    #     sql = """
+    #         INSERT INTO players (username, email)
+    #         VALUES (?, ?)
+    #     """
+
+    #     # Update object id attribute using the primary key value of new row
+    #     CURSOR.execute(sql, (self.username, self.email))
+    #     CONN.commit()
+
+    #     # Save the object in local dictionary using table row's PK as dictionary key
+    #     self.id = CURSOR.lastrowid
+    #     type(self).ALL[self.id] = self
+    def save(self, cursor):
+        data = (self.username, self.email)
         sql = """
             INSERT INTO players (username, email)
             VALUES (?, ?)
         """
-
-        # Update object id attribute using the primary key value of new row
-        CURSOR.execute(sql, (self.username, self.email))
-        CONN.commit()
-
-        # Save the object in local dictionary using table row's PK as dictionary key
-        self.id = CURSOR.lastrowid
-        type(self).ALL[self.id] = self
+        cursor.execute(sql, data)
 
     def update(self):
         # Update this player's table row corresponding to the current Player instance

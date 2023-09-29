@@ -6,6 +6,15 @@ from models.player import Player
 
 def main():
     conn = sqlite3.connect('game.db')
+    cursor = conn.cursor()
+
+    cursor.execute("""
+                   CREATE TABLE IF NOT EXISTS players (
+                   id INTEGER PRIMARY KEY, 
+                   username TEXT, email TEXT)""")
+    conn.commit()
+
+
 
     while True:
         print("\nChoose a scenario:")
@@ -23,6 +32,9 @@ def main():
         player_username = input("Enter a username: ")
         player_email = input("Enter your email: ")
         player = Player(player_username, player_email)
+
+        cursor.execute("""INSERT INTO players (username, email) VALUES (?, ?)""", (player_username, player_email))
+        conn.commit()
 
         print(f"Welcome, {player_username}! Good luck on your adventure!")
 

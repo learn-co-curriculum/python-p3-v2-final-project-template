@@ -1,7 +1,6 @@
 import sqlite3
 import random
 
-
 class Monster:
     def __init__(self, id, name, hit_points, has_healing_item):
         self.id = id
@@ -39,23 +38,21 @@ class Monster:
         ]
 
         # Check if the monsters already exist in the table
-        existing_monsters = cursor.execute(
-            'SELECT name FROM monsters').fetchall()
+        existing_monsters = cursor.execute('SELECT name FROM monsters').fetchall()
         existing_monsters = [monster[0] for monster in existing_monsters]
 
         for monster in monsters_data:
             if monster[0] not in existing_monsters:
-                cursor.execute(
-                    'INSERT INTO monsters (name, hit_points, has_healing_item) VALUES (?, ?, ?)', monster)
+                cursor.execute('INSERT INTO monsters (name, hit_points, has_healing_item) VALUES (?, ?, ?)', monster)
                 conn.commit()
 
-
-def select_random_monster(conn):
-    cursor = conn.cursor()
-    cursor.execute('SELECT * FROM monsters')
-    monsters = cursor.fetchall()
-    monster_data = random.choice(monsters)
-    return Monster(*monster_data)
+    @classmethod
+    def select_random_monster(cls, conn):
+        cursor = conn.cursor()
+        cursor.execute('SELECT * FROM monsters')
+        monsters = cursor.fetchall()
+        monster_data = random.choice(monsters)
+        return cls(*monster_data)
 
 
 def remove_monster(conn, monster):

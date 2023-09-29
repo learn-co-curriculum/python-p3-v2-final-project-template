@@ -1,10 +1,9 @@
 # main.py
 from models.character import Character
 from models.player import Player
-from models.monster import Monster, remove_monster, attack, select_random_monster
+from models.monster import Monster, remove_monster, attack
 from models.scenario import Scenario
 import sqlite3
-
 
 def play_scenario(character, conn):
     cursor = conn.cursor()
@@ -17,7 +16,8 @@ def play_scenario(character, conn):
         print(f"{scenario.name}: {scenario.description}")
 
         # Assign a random monster
-        monster = select_random_monster(conn)
+        monster = Monster.select_random_monster(conn)
+
         print(f"You encounter a {monster}!")
 
         while monster.hit_points > 0:
@@ -39,33 +39,40 @@ def main():
     conn = sqlite3.connect('game.db')
     cursor = conn.cursor()
 
-    cursor.execute("""
-                   CREATE TABLE IF NOT EXISTS players (
-                   id INTEGER PRIMARY KEY,
-                   username TEXT, email TEXT)""")
-    conn.commit()
-
     while True:
-        print("\nChoose a scenario:")
-        print("1. Scenario One")
-        print("2. Scenario Two")
-        print("3. Exit")
+        print("\nChoose a character:")
+        for index, char_info in enumerate(Character.available_characters, 1):
+            print(f"{index}. {char_info['Class']} - {char_info['Description']}")
 
-        scenario_choice = input("Choose an option: ")
+        valid_characters = [str(i) for i in range(1, len(Character.available_characters) + 1)]
+        valid_characters.append("exit")
 
-        if scenario_choice == "3":
-            print("Thanks for playing!")
-            break
+        while True:
+            character_choice = input("Choose a character (1-6 or type 'exit' to quit): ").lower()
+
+            if character_choice in valid_characters:
+                break
+            else:
+                print("Invalid input! Please select a valid number or type 'exit'.")
+
+        if character_choice == "exit":
+            print("You chose to exit. Goodbye!")
+            conn.close()
+            exit()
+
+        character_info = Character.available_characters[int(character_choice) - 1]
 
         # Taking user's name input
         player_username = input("Enter a username: ")
         player_email = input("Enter your email: ")
-        player = Player(player_username, player_email)
+        player = Player.create(player_username, player_email)
 
-        cursor.execute("""INSERT INTO players (username, email) VALUES (?, ?)""", (player_username, player_email))
-        conn.commit()
+        # Create Character
+        character_name = input("Enter a name for your character: ")
+        character = Character.create(character_name, character_info['Class'], character_info['XP'],
+                                      character_info['HP'], character_info['MP'], player.id)
 
-        print(f"Welcome, {player_username}! Good luck on your adventure!")
+        print(f"Welcome, {character_name} the {character.character_class}! Good luck on your adventure!")
 
         # Call play_scenario
         play_again = play_scenario(character, conn)
@@ -74,7 +81,6 @@ def main():
             break
 
     conn.close()
-
 
 if __name__ == "__main__":
     main()

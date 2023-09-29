@@ -39,6 +39,8 @@ def main():
     conn = sqlite3.connect('game.db')
     cursor = conn.cursor()
 
+    Character.create_table(conn)
+
     while True:
         print("\nChoose a character:")
         for index, char_info in enumerate(Character.available_characters, 1):

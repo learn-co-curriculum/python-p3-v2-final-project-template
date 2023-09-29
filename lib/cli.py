@@ -1,8 +1,39 @@
-import sqlite3
-import random
-from models.monster import Monster, select_random_monster, remove_monster, attack
+# main.py
+from models.character import Character
 from models.player import Player
+from models.monster import Monster, remove_monster, attack, select_random_monster
+from models.scenario import Scenario
+import sqlite3
 
+
+def play_scenario(character, conn):
+    cursor = conn.cursor()
+
+    for step in range(1, 6):
+        print(f"\nStep {step}")
+
+        # Assign a random scenario
+        scenario = Scenario.get_random_scenarios(cursor, 1)[0]
+        print(f"{scenario.name}: {scenario.description}")
+
+        # Assign a random monster
+        monster = select_random_monster(conn)
+        print(f"You encounter a {monster}!")
+
+        while monster.hit_points > 0:
+            input("Press enter to attack!")
+            player_defeated = attack(character, monster)
+
+            if player_defeated:
+                print(f"{character.name} has been defeated by {monster.name}!")
+                return False
+
+            if monster.hit_points <= 0:
+                print(f"{monster.name} has been defeated!")
+                break
+
+    play_again = input("Scenario ended. Do you want to play again? (y/n): ").lower()
+    return play_again == 'y'
 
 def main():
     conn = sqlite3.connect('game.db')
@@ -10,11 +41,9 @@ def main():
 
     cursor.execute("""
                    CREATE TABLE IF NOT EXISTS players (
-                   id INTEGER PRIMARY KEY, 
+                   id INTEGER PRIMARY KEY,
                    username TEXT, email TEXT)""")
     conn.commit()
-
-
 
     while True:
         print("\nChoose a scenario:")
@@ -38,81 +67,9 @@ def main():
 
         print(f"Welcome, {player_username}! Good luck on your adventure!")
 
-        for step in range(1, 6):
-            print(f"\nStep {step}")
-            player_defeated = False
-
-            if step in [2, 4]:
-                current_monster = select_random_monster(conn)
-                print(f"A wild {current_monster} has appeared!")
-
-            elif step == 5:
-                cursor = conn.cursor()
-                cursor.execute(
-                    "SELECT * FROM monsters WHERE name IN ('Mothra', 'Godzilla')")
-                big_monsters = cursor.fetchall()
-
-                if not any(monster[1] == 'Mothra' for monster in big_monsters):
-                    cursor.execute(
-                        "INSERT INTO monsters (name, hit_points) VALUES ('Mothra', 175)")
-                if not any(monster[1] == 'Godzilla' for monster in big_monsters):
-                    cursor.execute(
-                        "INSERT INTO monsters (name, hit_points) VALUES ('Godzilla', 175)")
-
-                conn.commit()
-
-                current_monster = Monster(
-                    *random.choice([monster for monster in big_monsters if monster[1] in ['Mothra', 'Godzilla']]))
-                print(f"A wild {current_monster} has appeared!")
-
-            else:
-                print("No monster appeared at this step.")
-                input("Press Enter to continue to the next step...")
-                continue
-
-            while current_monster.hit_points > 0:
-                print(f"\n1. Attack the {current_monster.name}")
-                print("2. Show your status")
-
-                if current_monster.has_healing_item and not current_monster.healing_item_used:
-                    print("3. Use healing item")
-
-                choice = input("Choose an option: ")
-
-                if choice == "1":
-                    player_defeated = attack(player, current_monster)
-
-                    if current_monster.hit_points <= 0:
-                        print(f"{current_monster.name} has been defeated!")
-                        remove_monster(conn, current_monster)
-                        if current_monster.has_healing_item:
-                            print(
-                                f"{current_monster.name} was carrying a healing item!")
-                    if player_defeated:
-                        print("You have been defeated!")
-                        break
-
-                elif choice == "2":
-                    print(player)
-                    print(f"{player_username}, your current hitpoints are: {player.hit_points}")
-
-
-                elif choice == "3" and current_monster.has_healing_item and not current_monster.healing_item_used:
-                    healing_amount = 30
-                    player.hit_points = min(
-                        player.hit_points + healing_amount, player.max_hit_points)
-                    current_monster.healing_item_used = True
-                    print(
-                        f"You used the healing item and restored {healing_amount} HP!")
-
-            if player_defeated:
-                break
-
-            input("Press Enter to continue to the next step...")
-
-        play_again = input(
-            "Scenario ended. Do you want to play again? (y/n): ").lower()
-        if play_again != 'y':
+        # Call play_scenario
+        play_again = play_scenario(character, conn)
+        if not play_again:
             print("Thanks for playing! See you next time.")
             break
 

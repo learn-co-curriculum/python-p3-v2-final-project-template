@@ -1,7 +1,5 @@
 import sqlite3
 import random
-from models.character import Character
-from models.player import Player
 
 
 class Monster:
@@ -15,13 +13,49 @@ class Monster:
     def __repr__(self):
         return f"{self.name} (HP: {self.hit_points})"
 
+    @classmethod
+    def initialize_monsters(cls, conn):
+        cursor = conn.cursor()
+        sql = """
+            CREATE TABLE IF NOT EXISTS monsters (
+                id INTEGER PRIMARY KEY,
+                name TEXT NOT NULL,
+                hit_points INTEGER NOT NULL,
+                has_healing_item BOOLEAN NOT NULL DEFAULT FALSE
+            )
+        """
+        cursor.execute(sql)
+        conn.commit()
+
+        # Define monsters
+        monsters_data = [
+            ("Wolf", 75, True),
+            ("Orc", 125, False),
+            ("Spooky Skeleton", 85, True),
+            ("Silver wolf", 65, False),
+            ("Drunken man", 90, True),
+            ("Cunning witch", 85, True),
+            ("Large spider", 100, False),
+        ]
+
+        # Check if the monsters already exist in the table
+        existing_monsters = cursor.execute(
+            'SELECT name FROM monsters').fetchall()
+        existing_monsters = [monster[0] for monster in existing_monsters]
+
+        for monster in monsters_data:
+            if monster[0] not in existing_monsters:
+                cursor.execute(
+                    'INSERT INTO monsters (name, hit_points, has_healing_item) VALUES (?, ?, ?)', monster)
+                conn.commit()
+
 
 def select_random_monster(conn):
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM monsters')
     monsters = cursor.fetchall()
-    monster = random.choice(monsters)
-    return Monster(*monster)
+    monster_data = random.choice(monsters)
+    return Monster(*monster_data)
 
 
 def remove_monster(conn, monster):
@@ -30,14 +64,14 @@ def remove_monster(conn, monster):
     conn.commit()
 
 
-def attack(username, monster):
+def attack(character, monster):
     damage = 10
     monster.hit_points -= damage
-    print(f"{username} attacked {monster.name} for {damage} damage!")
+    print(f"{character.name} attacked {monster.name} for {damage} damage!")
 
     if random.choice([True, False]):
         damage = 5
-        username.hit_points -= damage
-        print(f"{monster.name} attacked back {username} for {damage} damage!")
+        character.hit_points -= damage
+        print(f"{monster.name} attacked back {character.name} for {damage} damage!")
 
-    return username.hit_points <= 0
+    return character.hit_points <= 0

@@ -1,5 +1,5 @@
 # category.py
-from __init__ import CONN  
+from __init__ import CONN
 
 class Category:
     """Represents a category for quiz questions."""

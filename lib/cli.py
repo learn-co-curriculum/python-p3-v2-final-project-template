@@ -1,10 +1,9 @@
-# lib/cli.py
-
 from helpers import (
+    welcome,
+    menu,
     exit_program,
-    helper_1
+    find_or_create_player
 )
-
 
 def main():
     while True:
@@ -13,16 +12,10 @@ def main():
         if choice == "0":
             exit_program()
         elif choice == "1":
-            helper_1()
+            find_or_create_player()
         else:
             print("Invalid choice")
-
-
-def menu():
-    print("Please select an option:")
-    print("0. Exit the program")
-    print("1. Some useful function")
-
-
+        
 if __name__ == "__main__":
+    welcome()
     main()

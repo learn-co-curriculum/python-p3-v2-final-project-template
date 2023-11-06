@@ -26,3 +26,28 @@ class Genre:
         else:
             CURSOR.execute("INSERT INTO genres (name, description) VALUES (?, ?)", (name, description))
             CONN.commit()
+
+     # delete by id
+    def delete_by_id(self, genre_id):
+        CURSOR.execute("SELECT name FROM genres WHERE id = ?", (genre_id))
+        existing_name = CURSOR.fetchone()
+
+        if existing_name:
+            print(f"Deleting {existing_name} (id: {genre_id})...")
+            CURSOR.execute("DELETE FROM genres WHERE id = ?", (genre_id)) 
+            CONN.commit()
+        else:
+            print(f'A genre with the name "{existing_name}" does not exist.')
+    
+    # delete by name
+    def delete_by_name(self, name):
+        name_search = name.lower()
+        CURSOR.execute("SELECT id FROM genres WHERE name = ?", (name_search))
+        existing_id = CURSOR.fetchone()
+
+        if existing_id:
+            print(f"Deleting {name} (id: {existing_id})...")
+            CURSOR.execute("DELETE FROM genres WHERE id = ?", (existing_id)) 
+            CONN.commit()
+        else:
+            print(f'A genre with the name "{name}" does not exist.')

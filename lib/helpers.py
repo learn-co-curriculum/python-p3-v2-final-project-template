@@ -37,7 +37,7 @@ def find_or_create_player():
         print(f"Welcome back, {player.name}!")
         select_game(player)
 
-def select_game():
+def select_game(current_player):
     print("Play Jeopardy!")
 
 

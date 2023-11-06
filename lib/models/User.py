@@ -1,9 +1,9 @@
 from models.__init__ import CONN, CURSOR
 
 class User:
-    def __init__(self, name, id=None):
+    def __init__(self, name, score=0, id=None):
         self.name = name
-        self.score = 0
+        self.score = score
         self.id = id
 
     def __repr__(self):

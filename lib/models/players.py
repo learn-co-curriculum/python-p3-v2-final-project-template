@@ -68,13 +68,13 @@ class Player:
         player.save()
         return player
     
-    # def characters(self):
-    #     sql = """
-    #         SELECT * FROM characters WHERE player = ?
-    #     """
-    #     var_tuple = self.id
-    #     result = CURSOR.execute(sql).fetchall()
-    #     return []
+    def characters(self):
+        sql = """
+            SELECT * FROM characters WHERE player = ?
+        """
+        var_tuple = self.id
+        result = CURSOR.execute(sql).fetchall()
+        return result
 
     @classmethod
     def all(cls):
@@ -82,7 +82,7 @@ class Player:
             SELECT * FROM players;
         """
         players = CURSOR.execute(sql).fetchall()
-        return [Player(player[1], player[2], player[3], player[4], player[0]) for player in players]
+        return [Player(player[1], player[2], player[3], player[0], player[4]) for player in players]
 
     @classmethod
     def next_players(cls):

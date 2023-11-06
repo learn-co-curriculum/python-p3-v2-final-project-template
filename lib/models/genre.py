@@ -19,9 +19,9 @@ class Genre:
     def add_genre(self, name, description):
         name_new = name.lower()
         CURSOR.execute("SELECT id FROM genres WHERE name = ?", (name_new))
-        existing_new = CURSOR.fetchone()
+        existing_id = CURSOR.fetchone()
 
-        if existing_new:
+        if existing_id:
             print(f'A genre with the name "{name}" already exists.')
         else:
             CURSOR.execute("INSERT INTO genres (name, description) VALUES (?, ?)", (name, description))

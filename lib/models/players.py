@@ -73,7 +73,7 @@ class Player:
             SELECT * FROM characters WHERE player = ?
         """
         var_tuple = self.id
-        result = CURSOR.execute(sql).fetchall()
+        result = CURSOR.execute(sql, var_tuple).fetchall()
         return result
 
     @classmethod

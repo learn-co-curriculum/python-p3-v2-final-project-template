@@ -51,3 +51,29 @@ class Genre:
             CONN.commit()
         else:
             print(f'A genre with the name "{name}" does not exist.')
+    
+     # find genre by id
+    def find_by_id(self, genre_id):
+        CURSOR.execute("SELECT * FROM genres WHERE id = ?", (genre_id))
+        existing_genre = CURSOR.fetchone()
+
+        if existing_genre:
+            return CURSOR.fetchone()
+        else: 
+            print(f'A genre with the id "{genre_id}" does not exist.')
+
+    # find genre by name
+    def find_by_name(self, name):
+        name_search = name.lower()
+        CURSOR.execute("SELECT * FROM genres WHERE name = ?", (name_search))
+        existing_genre = CURSOR.fetchone()
+
+        if existing_genre:
+            return CURSOR.fetchone()
+        else: 
+            print(f'A genre with the name "{name}" does not exist.')
+
+    # get all genres
+    def get_all_genres(self):
+        CURSOR.execute("SELECT * FROM genres")
+        return CURSOR.fetchall()

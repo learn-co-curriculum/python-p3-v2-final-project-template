@@ -1,4 +1,9 @@
 # lib/cli.py
+from models.Parent import Parent
+from models.Children import Child
+
+p1=Parent('zeus','this is a bio')
+c1=Child('Athena','Athena bio',p1)
 
 from helpers import (
     exit_program,
@@ -13,6 +18,7 @@ def main():
         if choice == "0":
             exit_program()
         elif choice == "1":
+            p1.my_children()
             helper_1()
         else:
             print("Invalid choice")

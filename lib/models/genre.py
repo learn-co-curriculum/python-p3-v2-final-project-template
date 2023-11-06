@@ -15,4 +15,14 @@ class Genre:
         ''')
         CONN.commit()
     
- 
+    # add genre
+    def add_genre(self, name, description):
+        name_new = name.lower()
+        CURSOR.execute("SELECT id FROM genres WHERE name = ?", (name_new))
+        existing_new = CURSOR.fetchone()
+
+        if existing_new:
+            print(f'A genre with the name "{name}" already exists.')
+        else:
+            CURSOR.execute("INSERT INTO genres (name, description) VALUES (?, ?)", (name, description))
+            CONN.commit()

@@ -9,9 +9,6 @@ class Team:
         self.name = name
         self.division = division
 
-    def __repr__(self):
-        return f"<Team {self.id}:{self.name}, {self.division}>"
-
     @property
     def name(self):
         return self._name
@@ -37,10 +34,6 @@ class Team:
             raise ValueError(
                 "Division must be a non-empty string"
             )
-        
-    # Create a class method to create a table which will create a blank table
-    # Create rows and append the seed data to the rows
-    # Users should be able to type in 2 to the CLI and return all teams
 
     @classmethod
     def create_table(cls):

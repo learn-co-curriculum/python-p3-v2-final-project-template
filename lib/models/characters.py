@@ -161,6 +161,22 @@ class Character:
         CONN.commit()
         self.id = None
 
+    def char_class(self):
+        sql = """
+            SELECT * FROM characters WHERE class = ?
+    """
+        char_class_tuple = (self.id,)
+        list_of_char_class_tuple = CURSOR.execute(sql, char_class_tuple).fetchall()
+        return [Character.dnd_data(row) for row in list_of_char_class_tuple]
+    
+    def race(self):
+        sql = """
+            SELECT * FROM characters WHERE race = ?
+    """
+        race_tuple = (self.id,)
+        list_of_race_tuple = CURSOR.execute(sql, race_tuple).fetchall()
+        return [Character.dnd_data(row) for row in list_of_race_tuple]
+
 #given a row from the database---return with new instance with info from database
     @classmethod
     def dnd_data(cls, row_tuple):

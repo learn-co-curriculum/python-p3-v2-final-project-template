@@ -1,11 +1,15 @@
 # lib/cli.py
+from models.players import Player
 
 """ MAIN MENU CLI """
 from helpers import (
     exit_program,
-    create_new_player,
     view_all_players,
     view_players_in_next_session,  
+)
+
+from create_player import (
+    create_new_player
 )
 
 def display_main_menu():
@@ -51,8 +55,28 @@ from create_char import (
 )
 
 def display_profile_menu():
-    password = input('Enter your password: ')
-    if password == '123':
+    current_player = None
+
+    def profile_menu():
+        """profile title should include player.name"""
+        print(f"{current_player.name}'s Profile:") 
+        print("0. Back to Main Menu")
+        print("1. Create new character")
+        print("2. View all characters")
+        print("3. View your active characters")
+        print("4. RSVP for next session")
+        print("5. Delete a character")
+        print("6. Delete your profile")
+
+    name = input('Name: ')
+    password = input('Password: ')
+    if (name in [player.name for player in Player.all()] and 
+        password == Player.find_by_name(name)[0].password):
+        current_player = Player.find_by_name(name)[0]
+    else:
+        print("Incorrect Login.")
+    
+    if current_player:
         while True:
             profile_menu()
             choice = input('** ')
@@ -72,19 +96,6 @@ def display_profile_menu():
                 delete_player()    
             else:
                 print("Invalid choice. Please try again.")
-    else:
-        print("Incorrect Password.")
-                
-def profile_menu():
-    """profile title should include player.name"""
-    print(f"{player_name}'s Profile:") 
-    print("0. Back to Main Menu")
-    print("1. Create new character")
-    print("2. View all characters")
-    print("3. View your active characters")
-    print("4. RSVP for next session")
-    print("5. Delete a character")
-    print("6. Delete your profile")
 
 
 if __name__ == "__main__":

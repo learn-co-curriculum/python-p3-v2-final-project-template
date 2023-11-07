@@ -1,8 +1,11 @@
-from __init__ import CURSOR, CONN
-import ipdb
+import sqlite3
+CONN = sqlite3.connect('dnd_data.sqlite')
+CURSOR = CONN.cursor()
+
+# import ipdb
 
 class Player:
-    def __init__(self, name, password, age, id=None, next_game=False):
+    def __init__(self, name, password, age, next_game=False, id=None):
         self.id = id
         self.name = name
         self.password = password
@@ -63,7 +66,7 @@ class Player:
         self.id = CURSOR.lastrowid
 
     @classmethod
-    def create(cls, name, password, age, next_game=False):
+    def create(cls, name, password, age, next_game):
         player = Player(name, password, age, next_game)
         player.save()
         return player
@@ -82,7 +85,7 @@ class Player:
             SELECT * FROM players;
         """
         players = CURSOR.execute(sql).fetchall()
-        return [Player(player[1], player[2], player[3], player[0], player[4]) for player in players]
+        return [Player(player[1], player[2], player[3], player[4], player[0]) for player in players]
 
     @classmethod
     def next_players(cls):
@@ -102,7 +105,7 @@ class Player:
     
     def delete(self):
         sql = """
-            DEL FROM players WHERE id = ?;
+            DELETE FROM players WHERE id = ?;
         """
         var_tuple = (self.id,)
         CURSOR.execute(sql,var_tuple)
@@ -118,5 +121,14 @@ class Player:
         var_tuple = (self.name, self.password, self.age, self.next_game, self.id)
         CURSOR.execute(sql, var_tuple)
         CONN.commit()
+    
+    @classmethod
+    def find_by_name(cls, name):
+        sql = """
+            SELECT * FROM players WHERE name = ?;
+        """
+        var_tuple = (name,)
+        players = CURSOR.execute(sql, var_tuple).fetchall()
+        return [Player(player[1], player[2], player[3], player[4], player[0]) for player in players]
 
-ipdb.set_trace()
+# ipdb.set_trace()

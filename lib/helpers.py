@@ -1,22 +1,34 @@
 # lib/helpers.py
 
+from models.players import Player
+
 """VARIABLES"""
 player_name = "Toaster"
 char_name = "Gary the Goblin"
 
 """Main Menu Helpers"""
 
-def create_new_player():
-    print("Creating new player...")
-
 def view_all_players():
+    print('-----------------------')
     print("Viewing all players...")
+    for index, player in enumerate(Player.all()):
+        print(f'{index + 1}. {player}')
+    print('-----------------------')
 
-def view_profile_menu():
-    print("Enter your password:")
+# def view_profile_menu():
+#     name = input('Name: ')
+#     if name in [player.name for player in Player.all()]:
+#         password = input('Password: ')
+#         if password == Player.find_by_name(name)[0].name:
+
+#     print("Enter your password:")
 
 def view_players_in_next_session():
-    print("Players attending next session")
+    print('-----------------------')
+    print("Viewing players in next session...")
+    for index, player in enumerate(Player.next_players()):
+        print(f'{index + 1}. {player}')
+    print('-----------------------')
 
 
 def exit_program():

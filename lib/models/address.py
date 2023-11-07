@@ -28,17 +28,28 @@ class Address:
         """
         CURSOR.execute(sql)
 
-    def save(self, cursor, contact_id):
-        if self.id is None:
-            sql = "INSERT INTO addresses (contact_id, email) VALUES (?, ?)"
-            cursor.execute(sql, (contact_id, self.email))
-            self.id = cursor.lastrowid
+    # def save(self, CURSOR, contact_id):
+    #     if self.id is None:
+    #         sql = "INSERT INTO addresses (contact_id, email) VALUES (?, ?)"
+    #         CURSOR.execute(sql, (contact_id, self.email))
+    #         self.id = CURSOR.lastrowid
         
     def create(self):
-        pass
+        sql = "INSERT INTO addresses (email, person_id) VALUES (?, ?)"
+        c = CURSOR.execute(sql, (self.email, self.person_id))
+        CONN.commit()
+        self._id = c.lastrowid
+        return c.lastrowid
     
     def read_all():
-        pass
+        sql = "select id, email, person_id from addresses"
+        rows = CURSOR.execute(sql)
+        ret = []
+        for (id, email, person_id) in rows:
+            addr = Address(email, person_id)
+            addr._id = id
+            ret.append(addr)
+        return ret
     
     def update_email(self, new_email:str):
         pass
@@ -46,5 +57,3 @@ class Address:
     def update_person_id(self, person_id:int):
         pass
     
-    pass delete(self):
-        pass

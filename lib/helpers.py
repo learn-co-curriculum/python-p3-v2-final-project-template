@@ -1,9 +1,3 @@
 # lib/helpers.py
-
-def helper_1():
-    print("Performing useful function#1.")
-
-
-def exit_program():
-    print("Goodbye!")
-    exit()
+from models.contact import Contact
+from models.address import Address

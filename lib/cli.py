@@ -16,6 +16,23 @@ def create_an_address():
     else:
         print("should read or create a person first")
 
+def show_all_contacts():
+    contacts = Contact.read_all()
+    print("===all contacts===")
+    for c in contacts:
+        print(c)
+    print("==============")
+
+def show_all_addresses():
+    addresses = Address.read_all()
+    print("===all addresses===")
+    for c in addresses:
+        print(c)
+    print("==============")
+
+def exit_program():
+    print("Goodbye!")
+    exit()
 
 
 def main():

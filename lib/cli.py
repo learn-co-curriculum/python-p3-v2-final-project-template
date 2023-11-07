@@ -1,12 +1,10 @@
-# lib/cli.py
-
+#lib/cli.py
 from helpers import (
     exit_program,
     helper_1,
     list_teams,
     list_players
 )
-
 
 def main():
     while True:

@@ -1,4 +1,4 @@
-# lib/helpers.py
+#lib/helpers.py
 from models.team import Team
 from models.players import Players
 
@@ -17,7 +17,7 @@ def list_teams():
     print("ID", "\t", '{0: <25}'.format("NAME"), "DIVISION")
     for team in teams:
         print(team[0], "\t", '{0: <25}'.format(team[1]), team[2])
-    
+
 
 def list_players():
     players = Players.get_all()

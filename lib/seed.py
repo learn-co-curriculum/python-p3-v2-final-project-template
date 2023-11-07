@@ -7,8 +7,7 @@ def seed_database():
     Team.create_table()
     Players.drop_table()
     Players.create_table()
-    
-    
+
     atlanta_hawks = Team("Atlanta Hawks", "Southeast").save()
     boston_celtics = Team("Boston Celtics", "Atlantic").save()
     brooklyn_nets = Team("Brooklyn Nets", "Atlantic").save()
@@ -39,12 +38,10 @@ def seed_database():
     toronto_raptors = Team("Toronto Raptors", "Atlantic").save()
     utah_jazz = Team("Utah Jazz", "Northwest").save()
     washington_wizards = Team("Washington Wizards", "Southeast").save()
-    
 
     jordan_poole = Players("Jordan Poole", washington_wizards).save()
     johnny_davis = Players("Johnny Davis", washington_wizards).save()
     jared_butler = Players("Jared Butler", washington_wizards).save()
-
 
 seed_database()
 print("Seeded database")

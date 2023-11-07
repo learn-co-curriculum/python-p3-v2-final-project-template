@@ -1,4 +1,4 @@
-# lib/models/team.py
+#lib/models/team.py
 from models.__init__ import CURSOR, CONN
 from models.team import Team
 
@@ -10,7 +10,7 @@ class Players:
 
     def get_name(self):
         return self._name
-    
+
     def set_name(self, new_name):
         if type(new_name) == str and len(new_name) > 0:
             self._name = new_name
@@ -38,7 +38,7 @@ class Players:
         )"""
         CURSOR.execute(sql)
         CONN.commit()
-    
+
     @classmethod
     def drop_table(cls):
         sql = """DROP TABLE IF EXISTS players"""

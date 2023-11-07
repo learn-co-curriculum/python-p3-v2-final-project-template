@@ -1,6 +1,5 @@
-# lib/models/team.py
+# liv/models/team.py
 from models.__init__ import CURSOR, CONN
-
 
 class Team:
 
@@ -21,7 +20,7 @@ class Team:
             raise ValueError(
                 "Name must be a non-empty string"
             )
-
+    
     @property
     def division(self):
         return self._division

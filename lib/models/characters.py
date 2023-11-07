@@ -3,7 +3,7 @@ from __init__ import CURSOR, CONN
 class Character:
 
 
-    def __init__(self, name, char_class, race, strengh, dexterity, constitution, intelligence, wisdom, charisma, align, player, active, id = None):
+    def __init__(self, name, char_class, race, strengh, dexterity, constitution, intelligence, wisdom, charisma, alignment, player, active, id = None):
         self.name = name
         self.char_class = char_class
         self.race = race
@@ -13,13 +13,13 @@ class Character:
         self.intelligence = intelligence
         self.wisdom = wisdom
         self.charisma = charisma
-        self.align = align
+        self.align = alignment
         self.player = player
         self.active = active
         self.id = id
 
     def __repr__(self):
-        return f"<Chracter {self.id}: {self.name}, {self.char_class}, {self.race}, {self. strengh}, {self.dexterity}, {self.constitution}, {self.intelligence}, {self.wisdom}, {self.charisma}, {self.align}, {self.player}, {self.active}>"
+        return f"<Chracter {self.id}: {self.name}, {self.char_class}, {self.race}, {self. strengh}, {self.dexterity}, {self.constitution}, {self.intelligence}, {self.wisdom}, {self.charisma}, {self.alignment}, {self.player}, {self.active}>"
 
     @property
     def name(self):
@@ -94,13 +94,13 @@ class Character:
     def charisma(self, charisma):
         self._charisma = charisma
 
-     @property
-    def align(self):
-        return self._align
+    @property
+    def alignment(self):
+        return self._alignment
     
-    @align.setter
-    def align(self, align):
-        self._align = align
+    @alignment.setter
+    def alignment(self, alignment):
+        self._alignment = alignment
 
     @property
     def player(self):
@@ -110,13 +110,34 @@ class Character:
     def player(self, player):
         self._player = player
 
-     @property
+    @property
     def active(self):
         return self._active
     
     @active.setter
     def active(self, active):
         self._active = active
+
+    def save(self):
+        if self.id:
+            sql = """
+                UPDATE characters SET name =?, char_class = ?, race = ?, strengh = ?, dexterity = ?, constitution = ?, intelligence = ?, wisdom = ?, charisma = ?, alignment = ?, player = ?, active = ? WHERE id = ?
+        """
+            char_tuple = (self.name, self.char_class, self.race, self.strengh, self.dexterity, self.constitution, self.intelligence, self.wisdom, self.charisma, self.alignment, self.player, self.active)
+            CURSOR.execute(sql, char_tuple)
+            CONN.commit()
+        else:
+            sql = """
+                INSERT INTO characters (name, char_class, race, strengh, dexterity, constitution, intelligence, wisdom, charisma, alignment, player, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """
+            char_tuple = (self.name, self.char_class, self.race, self.strengh, self.dexterity, self.constitution, self.intelligence, self.wisdom, self.charisma, self.alignment, self.player, self.active)
+            CURSOR.execute(sql, char_tuple)
+            CONN.commit()
+            id_sql = """
+                SELECT LAST_INSERT_ROWID() FROM characters
+            """
+            new_id_tuple = CURSOR.execute(id_sql).fetchoe()
+            self.id = new_id_tuple[0]
 
     @classmethod
     def create_char(cls):
@@ -130,11 +151,20 @@ class Character:
         CURSOR.execute(sql)
         CONN.commit()
 
-        def delete_char(self):
-            sql = """
-                DEL FROM characters WHERE id = ?;
+    def delete_char(self):
+        sql = """
+            DELETE FROM characters WHERE id = ?;
         """
+        char_tuple = (self.id,)
+        CURSOR.execute(sql, char_tuple)
+        CONN.commit()
+        self.id = None
 
+    @classmethod
+    def dnd_data(cls, row_tuple):
+        character = Character(row_tuple[1])
+        character.id = row_tuple[0]
+        return character
 
     @classmethod
     def all(cls):
@@ -142,6 +172,7 @@ class Character:
             SELECT * FROM characters
         """
         char_list = CURSOR.execute(sql).fetchall()
-        return char_list
+        return [Character.dnd_data(row) for row in char_list]
     
-#create an object, delete an object, view related objects, and find an object by attribute.
+    
+#create an object, view related objects, and find an object by attribute.

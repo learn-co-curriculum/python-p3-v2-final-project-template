@@ -1,9 +1,12 @@
 from models.__init__ import CONN, CURSOR
 from models.team import Team
+from models.players import Players
 
 def seed_database():
     Team.drop_table()
     Team.create_table()
+    Players.drop_table()
+    Players.create_table()
     
     
     atlanta_hawks = Team("Atlanta Hawks", "Southeast").save()
@@ -36,6 +39,12 @@ def seed_database():
     toronto_raptors = Team("Toronto Raptors", "Atlantic").save()
     utah_jazz = Team("Utah Jazz", "Northwest").save()
     washington_wizards = Team("Washington Wizards", "Southeast").save()
+    
+
+    jordan_poole = Players("Jordan Poole", washington_wizards).save()
+    johnny_davis = Players("Johnny Davis", washington_wizards).save()
+    jared_butler = Players("Jared Butler", washington_wizards).save()
+
 
 seed_database()
 print("Seeded database")

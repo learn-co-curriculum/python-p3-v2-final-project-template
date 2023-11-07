@@ -14,8 +14,8 @@ Zeus=Parent.create('Zeus','this is a bio')
 Hera=Parent.create('Hera','Hera bio')
 Metis=Parent.create('Metis','Metis bio')
 
-Athena=Child.create('Athena','Athena bio',Zeus,Metis)
-Ares=Child.create('Ares','Ares bio',Zeus,Hera)
+Athena=Child.create('Athena','Athena bio',Zeus)
+Ares=Child.create('Ares','Ares bio',Zeus)
 
 
 ipdb.set_trace()

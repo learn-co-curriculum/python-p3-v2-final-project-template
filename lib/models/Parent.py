@@ -3,19 +3,26 @@ from models.__init__ import CURSOR,CONN
 
 
 class Parent:
+    parent_names=[]
     all_parents=[]
     all={}
     def __init__(self,name,bio):
         self.name=name
         self._bio=bio
         Parent.all_parents.append(self)
+        Parent.parent_names.append(self.name)
+
+    @classmethod
+    def names(cls):
+        for a in Parent.all_parents:
+            print(a)
 
     def __repr__(self):
         return f"<{self.name},{self.bio}>"
 
     # CLI can only read Print
     def my_children(self):
-        child=[a.name for a in Child.spawn if a.father==self or a.mother==self]
+        child=[a.name for a in Child.spawn if a.father==self]
         print(f'{self.name}\'s children are {child}')
 
     def get_name(self):
@@ -116,6 +123,7 @@ class Parent:
     
 
 class Child:
+    name_list=[]
     spawn=[]
     all={}
 
@@ -124,6 +132,7 @@ class Child:
         self._bio=bio
         self.father=father
         Child.spawn.append(self)
+        Child.name_list.append(self.name)
 
     def __repr__(self):
         return f"<Name:{self.name}, Bio:{self.bio},Father:{self.father.name}>"
@@ -185,10 +194,9 @@ class Child:
     def save(self):
         sql="""
            insert into children(name,bio,father)
-           values(?,?,?,?)
+           values(?,?,?)
         """
         father=str(self.father.name)
-        mother=str(self.mother.name)
         CURSOR.execute(sql,(self.name,self.bio,father))
         CONN.commit()
         self.id=CURSOR.lastrowid

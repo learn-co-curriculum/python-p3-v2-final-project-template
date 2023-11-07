@@ -1,9 +1,9 @@
 # lib/cli.py
-from models.Parent import Parent
-from models.Children import Child
+from models.Parent import Parent,Child
 
-p1=Parent('zeus','this is a bio')
-c1=Child('Athena','Athena bio',p1)
+Zeus=Parent('Zeus','this is a bio')
+Metis=Parent('Metis','Metis bio')
+Athena=Child('Athena','Athena bio',Zeus)
 
 from helpers import (
     exit_program,
@@ -18,8 +18,19 @@ def main():
         if choice == "0":
             exit_program()
         elif choice == "1":
-            p1.my_children()
-            helper_1()
+            Parent.names()
+        elif choice in Parent.parent_names:
+            for a in Parent.all_parents:
+                bio=''
+                if a.name == choice:
+                    bio=a.bio
+                    print(bio)
+        elif choice in Child.name_list:
+            for a in Child.spawn:
+                bio=''
+                if a.name == choice:
+                    bio=a.bio
+                    print(bio)
         else:
             print("Invalid choice")
 

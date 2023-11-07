@@ -56,3 +56,11 @@ class World:
         return world_instance
     def __repr__(self):
         return f'\n<World id: {self.id} name: {self.location}>\n.'
+
+    @classmethod
+    def find_by_id(cls, id):
+        sql = '''
+            SELECT * FROM worlds WHERE id = ?
+        '''
+        row = CURSOR.execute(sql, (id,)).fetchone()
+        return cls.from_db(row) if row else None

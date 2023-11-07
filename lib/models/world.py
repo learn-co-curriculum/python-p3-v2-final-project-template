@@ -36,3 +36,23 @@ class World:
             id_sql = 'SELECT LAST_INSERT_ROWID() FROM worlds'
             new_id_tuple = CURSOR.execute( id_sql ).fetchone()
             self.id = new_id_tuple[0]
+# Deletes World from db
+    def shatter( self ):
+        sql = 'DELETE FROM worlds WHERE id = ?'
+        params_tuple = ( self.id, )
+        CURSOR.execute( sql, params_tuple )
+        CONN.commit()
+        self.id = None
+# V makes database display , work to create a instance with menu
+    @classmethod
+    def all(cls):
+        sql = 'SELECT * FROM worlds'
+        list_of_tuples = CURSOR.execute( sql ).fetchall()
+        return [World.from_db(row) for row in list_of_tuples]
+    @classmethod
+    def from_db(cls,row_tuple):
+        world_instance = World( row_tuple[1])
+        world_instance.id = row_tuple[0]
+        return world_instance
+    def __repr__(self):
+        return f'\n<World id: {self.id} name: {self.location}>'

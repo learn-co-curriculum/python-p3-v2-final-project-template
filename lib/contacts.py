@@ -12,7 +12,19 @@ class Contact:
     
     def __repr__(self):
         return f"Contact(id={self._id}, name={self.name})"
-        
+    
+    @classmethod 
+    def all(cls):
+        sql = 'SELECT * FROM contacts'
+        list_of_tuples = cursor.execute(sql).fetchall()
+        return [Contact.from_db ( row ) for row in list_of_tuples]
+    
+    @classmethod
+    def from_db( cls, row_tuple ):
+        contact_instance = Contact( row_tuple[1], row_tuple[2])
+        contact_instance.id = row_tuple[0]
+        return contact_instance
+    
     @property
     def id(self):
         return self._id
@@ -25,7 +37,13 @@ class Contact:
         );
         """
         CURSOR.execute(sql)
-        
+
+    def save(self, cursor):
+        if self.id is None:
+            sql = "INSERT INTO contacts (first_name, last_name) VALUES (?, ?)"
+            cursor.execute(sql, (self.first_name, self.last_name))
+            self.id = cursor.lastrowid    
+                
     def read_all():
         pass
     

@@ -27,6 +27,12 @@ class Address:
         );
         """
         CURSOR.execute(sql)
+
+    def save(self, cursor, contact_id):
+        if self.id is None:
+            sql = "INSERT INTO addresses (contact_id, email) VALUES (?, ?)"
+            cursor.execute(sql, (contact_id, self.email))
+            self.id = cursor.lastrowid
         
     def create(self):
         pass

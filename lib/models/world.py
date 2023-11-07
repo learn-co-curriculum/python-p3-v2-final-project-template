@@ -64,3 +64,8 @@ class World:
         '''
         row = CURSOR.execute(sql, (id,)).fetchone()
         return cls.from_db(row) if row else None
+    @classmethod
+    def create(cls,location):
+        world = cls(location)
+        world.save()
+        return world

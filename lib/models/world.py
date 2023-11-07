@@ -43,7 +43,7 @@ class World:
         CURSOR.execute( sql, params_tuple )
         CONN.commit()
         self.id = None
-# V makes database display , work to create a instance with menu
+# V makes database display , work to create a instance with
     @classmethod
     def all(cls):
         sql = 'SELECT * FROM worlds'
@@ -55,4 +55,4 @@ class World:
         world_instance.id = row_tuple[0]
         return world_instance
     def __repr__(self):
-        return f'\n<World id: {self.id} name: {self.location}>'
+        return f'\n<World id: {self.id} name: {self.location}>\n.'

@@ -14,7 +14,7 @@ class Parent:
 
     @classmethod
     def names(cls):
-        for a in Parent.all_parents:
+        for a in Parent.parent_names + Child.name_list:
             print(a)
 
     def __repr__(self):

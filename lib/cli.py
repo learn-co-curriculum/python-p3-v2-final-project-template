@@ -3,7 +3,8 @@
 from helpers import (
     exit_program,
     helper_1,
-    list_teams
+    list_teams,
+    list_players
 )
 
 
@@ -14,7 +15,7 @@ def main():
         if choice == "0":
             exit_program()
         elif choice == "1":
-            helper_1()
+            list_players()
         elif choice == "2":
             list_teams()
         else:
@@ -24,8 +25,8 @@ def main():
 def menu():
     print("Please select an option:")
     print("0. Exit the program")
-    print("1. Some useful function")
-    print("2. List Teams")
+    print("1. List all the players")
+    print("2. List all the teams")
 
 
 if __name__ == "__main__":

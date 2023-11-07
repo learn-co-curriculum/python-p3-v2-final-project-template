@@ -1,13 +1,14 @@
-from __init__ import CURSOR, CONN
+import sqlite3
+CONN = sqlite3.connect('dnd_data.sqlite')
+CURSOR = CONN.cursor()
 
 class Character:
 
-
-    def __init__(self, name, char_class, race, strengh, dexterity, constitution, intelligence, wisdom, charisma, alignment, player, active, id = None):
+    def __init__(self, name, char_class, race, strength, dexterity, constitution, intelligence, wisdom, charisma, alignment, player, active, id = None):
         self.name = name
         self.char_class = char_class
         self.race = race
-        self.strengh = strengh
+        self.strength = strength
         self.dexterity = dexterity
         self.constitution = constitution
         self.intelligence = intelligence
@@ -19,7 +20,7 @@ class Character:
         self.id = id
 
     def __repr__(self):
-        return f"<Chracter {self.id}: {self.name}, {self.char_class}, {self.race}, {self. strengh}, {self.dexterity}, {self.constitution}, {self.intelligence}, {self.wisdom}, {self.charisma}, {self.alignment}, {self.player}, {self.active}>"
+        return f"<Character {self.id}: {self.name}, {self.char_class}, {self.race}, {self. strength}, {self.dexterity}, {self.constitution}, {self.intelligence}, {self.wisdom}, {self.charisma}, {self.alignment}, {self.player}, {self.active}>"
 
     @property
     def name(self):
@@ -50,12 +51,12 @@ class Character:
         self._race = race
     
     @property
-    def strengh(self):
-        return self._strengh
+    def strength(self):
+        return self._strength
     
-    @strengh.setter
-    def strengh(self, strengh):
-        self._strengh = strengh
+    @strength.setter
+    def strength(self, strength):
+        self._strength = strength
 
     @property
     def dexterity(self):
@@ -125,16 +126,16 @@ class Character:
     def save(self):
         if self.id:
             sql = """
-                UPDATE characters SET name =?, char_class = ?, race = ?, strengh = ?, dexterity = ?, constitution = ?, intelligence = ?, wisdom = ?, charisma = ?, alignment = ?, player = ?, active = ? WHERE id = ?
+                UPDATE characters SET name =?, char_class = ?, race = ?, strength = ?, dexterity = ?, constitution = ?, intelligence = ?, wisdom = ?, charisma = ?, alignment = ?, player = ?, active = ? WHERE id = ?
         """
-            char_tuple = (self.name, self.char_class, self.race, self.strengh, self.dexterity, self.constitution, self.intelligence, self.wisdom, self.charisma, self.alignment, self.player, self.active)
+            char_tuple = (self.name, self.char_class, self.race, self.strength, self.dexterity, self.constitution, self.intelligence, self.wisdom, self.charisma, self.alignment, self.player, self.active)
             CURSOR.execute(sql, char_tuple)
             CONN.commit()
         else:
             sql = """
-                INSERT INTO characters (name, char_class, race, strengh, dexterity, constitution, intelligence, wisdom, charisma, alignment, player, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO characters (name, char_class, race, strength, dexterity, constitution, intelligence, wisdom, charisma, alignment, player, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """
-            char_tuple = (self.name, self.char_class, self.race, self.strengh, self.dexterity, self.constitution, self.intelligence, self.wisdom, self.charisma, self.alignment, self.player, self.active)
+            char_tuple = (self.name, self.char_class, self.race, self.strength, self.dexterity, self.constitution, self.intelligence, self.wisdom, self.charisma, self.alignment, self.player, self.active)
             CURSOR.execute(sql, char_tuple)
             CONN.commit()
             id_sql = """
@@ -145,8 +146,8 @@ class Character:
 
 #creates a new character and saves it to the database
     @classmethod
-    def create_char(cls, name, char_class, race, strengh, dexterity, constitution, intelligence, wisdom, charisma, alignment, player, active):
-        character = Character(name, char_class, race, strengh, dexterity, constitution, intelligence, wisdom, charisma, alignment, player, active)
+    def create_char(cls, name, char_class, race, strength, dexterity, constitution, intelligence, wisdom, charisma, alignment, player, active):
+        character = Character(name, char_class, race, strength, dexterity, constitution, intelligence, wisdom, charisma, alignment, player, active)
         character.save()
         return character
         
@@ -195,4 +196,4 @@ class Character:
     
     
 # view related objects, and find an object by attribute
-#char_class, race, strengh, dexterity, constitution, intelligence, wisdom, charisma, alignment, player, active
+#char_class, race, strength, dexterity, constitution, intelligence, wisdom, charisma, alignment, player, active

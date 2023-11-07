@@ -33,17 +33,18 @@ def create_new_char_menu():
                 current_state = 'abilities'
             elif current_state == 'abilities':
                 print("Ability Stats:")
+
                 get_abilities()
                 current_state = None
-    
-    
         print(f'☺ {character_info["name"]}\'s Character Sheet ☺')
+        print('-----------------------')
         print(f'→ Class: {character_info["class"]}')
         print(f'→ Race: {character_info["race"]}')
         print(f'→ Alignment: {character_info["alignment"]}')
         print('→ Ability Stats:')
         for ability, score in character_info["abilities"].items():
             print(f'    • {ability}: {score}')
+        print('-----------------------')
         print("Confirm your new character (Y/N)?")
         choice = input("> ")
         if choice == "Y":
@@ -65,6 +66,7 @@ def get_name():
         character_info["name"] = name
         print(f'★ Character\'s name: {character_info["name"]} ★')
     else:
+
         print('The name must be 3-20 characters long.')
 
 def get_class():
@@ -116,6 +118,7 @@ def get_alignment():
 """returns a list of 3 random numbers between 1-6. adds the 3 numbers and assigns it to a variable 'ability score'
 """
 def roll_3d6():
+    print('-----------------------')
     print("Rolling 3 d6...")
     dice_rolls = [random.randint(1, 6) for _ in range(3)]
     print(f"Dice results: {dice_rolls}")
@@ -127,20 +130,15 @@ def roll_3d6():
 def get_abilities():
     abilities = ['Strength', 'Dexterity', 'Constitution', 'Intelligence', 'Wisdom', 'Charisma']
     ability_scores = {}
+    
     while abilities:
-        print("Roll for: ")
         for i, ability in enumerate(abilities, 1):
             print(f"{i}. {ability}")
-        choice = int(input('❯❯ '))
-        if 1 <= choice <= len(abilities):
-            selected_ability = abilities.pop(choice - 1)
-            input(f'❯❯ Press Enter to roll for {selected_ability}')
-            ability_scores[selected_ability] = roll_3d6()
-            print(f'★ {selected_ability} Score: {ability_scores[selected_ability]} ★')
-        else:
-            print("Invalid choice. Please try again.")
-    print(f'★ {character_info["name"]}\'s Ability Stats ★')
-    character_info["abilities"] = ability_scores
-    for ability, score in ability_scores.items():
-        print(f'{ability}: {score}')
+        selected_ability = abilities.pop(0)
+        input(f'❯❯ Press Enter to roll for {selected_ability}')
+        ability_scores[selected_ability] = roll_3d6()
+        print(f'★ {selected_ability} Score: {ability_scores[selected_ability]} ★')
+        print('-----------------------')
 
+    character_info["abilities"] = ability_scores
+    

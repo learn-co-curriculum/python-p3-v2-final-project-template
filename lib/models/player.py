@@ -71,7 +71,11 @@ class Player:
             '''
         row = CURSOR.execute(sql,(id,)).fetchone()
         return cls.from_db(row) if row else None
-        
+    @classmethod
+    def create(cls,name):
+        player = cls(name)
+        player.save()
+        return player
     
     
 

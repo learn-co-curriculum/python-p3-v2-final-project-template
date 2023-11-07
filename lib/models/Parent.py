@@ -3,12 +3,14 @@ from models.__init__ import CURSOR,CONN
 
 
 class Parent:
+    name_list = []
     all_parents=[]
     all={}
     def __init__(self,name,bio):
         self.name=name
         self._bio=bio
         Parent.all_parents.append(self)
+        Parent.name_list.append(self.name)
 
     def __repr__(self):
         return f"<{self.name},{self.bio}>"
@@ -114,6 +116,7 @@ class Parent:
     
 
 class Child:
+    name_list = []
     spawn=[]
     all={}
 
@@ -122,7 +125,8 @@ class Child:
         self._bio=bio
         self.father=father
         self.mother=mother
-        Child.spawn.append(self)
+        Child.spawn.append(self.name)
+        Child.name_list.append(self.name)
 
     def __repr__(self):
         return f"<Name:{self.name}, Bio:{self.bio},Father:{self.father.name},Mother:{self.mother.name}>"

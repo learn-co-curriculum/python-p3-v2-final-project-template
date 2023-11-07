@@ -1,10 +1,8 @@
 # lib/helpers.py
 
 from models.players import Player
+from models.characters import Character
 
-"""VARIABLES"""
-player_name = "Toaster"
-char_name = "Gary the Goblin"
 
 """Main Menu Helpers"""
 
@@ -38,17 +36,18 @@ def exit_program():
 
 """Profile Menu Helpers"""
 
-def create_new_character():
-    print("Creating new character...")
+
 
 def view_all_characters():
+    print('-----------------------')
     print("Viewing all characters...")
+    for index, character in enumerate(Character.all()):
+        print(f'{index + 1}. {character}')
+    print('-----------------------')
 
 def view_active_characters():
     print("Viewing Active Characters...")
 
-def delete_player():
-    print(f"Deleting {player_name}'s profile")
 
 def delete_character():
     print(f"Deleting {char_name}")

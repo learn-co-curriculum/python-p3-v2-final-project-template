@@ -1,5 +1,6 @@
 # lib/cli.py
 from models.players import Player
+from models.characters import Character
 
 """ MAIN MENU CLI """
 from helpers import (
@@ -43,10 +44,8 @@ def main_menu():
 
 """ PLAYER PROFILE CLI """
 from helpers import (
-    player_name,
     view_all_characters,
     view_active_characters,
-    delete_player,
     delete_character,
     rsvp
 )
@@ -80,6 +79,8 @@ def display_profile_menu():
         while True:
             profile_menu()
             choice = input('** ')
+            if choice == '!home':
+                break
             if choice == '0':
                 break
             elif choice == '1':
@@ -93,7 +94,13 @@ def display_profile_menu():
             elif choice == '5':
                 delete_character()
             elif choice == '6':
-                delete_player()    
+                confirm = input('Enter Y to confirm profile deletion: ')
+                if confirm == 'Y':
+                    current_player.delete()
+                    print('PROFILE DELETED!')
+                    break
+                else:
+                    print('Delete aborted...')
             else:
                 print("Invalid choice. Please try again.")
 

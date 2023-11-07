@@ -25,7 +25,7 @@ def menu():
     print("Please select an option:")
     print("0. Exit the program")
     print("1. Some useful function")
-    print("2. List Teams")
+    print("2. List all the teams")
 
 
 if __name__ == "__main__":

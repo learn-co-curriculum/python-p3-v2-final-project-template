@@ -9,21 +9,35 @@ p3=Parent('Hades - God of The Underworld', ' Hades Bio')
 p4=Parent('Hera - Goddess of Marriage', "Hera Bio")
 p5=Parent('Heistia - Goddess of The House', 'Heistia Bio')
 p6=Parent('Demeter - Goddess of The Harvest', 'Demeter Bio')
+
 c1=Child('Athena - God of Wisdom','Athena bio',p1)
 
 options = [" [q] Quit", "[a] List of All Gods"]
+godOptions = ["[q] Quit","[a] Bio", "[b] Children"]
+subMenuOptions =[ "[q] Quit",f"[a] {p1.name}",f"[b] {p2.name}",f"[c] {p3.name}",f"[d] {p4.name}",f"[e] {p5.name}",f"[f] {p6.name}",f"[g] {c1.name}"]
 
 mainMenu = TerminalMenu(options)
-subMenu = TerminalMenu( ["[q] Quit", f'{Parent.name_list}', f'{Child.name_list}'], title = "Sub-Menu")
+subMenu = TerminalMenu( subMenuOptions, title = "Sub-Menu")
+GodSubMenu= TerminalMenu(godOptions, title = 'God SubMenu')
 
 quitting = False
+
 while quitting ==  False:
     optionsIndex = mainMenu.show()
     optionsChoice = options[optionsIndex]
+  
     if optionsChoice == "[q] Quit":
         exit_program()
+
     if optionsChoice == "[a] List of All Gods":
-        subMenu.show()
+        subMenuIndex= subMenu.show()
+        subMenuChoice = subMenuOptions[subMenuIndex]
+
+        if subMenuChoice == "[a] Zeus - God of Thunder":
+            GodSubMenu.show()
+            godOptionIndex = GodSubMenu.show()
+            godOptionChoice = godOptions[godOptionIndex]
+    
     else:
         print(optionsChoice)
 

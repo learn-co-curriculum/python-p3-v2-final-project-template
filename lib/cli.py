@@ -29,6 +29,17 @@ def show_all_addresses():
     print("==============")
     return addresses
 
+def find_by_id():
+    try:
+        id = int(input("Enter the contact ID: "))
+        contact = Contact.get_id(id)
+        if contact:
+            print(f"Contact found: \n{contact}")
+        else:
+            print("Contact not found.")
+    except ValueError:
+        print("Invalid input. Please enter a valid contact ID.")
+
 def exit_program():
     print("Goodbye!")
     exit()
@@ -77,5 +88,6 @@ def menu():
     print("6. show a contact details")
 
 
-if __name__ == "__main__":
+
+if __name__ == "__main__": 
     main()

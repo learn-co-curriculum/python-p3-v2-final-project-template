@@ -12,8 +12,11 @@ def exit_program():
 
 def list_brands():
     brands = Brand.get_all()
+    if len(brands) < 1:
+        print("\n No brands in database.")
+    print("ID", "\t", '{0: <15}'.format("BRAND NAME"), "\t", "COUNTRY OF ORIGIN")
     for brand in brands:
-        print(brand)
+        print(brand.id, "\t", '{0: <15}'.format(brand.name), "\t", brand.coo)
 
 def delete_brand():
     brand_id = input("Enter the # of the brand to delete: ")
@@ -45,7 +48,8 @@ def find_brand_by_name():
             break
 
     if brand:
-        print(brand)
+        print("ID", "\t", '{0: <15}'.format("BRAND NAME"), "\t", "COUNTRY OF ORIGIN")
+        print(brand.id, "\t", '{0: <15}'.format(brand.name), "\t", brand.coo)
     else:
         print(f'Brand {name} not found')
 

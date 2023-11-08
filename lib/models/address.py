@@ -46,8 +46,8 @@ class Address:
     #     return ret
     
     @classmethod
-    def get_id (cls, person_id):
-        sql = 'SELECT * FROM addresses where person_id= ?'
+    def get_email (cls, person_id):
+        sql = 'SELECT email FROM addresses where person_id= ?'
         CURSOR.execute(sql, (person_id,))
         results= CURSOR.fetchall()
         if results:

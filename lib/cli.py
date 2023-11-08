@@ -5,13 +5,28 @@ from models.address import Address
 
 def create_a_person():
     name = input("type name to create:")
-    Contact.create(name)
+    try:
+        Contact.create(name)
+    except ValueError:
+        print("Please type a valid name in order to create a person")
 
 def create_an_address():
     show_all_contacts()
     email = input(f"type email address: ")
-    id = input(f"type id: ")
-    Address.create(email, int(id))
+    id = input(f"Type id number: ")
+
+    try:
+        id = int(id)
+        if not isinstance(email,str):
+            raise ValueError("Email must be a string.")
+        
+        Address.create(email,id)
+        print("Address created successfully")
+    except ValueError as e:
+        print(f"Error: {e}")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
 
 def show_all_contacts():
     contacts = Contact.all()
@@ -43,7 +58,7 @@ def find_by_id():
 def address_by_id():
     try:
         id= int(input("Enter the ID for the contact whose email you are looking for: "))
-        emails = Address.get_id(id)
+        emails = Address.get_email(id)
         if emails:
             print(f"Contact found: {emails}")
             for email in emails:
@@ -64,18 +79,6 @@ def find_by_name():
     except ValueError:
         print("Invalid input. Please enter a valid contact name.")
 
-# def find_email_by_id():
-#     try:
-#         id = int(input("Enter the contact id: "))
-#         addresses = Contact.addresses(id)
-#         if addresses:
-#             print("Adresses:")
-#             for address in addresses:
-#                 print(address)
-#         else:
-#             print("Contact not found.")
-#     except ValueError:
-#         print("Invalid input. Please enter a valid contact name.")
 
 def exit_program():
     print("Goodbye!")
@@ -84,12 +87,12 @@ def exit_program():
 def delete_contact():
     show_all_contacts()
     id = input("type the id to delete: ")
-    Contact.delete(int(id))
+    try:
+        Contact.delete(int(id))
+    except ValueError:
+        print("Invalid input for id. Please enter a valid integer.")
 
-def show_contact_detail():
-    show_all_contacts()
-    id = input("type the id to see the detail: ")
-    Contact.show_detail(int(id))
+
 
 def main():
     while True:
@@ -109,12 +112,10 @@ def main():
         elif c == 5:
             delete_contact()
         elif c == 6:
-            show_contact_detail()
-        elif c == 7:
             find_by_id()
-        elif c == 8:
+        elif c == 7:
             find_by_name()
-        elif c == 9:
+        elif c == 8:
             address_by_id()
         else:
             print("Invalid choice")
@@ -128,10 +129,9 @@ def menu():
     print("3. show all contact")
     print("4. show all address")
     print("5. delete a contact")
-    print("6. show a contact details")
-    print("7. find a contact by id")
-    print("8. find a contact by name")
-    print("9. find email by contact id")
+    print("6. find a contact by id")
+    print("7. find a contact by name")
+    print("8. find email by contact id")
 
 
 

@@ -86,13 +86,6 @@ class Contact:
             
     #     return ret
     
-    def show_detail(id:int):
-        pass
-        # sql = "SELECT name from contacts where id=?"
-        # rows = CURSOR.execute(sql, (id,))
-        # for (name) in rows:
-        #     sql = "select "
-        # selected = 
         
     def update(name:str, id:int):
         sql = "UPDATE contacts SET name=? WHERE id=?"

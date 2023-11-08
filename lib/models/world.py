@@ -7,6 +7,7 @@ class World:
     @property
     def location(self):
         return self._location
+    
     @location.setter
     def location(self,new_location):
         if not hasattr(self, '_location'):
@@ -22,6 +23,7 @@ class World:
             )
         '''
         CURSOR.execute(sql)
+
     def save(self):
         if self.id:
             sql: f'UPDATE worlds SET location = ? WHERE id = ?'
@@ -49,11 +51,13 @@ class World:
         sql = 'SELECT * FROM worlds'
         list_of_tuples = CURSOR.execute( sql ).fetchall()
         return [World.from_db(row) for row in list_of_tuples]
+
     @classmethod
     def from_db(cls,row_tuple):
         world_instance = World( row_tuple[1])
         world_instance.id = row_tuple[0]
         return world_instance
+
     def __repr__(self):
         return f'\n<World id: {self.id} name: {self.location}>\n.'
 
@@ -64,6 +68,7 @@ class World:
         '''
         row = CURSOR.execute(sql, (id,)).fetchone()
         return cls.from_db(row) if row else None
+
     @classmethod
     def create(cls,location):
         world = cls(location)

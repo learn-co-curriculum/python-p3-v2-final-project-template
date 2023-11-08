@@ -77,6 +77,7 @@ class Parent:
         CURSOR.execute(sql,(self.name,self.bio))
         CONN.commit()
         self.id=CURSOR.lastrowid
+        type(self).all[self.id]=self
     
     @classmethod
     def instance_from_db(cls,row):
@@ -88,7 +89,7 @@ class Parent:
             parents = cls(row[1],row[2])
             parents.id=row[0]
             cls.all[parents.id]=parents
-        return parents
+        return parents.name
 
     @classmethod
     def get_all_parents(cls):
@@ -98,6 +99,15 @@ class Parent:
         """
         rows=CURSOR.execute(sql).fetchall()
         return [cls.instance_from_db(row)for row in rows]
+
+    def get_children(self):
+        sql="""
+           select *
+           from children
+           where father = ?
+        """
+        rows=CURSOR.execute(sql,(self.name,))
+        return [Child.instance_from_db(row)for row in rows]
 
     def delete(self):
         sql="""
@@ -213,7 +223,7 @@ class Child:
             child = cls(row[1],row[2],row[3])
             child.id=row[0]
             cls.all[child.id]=child
-        return child
+        return child.name
 
     @classmethod
     def get_all_children(cls):

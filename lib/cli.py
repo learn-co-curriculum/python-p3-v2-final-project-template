@@ -30,6 +30,17 @@ def show_all_addresses():
         print(c)
     print("==============")
 
+def find_by_id():
+    try:
+        id = int(input("Enter the contact ID: "))
+        contact = Contact.get_id(id)
+        if contact:
+            print(f"Contact found: \n{contact}")
+        else:
+            print("Contact not found.")
+    except ValueError:
+        print("Invalid input. Please enter a valid contact ID.")
+
 def exit_program():
     print("Goodbye!")
     exit()
@@ -50,6 +61,8 @@ def main():
             show_all_contacts()
         elif c == 4:
             show_all_addresses()
+        elif c == 5:
+            find_by_id()
         else:
             print("Invalid choice")
 
@@ -61,7 +74,8 @@ def menu():
     print("2. create an email address")
     print("3. show all contact")
     print("4. show all address")
+    print("5. get contact by id")
 
 
-if __name__ == "__main__":
+if __name__ == "__main__": 
     main()

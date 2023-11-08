@@ -12,6 +12,17 @@ class Contact:
     
     def __repr__(self):
         return f"Contact(id={self._id}, name={self.name})"
+
+    # @classmethod
+    # def get_id (cls, id):
+    #     sql = 'SELECT * FROM contacts WHERE id = ?'
+    #     CURSOR.execute(sql, (id,))
+    #     result = CURSOR.fetchone()
+    #     if result:
+    #         return Contact.from_db(result)
+    #     else:
+    #         return None
+
     
     # @classmethod 
     # def all(cls):
@@ -21,7 +32,7 @@ class Contact:
     
     # @classmethod
     # def from_db( cls, row_tuple ):
-    #     contact_instance = Contact( row_tuple[1], row_tuple[2])
+    #     contact_instance = Contact( row_tuple[1])
     #     contact_instance.id = row_tuple[0]
     #     return contact_instance
     

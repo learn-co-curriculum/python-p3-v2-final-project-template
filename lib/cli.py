@@ -3,6 +3,8 @@ from models.world import World
 from models.player import Player
 from helpers import exit_program
 
+selected_world = None
+selected_player = None
 def main():
     while True:
         menu()
@@ -13,6 +15,8 @@ def main():
             player_options()
         elif choice == "3":
             exit_program()
+        elif choice == "4":
+            login_menu()
         else:
             print("Please Make A Valid Choice")
 
@@ -27,6 +31,7 @@ def menu():
 def world_options():
     while True:
         world_menu()
+        print(selected_world)
         choice = input(">")
         if choice == "1":
             create_world_menu()
@@ -46,6 +51,10 @@ def world_options():
             break
         else:
             print("Please Make A Valid Choice")
+        
+def login_menu():
+    print(f"World Selected:{selected_world}")
+    print(f"Player Selected:{selected_player}")
 
 def world_menu():
     print("________________________")
@@ -68,6 +77,7 @@ def player_options():
                 print("There Are No Players\n Please Create One")
             else:
                 print(Player.all())
+                select_player()
         elif choice == "3":
             id = input("Select Player Id to Delete:")
             player = Player.find_by_id(id)
@@ -132,8 +142,23 @@ def select_world():
         elif selection == "":
             print("Please Select a world ID or backout with 0: >")
         elif int(selection) <= len(World.all()):
-            print(f'Selected\n{World.find_by_id(selection)}')
+            global selected_world
+            selected_world = World.find_by_id(selection)
+            print(f'Selected\n{selected_world}')
         else:
             print("Please Select a valid world ID")
+def select_player():
+    while True:
+        selection = input("Select a player id or backout with 0: >")
+        if selection == "0":
+            break
+        elif selection == "":
+            print("Please Select a Player with ID or backout with 0")
+        elif int(selection) <= len(Player.all()):
+            global selected_player
+            selected_player = Player.find_by_id(selection)
+            print(f'Selected\n{selected_player}')
+        else:
+            print("Please Select a valid Player ID")
 if __name__ == "__main__":
     main()

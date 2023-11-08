@@ -1,14 +1,11 @@
-from typing import List
-from typing import Optional
+
 from models.address import Address
 from models.__init__ import CURSOR, CONN
 
 class Contact:
-    latest = None
     def __init__(self, name:str):
         self._id = -1
         self.name = name
-        Contact.latest = self
     
     def __repr__(self):
         return f"Contact(id={self._id}, name={self.name})"
@@ -38,11 +35,10 @@ class Contact:
         """
         CURSOR.execute(sql)
         
-    def create(self):
+    def create(name: str):
         sql = "INSERT INTO contacts (name) VALUES (?)"
-        c = CURSOR.execute(sql, (self.name,))
+        c = CURSOR.execute(sql, (name,))
         CONN.commit()
-        self._id = c.lastrowid
         return c.lastrowid
 
     # def save(self, CURSOR):
@@ -62,24 +58,28 @@ class Contact:
             
         return ret
     
-    def update(self):
+    def show_detail(id:int):
+        pass
+        # sql = "SELECT name from contacts where id=?"
+        # rows = CURSOR.execute(sql, (id,))
+        # for (name) in rows:
+        #     sql = "select "
+        # selected = 
+        
+    def update(name:str, id:int):
         sql = "UPDATE contacts SET name=? WHERE id=?"
-        if self._id < 0:
+        if id < 0:
             print("cannot update with unsaved data. call create first")
             return
         
-        c = CURSOR.execute(sql, (self.name,self._id))
+        c = CURSOR.execute(sql, (name, id))
         CONN.commit()
     
-    def delete(self, id=-1):
-        if id < 0:
-            id = self._id
-        sql = "DELETE from contacts WHERE id=?"
-        if id < 0:
-            print("cannot update with unsaved data. call create first")
-            return
-        
-        c = CURSOR.execute(sql, (self._id,))
+    def delete(id:int):
+        sql = "DELETE FROM addresses WHERE person_id=?"
+        CURSOR.execute(sql, (id,))
+        sql = "DELETE FROM contacts WHERE id=?"
+        CURSOR.execute(sql, (id,))
         CONN.commit()
         
 if __name__ == "__main__":

@@ -28,12 +28,18 @@ def create_new_player():
                 break
             else:
                 print('Password must be at least 5 characters')
-        age = input('Tell us your age: ')
-        if int(age) >= 18:
-            player_info['age'] = int(age)
-        else:
-            print('You must be 18 or over to play. Goodbye!')
-            break
+        while True:
+            age = input('Tell us your age: ')
+            try:
+                age = int(age)
+                if age >= 18:
+                    player_info['age'] = age
+                    break
+                else:
+                    print('You must be 18 or over to play. Goodbye!')
+                    break
+            except ValueError:
+                print("age must be a valid number.")
         while True: 
             next_game = input('Will you be playing in the next game? (Y/N): ')
             if next_game == 'Y':

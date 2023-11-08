@@ -45,53 +45,70 @@ def create_new_char_menu():
         for ability, score in character_info["abilities"].items():
             print(f'    • {ability}: {score}')
         print('-----------------------')
-        print("Confirm your new character (Y/N)?")
-        choice = input("> ")
-        if choice == "Y":
-            print("✔ ✔ SUCCESS ✔ ✔")
-            print("Your new character has been saved!")
-            print("Returning to your profile...")
-            break
-        elif choice == "N":
-            print("✖ ✖ CANCELLED ✖ ✖")
-            print("Restarting Character Form...")
-        else:
-            print("Type Y or N to confirm or restart your new character")
-        current_state = 'name'
+        while True:
+            print("Confirm your new character (Y/N)?")
+            choice = input("> ")
+            if choice == "Y":
+                print("✔ ✔ SUCCESS ✔ ✔")
+                print("Your new character has been saved!")
+                print("Returning to your profile...")
+                return
+            elif choice == "N":
+                print("✖ ✖ CANCELLED ✖ ✖")
+                print("Restarting Character Form...")
+                current_state = 'name'
+                break
+            else:
+                print("Type Y or N to confirm or restart your new character")
+        
 
 
 def get_name():
-    name = input("❯❯ ")
-    if 3 <= len(name) <= 20:
-        character_info["name"] = name
-        print(f'★ Character\'s name: {character_info["name"]} ★')
-    else:
-
-        print('The name must be 3-20 characters long.')
+    while True:
+        name = input("❯❯ ")
+        if 3 <= len(name) <= 20:
+            character_info["name"] = name
+            print(f'★ Character\'s name: {character_info["name"]} ★')
+            break
+        else:
+            print('The name must be 3-20 characters long.')
 
 def get_class():
-    classes = ["Barbarian", "Bard", "Cleric", "Druid", "Fighter", "Monk", "Paladin", "Ranger", "Rogue", "Sorcerer", "Warlock", "Wizard"]
-    
-    for i, class_name in enumerate(classes, 1):
-        print(f"{i}. {class_name}")
-    choice = int(input('❯❯ '))
-    if 1 <= choice <= len(classes):
-        character_info["class"] = classes[choice - 1]
-        print(f'★ You chose: {character_info["class"]} ★')
-    else:
-        print("Invalid choice. Please try again.")
+    while True:
+        classes = ["Barbarian", "Bard", "Cleric", "Druid", "Fighter", "Monk", "Paladin", "Ranger", "Rogue", "Sorcerer", "Warlock", "Wizard"]
+        for i, class_name in enumerate(classes, 1):
+            print(f"{i}. {class_name}")
+        
+        choice = input('❯❯ ')
+        try:
+            choice = int(choice)
+            if 1 <= choice <= len(classes):
+                character_info["class"] = classes[choice - 1]
+                print(f'★ You chose: {character_info["class"]} ★')
+                break
+            else:
+                print("Invalid choice. Please try again.")
+        except ValueError:
+            print("Please select by number.")
 
 
 def get_race():
-    races = ["Dragonborn", "Dwarf", "Elf", "Gnome", "Goblin", "Halfling", "Human", "Orc", "Tiefling"]
-    for i, race in enumerate(races, 1):
-        print(f"{i}. {race}")
-    choice = int(input('❯❯ '))
-    if 1 <= choice <= len(races):
-        character_info["race"] = races[choice - 1]
-        print(f'★ You chose: {character_info["race"]} ★')
-    else:
-        print("Invalid choice. Please try again.")
+    while True:
+        races = ["Dragonborn", "Dwarf", "Elf", "Gnome", "Goblin", "Halfling", "Human", "Orc", "Tiefling"]
+        for i, race in enumerate(races, 1):
+            print(f"{i}. {race}")
+
+        choice = input('❯❯ ')
+        try:
+            choice = int(choice)
+            if 1 <= choice <= len(races):
+                character_info["race"] = races[choice - 1]
+                print(f'★ You chose: {character_info["race"]} ★')
+                break
+            else:
+                print("Invalid choice. Please try again.")
+        except ValueError:
+            print("Please select by number.")
 
 """ creates an even grid of alignments using left-justify at a width of the max char length of alignment strs. prompts users to select alignment using rows and columns as indices, row being the different lists of alignments and columns being the alignments in each list
 """
@@ -105,15 +122,32 @@ def get_alignment():
     for row in alignments:
         alignment_row = "| " + " | ".join(alignment.ljust(max_length) for alignment in row) + " |"
         print(alignment_row)
-    
-    row_choice = int(input('❯❯ Enter the row number: ')) - 1
-    col_choice = int(input('❯❯ Enter the column number: ')) - 1
-    if 0 <= row_choice < 3 and 0 <= col_choice < 3:
-        alignment = alignments[row_choice][col_choice]
-        character_info['alignment'] = alignment
-        print(f'★ You chose: {character_info["alignment"]} ★')
-    else:
-        print("Invalid choice. Please try again.")
+    while True:
+        # row_choice = int(input('❯❯ Enter the row number: ')) - 1
+        row_choice = input('❯❯ Enter the row number: ')
+        try:
+            row_choice = int(row_choice) - 1
+            if 0 <= row_choice < 3:
+                while True:
+                    # col_choice = int(input('❯❯ Enter the column number: ')) - 1
+                    col_choice = input('❯❯ Enter the column number: ')
+                    try:
+                        col_choice = int(col_choice) - 1
+                        if 0 <= col_choice < 3:
+                            alignment = alignments[row_choice][col_choice]
+                            character_info['alignment'] = alignment
+                            print(f'★ You chose: {character_info["alignment"]} ★')
+                            break
+                        else:
+                            print("Invalid choice. Please try again.")
+                    except ValueError:
+                        print("Must be a valid number.")
+                break
+            else:
+                    print("Invalid choice. Please try again.")
+        except ValueError:
+            print("Must be a valid number.")
+
 
 """returns a list of 3 random numbers between 1-6. adds the 3 numbers and assigns it to a variable 'ability score'
 """

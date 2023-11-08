@@ -43,9 +43,11 @@ def find_by_id():
 def address_by_id():
     try:
         id= int(input("Enter the ID for the contact whose email you are looking for: "))
-        email = Address.get_id(id)
-        if email:
-            print(f"Contact found: {email}")
+        emails = Address.get_id(id)
+        if emails:
+            print(f"Contact found: {emails}")
+            for email in emails:
+                print(email)
         else: 
             print("Contact not found.")
     except ValueError:

@@ -49,9 +49,11 @@ class Address:
     def get_id (cls, person_id):
         sql = 'SELECT * FROM addresses where person_id= ?'
         CURSOR.execute(sql, (person_id,))
-        result= CURSOR.fetchone()
-        if result:
-            return Address.from_db(result)
+        results= CURSOR.fetchall()
+        if results:
+            emails = [result[0] for result in results]
+            return emails
+            # return Address.from_db(result)
         else:
             return None
 

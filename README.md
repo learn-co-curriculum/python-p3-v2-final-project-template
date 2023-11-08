@@ -266,9 +266,9 @@ This function is designed to delete a contact and all associated addresses based
 
 ## Contact.py
 ```py
-def __init__(self, name:str):
-        self._id = -1
+def __init__ (self, name, id=None):
         self.name = name
+        self.id = id
 ```
 The __init__ method is defined with self as the first parameter (which refers to the instance of the class being created) and name as the second parameter. Inside the __init__ method, two attributes are initialized:
 _id is set to -1.
@@ -276,17 +276,12 @@ name is set to the value of the name parameter passed to the constructor.
 
 An ID of -1 can serve as a temporary placeholder before the object is inserted into the database and receives a valid, database-generated ID.
 ```py   
-def __repr__(self):
-        return f"Contact(id={self._id}, name={self.name})"
+def __repr__( self ):
+        return f'id: {self.id} name: {self.name}'
 ```
  In your provided code, the __repr__ method returns a string that represents a "Contact" object, including its _id and name attributes.
-```py
- @property
-    def id(self):
-        return self._id
-```
-The @property decorator is applied to the id method, making it a read-only property.
-When you access contact_instance.id, it calls the id method, which returns the value of the _id attribute. This allows you to access the ID attribute as if it were a regular instance variable while encapsulating it with a method.
+
+
 ```py
 def __create_table__():
         sql = """create table contacts (
@@ -353,7 +348,7 @@ def update(name:str, id:int):
         c = CURSOR.execute(sql, (name, id))
         CONN.commit()
 ```
-he update function you've provided is intended to update the "name" of a contact with a specified id in the "contacts" table of a database.
+The update function you've provided is intended to update the "name" of a contact with a specified id in the "contacts" table of a database.
 
 The SQL statement "UPDATE contacts SET name=? WHERE id=?" is used to create an SQL command to update the "name" of a contact in the "contacts" table where the id matches the provided id. The ? placeholders are used for parameterized queries, and you pass the name and id as a tuple (name, id) to the CURSOR.execute method.
 

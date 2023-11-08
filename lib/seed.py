@@ -85,8 +85,5 @@ def seed_database():
     Studebaker = Brand.create("Studebaker", "United States")
     AMC = Brand.create("AMC", "United States")
 
-    Ehad = Driver.create("Ehad", 22)
-    Johnson = Driver.create("Johnson", 22)
-
 seed_database()
 print("Seeded database")

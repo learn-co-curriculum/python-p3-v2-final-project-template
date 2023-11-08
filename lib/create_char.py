@@ -1,11 +1,13 @@
 import random
+from models.characters import Character
 
 character_info = {
     'name': '',
     'class': '',
     'race': '',
     'alignment': '',
-    'abilities': ''
+    'abilities': '',
+    'next-game': ''
 }
 
 states = ['name', 'class', 'race', 'alignment', 'abilities']
@@ -45,10 +47,32 @@ def create_new_char_menu():
         for ability, score in character_info["abilities"].items():
             print(f'    • {ability}: {score}')
         print('-----------------------')
+        while True: 
+            next_game = input('Will you be playing this character in the next game? (Y/N): ')
+            if next_game == 'Y':
+                character_info['next_game'] = 1
+                break
+            elif next_game == 'N': 
+                character_info['next_game'] = 0
+                break
+            else:
+                print("Your answer must be Y or N")
         while True:
             print("Confirm your new character (Y/N)?")
             choice = input("> ")
             if choice == "Y":
+                Character.create_char(
+                    character_info["name"],
+                    character_info["class"],
+                    character_info["race"],
+                    character_info["abilities"]["Strength"],
+                    character_info["abilities"]["Dexterity"],
+                    character_info["abilities"]["Constitution"],
+                    character_info["abilities"]["Intelligence"],
+                    character_info["abilities"]["Wisdom"],
+                    character_info["abilities"]["Charisma"],
+                    character_info["alignment"]
+                )
                 print("✔ ✔ SUCCESS ✔ ✔")
                 print("Your new character has been saved!")
                 print("Returning to your profile...")

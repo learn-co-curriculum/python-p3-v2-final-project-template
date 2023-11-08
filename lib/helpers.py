@@ -82,8 +82,9 @@ def list_brands_by_country():
     brands = [brand for brand in Brand.get_all() if brand.coo.lower() == country]
     if brands:
         print(f"Car brands from {country}:")
+        print("ID", "\t", '{0: <15}'.format("BRAND NAME"))
         for brand in brands:
-            print(brand)
+            print(brand.id, "\t", '{0: <15}'.format(brand.name))
     else:
         print(f"No car brands found from {country}.")
 

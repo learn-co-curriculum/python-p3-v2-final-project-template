@@ -35,10 +35,17 @@ def exit_program():
 
 """Profile Menu Helpers"""
 
+def change_level():
+    print('Changing a characters level...')
 
+def edit_active():
+    print('Editing active players...')
 
 def view_all_characters(current_player):
-    my_chars = Character.my_chars(current_player)
+    if current_player == 'dm':
+        my_chars = Character.all()
+    else:
+        my_chars = Character.my_chars(current_player)
     for index, character in enumerate(my_chars):
         print(f'{index + 1}. {character.name} the {character.char_class} {character.race} | Level: {character.level} |')
     print('-----------------------')

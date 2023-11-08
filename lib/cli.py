@@ -1,6 +1,5 @@
 # lib/cli.py
 from models.players import Player
-from models.characters import Character
 
 """ MAIN MENU CLI """
 from helpers import (
@@ -17,7 +16,12 @@ def display_main_menu():
     while True:
         main_menu()
         choice = input("❯❯ ")
-        if choice == "0":
+        if choice == "dm":
+            print("It's a secret to everybody")
+            password = input("❯❯ ")
+            if password == "secret":
+                run_dm_mode()
+        elif choice == "0":
             exit_program()
         elif choice == "1":
             create_new_player()
@@ -48,7 +52,9 @@ from helpers import (
     get_active_char,
     delete_character,
     rsvp,
-    delete_player
+    delete_player,
+    change_level,
+    edit_active
 )
 from create_char import (
     create_new_char_menu
@@ -70,10 +76,12 @@ def display_profile_menu():
         print('-----------------------')
 
     name = input('Name: ')
-    if name in [player.name for player in Player.all()]:
+    name_list = [player.name.lower().strip() for player in Player.all()]
+    if name.lower().strip() in name_list:
+        index = name_list.index(name.lower().strip())
         password = input('Password: ')
-        if password == Player.find_by_name(name)[0].password:
-            current_player = Player.find_by_name(name)[0]
+        if password == [player for player in Player.all()][index].password:
+            current_player = [player for player in Player.all()][index]
         else:
             print("Incorrect Password!")
     else:
@@ -108,24 +116,37 @@ def display_profile_menu():
             else:
                 print("Invalid choice. Please try again.")
 
+def run_dm_mode():
+    def dm_menu():
+        print("★ Secret Dungeon Master Mode ★") 
+        print('-----------------------')
+        print("0. Back to Main Menu")
+        print("1. See all characters")
+        print("2. Change a characters level")
+        print("3. Edit active players")
+        print('-----------------------')
+
+    while True:
+        dm_menu()
+        choice = input('❯❯ ')
+        if choice == '0':
+            break
+        elif choice == '1':
+            view_all_characters('dm')
+        elif choice == '2':
+            change_level()
+        elif choice == '3':
+            edit_active()
+        else:
+            print('Invalid choice. Please try again.')
+
+
+
+    
+
+
+
 
 if __name__ == "__main__":
     display_main_menu()
 
-
-# import helpers
-# 
-# profile_choice = input("> ")
-# 
-# if profile_choice == '0':
-#   break
-# elif profile_choice in ['1', '2', '3']:
-#   profile_actions ={
-#       '1': helpers.create_character,
-#       '2': helpers.view_characters
-# } 
-#   profile_actions[profile_choice]()
-# 
-# 
-# 
-# 

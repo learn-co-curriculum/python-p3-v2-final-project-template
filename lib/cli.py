@@ -2,7 +2,6 @@
 from models.brand import Brand
 from helpers import (
     exit_program,
-    helper_1,
     list_brands,
     create_brand,
     delete_brand,
@@ -12,7 +11,8 @@ from helpers import (
     list_drivers,
     delete_driver,
     find_driver_by_name,
-    list_drivers_by_brand
+    list_drivers_by_brand,
+    find_brand_by_driver_name
 )
 
 def main():
@@ -41,6 +41,8 @@ def main():
             find_driver_by_name()
         elif choice == "10":
             list_drivers_by_brand()
+        elif choice == "11":
+            find_brand_by_driver_name()
 def menu():
     print("Please select an option:")
     print("0. Exit the program")
@@ -54,9 +56,8 @@ def menu():
     print("8. DELETE an existing DRIVER")
     print("9. FIND an existing DRIVER by name")
     print("10.List all DRIVERS of a specific BRAND #")
+    print("11. Find BRAND by DRIVER name")
 
 
-
-    
 if __name__ == "__main__":
     main()

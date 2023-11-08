@@ -13,25 +13,35 @@ def main():
         if choice == "0":
             print("What Is Your World Called Traveler?")
             World.create(input("->"))
+
         elif choice == "1":
             print(World.all())
+
         elif choice == "2":
             print("Select World Id to Delete")
             id = input("->")
             world = World.find_by_id(id)
             world.shatter()
+
         elif choice == "3":
             print("What Is Your Name Traveler?")
             Player.create(input("->"))
+
         elif choice == "4":
             print(Player.all())
+
         elif choice == "5":
-            print("Select Player Id to Delete")
-            id = input("->")
+            id = input("Select Player Id to Delete:")
             player = Player.find_by_id(id)
             player.deletes()
+
         elif choice == "6":
             exit_program()
+
+        elif choice == '7':
+            name = input('Find your character by their name: ')
+            player = Player.find_by_name(name)
+            print(player)
         else:
             print("Invalid choice")
 
@@ -45,6 +55,7 @@ def menu():
     print("4. Display Player's")
     print("5. Remove Player")
     print("6. Exit the program")
+    print('7. Find Player by name')
 if __name__ == "__main__":
     main()
 

@@ -1,6 +1,6 @@
 from models.__init__ import CONN, CURSOR
 class Player:
-    def __init__(self, name, strength = 1, hp = 10, id=None ):
+    def __init__(self, name, world_instance, strength = 1, hp = 10, id=None ):
         self.name = name 
         self.strength = strength
         self.hp = hp
@@ -63,7 +63,7 @@ class Player:
         player_instance.id = row_tuple[0]
         return player_instance
     def __repr__(self):
-        return f'\n<Player id: {self.id} name: {self.name}>\n.'
+        return f'\n<Player id: {self.id} name: {self.name} strength: {self.strength} hp: {self.hp}>\n.'
     @classmethod
     def find_by_id(cls,id):
         sql = '''
@@ -71,6 +71,13 @@ class Player:
             '''
         row = CURSOR.execute(sql,(id,)).fetchone()
         return cls.from_db(row) if row else None
+    @classmethod
+    def find_by_name(cls, name):
+        sql = '''
+            SELECT * FROM players WHERE name = ? 
+        '''
+        row = CURSOR.execute(sql,(name,)).fetchone()
+        return cls.from_db(row) if row else None 
     @classmethod
     def create(cls,name):
         player = cls(name)

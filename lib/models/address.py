@@ -35,15 +35,38 @@ class Address:
         sql = "select (id, email, person_id) from addresses where person_id = ?"
         return CURSOR.execute(sql, (person_id,))
     
-    def read_all():
-        sql = "select id, email, person_id from addresses"
-        rows = CURSOR.execute(sql)
-        ret = []
-        for (id, email, person_id) in rows:
-            addr = Address(email, person_id)
-            addr._id = id
-            ret.append(addr)
-        return ret
+    # def read_all():
+    #     sql = "select id, email, person_id from addresses"
+    #     rows = CURSOR.execute(sql)
+    #     ret = []
+    #     for (id, email, person_id) in rows:
+    #         addr = Address(email, person_id)
+    #         addr._id = id
+    #         ret.append(addr)
+    #     return ret
+    
+    @classmethod
+    def get_id (cls, person_id):
+        sql = 'SELECT * FROM addresses where person_id= ?'
+        CURSOR.execute(sql, (person_id,))
+        result= CURSOR.fetchone()
+        if result:
+            return Address.from_db(result)
+        else:
+            return None
+
+
+    @classmethod
+    def all(cls):
+        sql = 'SELECT * FROM addresses'
+        list_of_tuples = CURSOR.execute(sql).fetchall()
+        return [Address.from_db ( row ) for row in list_of_tuples]
+    
+    @classmethod
+    def from_db(cls, row_tuple):
+        address_instance = Address(row_tuple[1], row_tuple[2])
+        address_instance.id = row_tuple[0]
+        return address_instance
     
     def update_email(new_email:str):
         pass

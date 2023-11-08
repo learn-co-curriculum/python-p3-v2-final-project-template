@@ -14,7 +14,7 @@ def create_an_address():
     Address.create(email, int(id))
 
 def show_all_contacts():
-    contacts = Contact.read_all()
+    contacts = Contact.all()
     print("===all contacts===")
     for c in contacts:
         print(c)
@@ -22,7 +22,7 @@ def show_all_contacts():
     return contacts
 
 def show_all_addresses():
-    addresses = Address.read_all()
+    addresses = Address.all()
     print("===all addresses===")
     for c in addresses:
         print(c)
@@ -39,6 +39,41 @@ def find_by_id():
             print("Contact not found.")
     except ValueError:
         print("Invalid input. Please enter a valid contact ID.")
+
+def address_by_id():
+    try:
+        id= int(input("Enter the ID for the contact whose email you are looking for: "))
+        email = Address.get_id(id)
+        if email:
+            print(f"Contact found: {email}")
+        else: 
+            print("Contact not found.")
+    except ValueError:
+        print("Invalid input. Please enter a valid contact ID.")
+
+def find_by_name():
+    try:
+        name = str(input("Enter the contact name: "))
+        contact = Contact.get_name(name)
+        if contact:
+            print(f"Contact found: \n{contact}")
+        else:
+            print("Contact not found.")
+    except ValueError:
+        print("Invalid input. Please enter a valid contact name.")
+
+# def find_email_by_id():
+#     try:
+#         id = int(input("Enter the contact id: "))
+#         addresses = Contact.addresses(id)
+#         if addresses:
+#             print("Adresses:")
+#             for address in addresses:
+#                 print(address)
+#         else:
+#             print("Contact not found.")
+#     except ValueError:
+#         print("Invalid input. Please enter a valid contact name.")
 
 def exit_program():
     print("Goodbye!")
@@ -73,6 +108,12 @@ def main():
             delete_contact()
         elif c == 6:
             show_contact_detail()
+        elif c == 7:
+            find_by_id()
+        elif c == 8:
+            find_by_name()
+        elif c == 9:
+            address_by_id()
         else:
             print("Invalid choice")
 
@@ -86,6 +127,10 @@ def menu():
     print("4. show all address")
     print("5. delete a contact")
     print("6. show a contact details")
+    print("7. find a contact by id")
+    print("8. find a contact by name")
+    print("9. find email by contact id")
+
 
 
 

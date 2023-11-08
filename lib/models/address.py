@@ -1,22 +1,13 @@
-from typing import List
-# from typing import Optional
 from models.__init__ import CURSOR, CONN
 
 class Address:
-    latest = None
     def __init__(self, email:str, person_id:int):
-        self._id = -1
         self.email = email
         self.person_id = person_id
-        Address.latest = self
 
     def __repr__(self):
-        return f"Address(id={self._id}, email={self.email}, person_id={self.person_id})"
-    
-    @property    
-    def id(self):
-        return self._id
-        
+        return f"Address(email={self.email}, person_id={self.person_id})"
+       
     def __create_table__():
         sql = """create table addresses (
             id INTEGER NOT NULL, 
@@ -34,12 +25,15 @@ class Address:
     #         CURSOR.execute(sql, (contact_id, self.email))
     #         self.id = CURSOR.lastrowid
         
-    def create(self):
+    def create(email:str, person_id:int):
         sql = "INSERT INTO addresses (email, person_id) VALUES (?, ?)"
-        c = CURSOR.execute(sql, (self.email, self.person_id))
+        c = CURSOR.execute(sql, (email, person_id))
         CONN.commit()
-        self._id = c.lastrowid
         return c.lastrowid
+    
+    def read_by_person_id(person_id:int):
+        sql = "select (id, email, person_id) from addresses where person_id = ?"
+        return CURSOR.execute(sql, (person_id,))
     
     def read_all():
         sql = "select id, email, person_id from addresses"
@@ -51,9 +45,9 @@ class Address:
             ret.append(addr)
         return ret
     
-    def update_email(self, new_email:str):
+    def update_email(new_email:str):
         pass
     
-    def update_person_id(self, person_id:int):
+    def update_person_id(person_id:int):
         pass
     

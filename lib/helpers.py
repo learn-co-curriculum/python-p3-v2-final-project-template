@@ -89,16 +89,31 @@ def list_brands_by_country():
         print(f"No car brands found from {country}.")
 
 def create_driver():
+   name = input("Enter the driver's name: ")
+   brand_num = input("Enter the driver's car #: ")
+   try:
+       brand_num = int(brand_num)
+       driver = Driver.create(name, brand_num)
+       print(f'Success: {driver}')
+   except ValueError as ve:
+       print("Error creating driver: The Driver's Brand # must the Brand # of an existing Brand in our database")
+   except Exception as exc:
+       print("Error creating driver: ", exc)
+
+def create_driver():
     name = input("Enter the driver's name: ")
     brand_num = input("Enter the driver's car #: ")
+    driver_password = input("Set a password for the driver: ")
+
     try:
         brand_num = int(brand_num)
         driver = Driver.create(name, brand_num)
-        print(f'Success: {driver}')
+        drivers[driver.id] = driver_password  # Store driver and associated password
+        print(f'Driver "{driver.name}" created with car #{driver.brand_num}.')
     except ValueError as ve:
-        print("Error creating driver: The Driver's Brand # must the Brand # of an existing Brand in our database")
+        print("Error creating driver: The Driver's Brand # must be the Brand # of an existing Brand in our database.")
     except Exception as exc:
-        print("Error creating driver: ", exc)
+        print("Error creating driver:", exc)
 
 def list_drivers():
     drivers = Driver.get_all()
@@ -106,26 +121,33 @@ def list_drivers():
         print("DRIVER NAME", "\t", "CAR NUMBER")
         print(driver.name, "\t", driver.brand_num)
 
+drivers = {}
 
 def delete_driver():
-    driver_id = input("Enter the # of the driver to delete: ")
-    
+    driver_id = input("Please Enter the Driver # You Wish To Delete: ")
+
     if driver_id.isdigit():
         driver_id = int(driver_id)
-        
-        driver = Driver.find_by_id(driver_id)
-        if driver:
-            confirmation = input(f"Are you sure you want to delete the brand '{driver.name}'? Type and enter 'y' for yes, and 'n' for no: ")
-            
-            if confirmation.lower() == "y":
-                driver.delete()
-                print(f"Driver '{driver.name}' has been deleted.")
+        entered_password = input(f"Enter the password for Driver #{driver_id}: ")
+
+        if drivers.get(driver_id) == entered_password: 
+            driver = Driver.find_by_id(driver_id)
+
+            if driver:
+                confirmation = input(f"Are you sure you want to delete the driver '{driver.name}'? Type and enter 'y' for yes, and 'n' for no: ")
+
+                if confirmation.lower() == "y":
+                    driver.delete()
+                    del drivers[driver_id]  
+                    print(f"Driver '{driver.name}' has been deleted.")
+                else:
+                    print("Deletion canceled.")
             else:
-                print("Deletion canceled.")
+                print(f"No driver found with the # {driver_id}.")
         else:
-            print(f"No car brand found with the # {driver_id}.")
+            print("Password Incorrect. Driver has Not Been Deleted")
     else:
-        print("Invalid input. Please enter an existing brand #.")
+        print("Invalid input. Please enter a valid driver #.")
 
 def list_drivers_by_brand():
     brand_num = input("Enter the brand number to list drivers: ")

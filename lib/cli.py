@@ -29,7 +29,7 @@ def main():
             list_sub()
         
         elif choice == "3":
-            pass
+            create_sub()
 
         elif choice == "4":
             delete_sub()
@@ -68,6 +68,37 @@ def list_sub():
         else:
             print('[invalid choice, try again.]')
 
+def create_sub():
+    while True:
+        create_sub_menu()
+        # need to incorporate input validation
+        new_name = input("> ")
+
+        if new_name == "back":
+            break
+        else:
+            new_bio = input("Enter the new god's bio: ")
+            if new_bio == "back":
+                break
+            else:
+                parent = input("Enter the new god's parent (enter 'none' if new god has no parent): ")
+                if parent == "back":
+                    break
+                else:
+                    if parent == "none":
+                        Parent.create(new_name, new_bio)
+                        print(f"God {new_name} created successfully.")
+                    else:
+                        if parent in Parent.parent_names:
+                            for a in Parent.all_parents:
+                                parent_name = ""
+                                if a.name == parent:
+                                    parent_name = a
+                                    Child.create(new_name, new_bio, parent_name)
+                                    print(f"God {new_name} created successfully.")
+                        else:
+                            print(f"Parent {parent} not found. Please enter a valid parent name.")
+
 def delete_sub():
     while True:
         delete_sub_menu()
@@ -86,6 +117,11 @@ def delete_sub():
             break
         else:
             print('invalid')
+
+def create_sub_menu():
+    print('[Options]')
+    print('type back to go back')
+    print('type a new God\'s name to create them')
 
 def delete_sub_menu():
     print('[Options]')

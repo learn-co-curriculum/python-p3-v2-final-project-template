@@ -1,11 +1,12 @@
 # lib/cli.py
 from models.Parent import Parent,Child
 
-Parent.drop_table()
-Parent.create_table()
-Child.drop_table()
-Child.create_table()
-
+def reset_database():
+    Parent.drop_table()
+    Parent.create_table()
+    Child.drop_table()
+    Child.create_table()
+reset_database()
 Poseidon=Parent.create('Poseidon','this is a bio')
 Demeter=Parent.create('Demeter','Demeter bio')
 Theseus=Child.create('Theseus','Theseus bio',Poseidon)
@@ -23,7 +24,7 @@ def main():
         if choice == "0":
             exit_program()
         elif choice == "1":
-            Parent.names()
+            print(f'{Parent.get_all_parents()+Child.get_all_children()}')
         
         elif choice == "2":
             list_sub()
@@ -49,7 +50,7 @@ def menu():
 def list_sub():
     while True:
         list_sub_menu()
-        Parent.names()
+        print(f'{Parent.get_all_parents()+Child.get_all_children()}')
         sub_choice = input("> ")
         if sub_choice in Parent.parent_names:
             for a in Parent.all_parents:
@@ -73,14 +74,18 @@ def delete_sub():
         delete_sub_menu()
         sub_choice=input("> ")
         if sub_choice in Parent.parent_names:
+            Parent.parent_names.remove(sub_choice)
             for a in Parent.all_parents:
                 if a.name == sub_choice:
                     a.delete()
+                    Parent.all_parents.remove(a)
                     print(f'{a.name} has been deleted')
         elif sub_choice in Child.name_list:
+            Child.name_list.remove(sub_choice)
             for a in Child.spawn:
                 if a.name == sub_choice:
                     a.delete()
+                    Child.spawn.remove(a)
                     print(f'{a.name} has been deleted')
         elif sub_choice == "back":
             break

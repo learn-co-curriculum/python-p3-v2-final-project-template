@@ -18,6 +18,15 @@ def list_brands():
     for brand in brands:
         print(brand.id, "\t", '{0: <15}'.format(brand.name), "\t", brand.coo)
 
+def create_brand():
+    name = input("Enter the brand's name: ") 
+    coo = input("Enter the brand's country of origin: ")
+    try:
+        brand = Brand.create(name, coo)
+        print(f'Success: {brand.name, brand.coo}')
+    except Exception as exc:
+        print("Error creating brand: ", exc)
+
 def delete_brand():
     brand_id = input("Enter the # of the brand to delete: ")
     
@@ -56,14 +65,14 @@ def find_brand_by_name():
 def find_driver_by_name():
     name = input("Enter the driver's name: ")
     name = name.lower()
-    brand = None
     for db_driver in Driver.get_all():
         if db_driver.name.lower() == name:
             driver = db_driver
             break
 
     if driver:
-        print(driver)
+        print("DRIVER NAME")
+        print(driver.name)
     else:
         print(f'Driver {name} not found')
 
@@ -73,21 +82,11 @@ def list_brands_by_country():
     brands = [brand for brand in Brand.get_all() if brand.coo.lower() == country]
     if brands:
         print(f"Car brands from {country}:")
+        print("ID", "\t", '{0: <15}'.format("BRAND NAME"))
         for brand in brands:
-            print(brand)
+            print(brand.id, "\t", '{0: <15}'.format(brand.name))
     else:
         print(f"No car brands found from {country}.")
-
-
-
-def create_brand():
-    name = input("Enter the brand's name: ") 
-    coo = input("Enter the brand's country of origin: ")
-    try:
-        brand = Brand.create(name, coo)
-        print(f'Success: {brand}')
-    except Exception as exc:
-        print("Error creating brand: ", exc)
 
 def create_driver():
    name = input("Enter the driver's name: ")
@@ -119,7 +118,8 @@ def create_driver():
 def list_drivers():
     drivers = Driver.get_all()
     for driver in drivers:
-        print(driver)
+        print("DRIVER NAME", "\t", "CAR NUMBER")
+        print(driver.name, "\t", driver.brand_num)
 
 drivers = {}
 
@@ -162,3 +162,17 @@ def list_drivers_by_brand():
             print(f"No drivers found with brand number {brand_num}.")
     else:
         print("Invalid input. Please enter a valid brand number.")
+
+def find_brand_by_driver_name():
+    name = input("Enter the driver's name: ")
+    name = name.lower()
+    for db_driver in Driver.get_all():
+        if db_driver.name.lower() == name:
+            driver = db_driver
+            break
+
+    if driver:
+        print("DRIVER CAR NUMBER")
+        print(driver.brand_num)
+    else:
+        print(f'Driver {name} not found')

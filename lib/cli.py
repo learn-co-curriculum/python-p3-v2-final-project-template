@@ -1,7 +1,6 @@
 from models.brand import Brand
 from helpers import (
     exit_program,
-    helper_1,
     list_brands,
     create_brand,
     delete_brand,
@@ -11,7 +10,8 @@ from helpers import (
     list_drivers,
     delete_driver,
     find_driver_by_name,
-    list_drivers_by_brand
+    list_drivers_by_brand,
+    find_brand_by_driver_name
 )
 
 def main():
@@ -46,6 +46,8 @@ def main():
             find_driver_by_name()
         elif choice == "10":
             list_drivers_by_brand()
+        elif choice == "11":
+            find_brand_by_driver_name()
         else:
             print("Invalid choice. Please select a valid option.")
 

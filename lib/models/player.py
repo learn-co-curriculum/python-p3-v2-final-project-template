@@ -1,6 +1,7 @@
 from models.__init__ import CONN, CURSOR
+from models.world import World
 class Player:
-    def __init__(self, name, world_instance, strength = 1, hp = 10, id=None ):
+    def __init__(self, name, strength = 1, hp = 10, id=None ):
         self.name = name 
         self.strength = strength
         self.hp = hp
@@ -15,7 +16,6 @@ class Player:
             if isinstance(new_name, str) and 1 <= len(new_name) <= 10:
                 self._name = new_name
 
-
     @classmethod 
     def create_table(cls):
         sql= '''
@@ -24,7 +24,6 @@ class Player:
                 name TEXT,
                 strength INTEGER,
                 HP INTEGER
-
             )
         '''
         CURSOR.execute(sql)
@@ -57,13 +56,16 @@ class Player:
         sql = 'SELECT * FROM players'
         list_of_tuples = CURSOR.execute( sql ).fetchall()
         return [Player.from_db(row) for row in list_of_tuples]
+    
     @classmethod
     def from_db(cls,row_tuple):
         player_instance = Player( row_tuple[1],row_tuple[2],row_tuple[3])
         player_instance.id = row_tuple[0]
         return player_instance
+
     def __repr__(self):
         return f'\n<Player id: {self.id} name: {self.name} strength: {self.strength} hp: {self.hp}>\n.'
+    
     @classmethod
     def find_by_id(cls,id):
         sql = '''
@@ -71,6 +73,7 @@ class Player:
             '''
         row = CURSOR.execute(sql,(id,)).fetchone()
         return cls.from_db(row) if row else None
+    
     @classmethod
     def find_by_name(cls, name):
         sql = '''
@@ -78,16 +81,43 @@ class Player:
         '''
         row = CURSOR.execute(sql,(name,)).fetchone()
         return cls.from_db(row) if row else None 
+    
     @classmethod
     def create(cls,name):
         player = cls(name)
         player.save()
         return player
+        
+    def login(self, world):
+        sql = 'INSERT INTO login (world_id, player_id) VALUES(?,?)'
+        params_tuple = (world.id, self.id)
+        CURSOR.execute(sql,params_tuple)
+        CONN.commit()
+    def worlds(self):
+        sql = '''
+            SELECT DISTINCT worlds.* FROM WORLDS
+            JOIN login ON login.world_id = worlds.id
+            WHERE login.player_id = ?
+        '''
+        params_tuple = (self.id,)
+        list_of_tuples = CURSOR.execute(sql,params_tuple).fetchall()
+        return [World.from_db(row) for row in list_of_tuples]
     
-    
-
-
-
-
-  
-
+    #CREATE TABLE login(id INTEGER PRIMARY KEY,player_id INTEGER,world_id INTEGER);
+    @classmethod 
+    def create_table2(cls):
+        sql = 'CREATE TABLE login(id INTEGER PRIMARY KEY,player_id INTEGER,world_id INTEGER)'
+        CURSOR.execute(sql)
+    # must create a table(will throw seed at project later)
+    # need a player instace, and a world instance to login.
+# ipdb> player1 = Player("Test7")
+# ipdb> world1 = World("test4")
+# ipdb> player1.save()
+# ipdb> world1.save()
+# ipdb> player1.login_history(world1)
+# *** AttributeError: 'Player' object has no attribute 'login_history'
+# ipdb> player1.login(world1)
+# ipdb> player1.worlds()
+# [
+# <World id: 4 name: test4>
+# .]

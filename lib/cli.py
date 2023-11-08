@@ -18,7 +18,9 @@ def main():
             print("Please Make A Valid Choice")
 
 def menu():
-    print("Please select an option:")
+    print("________________________")
+    print("Please select an option")
+    print("------------------------")
     print("1. World Options")
     print("2. Player Options")
     print("3. Exit the program")
@@ -31,7 +33,11 @@ def world_options():
             print("What Is Your World Called Traveler?")
             World.create(input("->"))
         elif choice == "2":
-            print(World.all())
+            if World.all() == []:
+                print("")
+                print("There Are No Worlds\n Please Create One")
+            else:
+                print(World.all())
         elif choice == "3":
             print("Select World Id to Delete")
             id = input("->")
@@ -43,7 +49,9 @@ def world_options():
             print("Please Make A Valid Choice")
 
 def world_menu():
-    print("World Menu:")
+    print("________________________")
+    print("World Menu")
+    print("------------------------")
     print("1. Create World")
     print("2. Display Worlds")
     print("3. Delete World")
@@ -72,7 +80,9 @@ def player_options():
             print("Please Make A Valid Choice")
 
 def player_menu():
+    print("________________________")
     print("Player Menu")
+    print("------------------------")
     print("1. Create Player")
     print("2. Display Player's")
     print("3. Remove Player")

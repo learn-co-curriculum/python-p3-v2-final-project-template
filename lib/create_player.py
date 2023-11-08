@@ -12,7 +12,8 @@ def create_new_player():
     creating = True
     while creating:
         while True:
-            name = input("Enter your name: ")
+            print("Enter your name:")
+            name = input("❯❯ ")
             if name.lower().strip() not in existing_players:
                 if len(name) != 0:
                     player_info['name'] = name
@@ -22,26 +23,29 @@ def create_new_player():
             else:
                 print('Player name already exists!')
         while True:
-            password = input("Enter a password (must be at least 5 characters): ")
+            print("Enter a password (must be at least 5 characters): ")
+            password = input("❯❯ ")
             if len(password) >= 5:
                 player_info['password'] = password
                 break
             else:
                 print('Password must be at least 5 characters')
         while True:
-            age = input('Tell us your age: ')
+            print("Enter your age:")
+            age = input('❯❯ ')
             try:
                 age = int(age)
                 if age >= 18:
                     player_info['age'] = age
                     break
                 else:
-                    print('You must be 18 or over to play. Goodbye!')
-                    break
+                    print('✖ ✖ You must be 18 or over to play. Goodbye! ✖ ✖')
+                    return
             except ValueError:
-                print("age must be a valid number.")
+                print("age must be a valid number")
         while True: 
-            next_game = input('Will you be playing in the next game? (Y/N): ')
+            print('Will you be playing in the next game? (Y/N):')
+            next_game = input('❯❯ ')
             if next_game == 'Y':
                 player_info['next_game'] = 1
                 break
@@ -57,7 +61,7 @@ def create_new_player():
         print(f'→ Will be in next game: {"Yes" if player_info["next_game"] else "No"}')
         print("Confirm your profile (Y/N)?")
         while True:
-            choice = input("> ")    
+            choice = input("❯❯ ")    
             if choice == "Y":
                 Player.create(
                     player_info['name'],
@@ -72,7 +76,8 @@ def create_new_player():
                 break
             elif choice == "N":
                 print("✖ ✖ CANCELLED ✖ ✖")
-                print("Restarting Player Creation Form...")
+                print("Returning to Main Menu...")
+                creating = False
                 break
             else:
                 print("Type Y or N to confirm or restart your new Player Profile")

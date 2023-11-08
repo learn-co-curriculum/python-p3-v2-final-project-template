@@ -7,13 +7,16 @@ character_info = {
     'race': '',
     'alignment': '',
     'abilities': '',
-    'next-game': ''
+    'level': '',
+    'player_id': ''
 }
 
-states = ['name', 'class', 'race', 'alignment', 'abilities']
+states = ['name', 'class', 'race', 'alignment', 'abilities', 'level']
 
-def create_new_char_menu():
-    while True:
+def create_new_char_menu(current_player):
+    character_info['player_id'] = current_player.id
+    creating = True
+    while creating:
         current_state = 'name'
 
         while current_state:
@@ -35,31 +38,25 @@ def create_new_char_menu():
                 current_state = 'abilities'
             elif current_state == 'abilities':
                 print("Ability Stats:")
-
                 get_abilities()
+                current_state = 'level'
+            elif current_state == 'level':
+                print("What level is your character?")
+                get_level()
                 current_state = None
         print(f'☺ {character_info["name"]}\'s Character Sheet ☺')
         print('-----------------------')
         print(f'→ Class: {character_info["class"]}')
         print(f'→ Race: {character_info["race"]}')
+        print(f'→ Level: {character_info["level"]}')
         print(f'→ Alignment: {character_info["alignment"]}')
         print('→ Ability Stats:')
         for ability, score in character_info["abilities"].items():
             print(f'    • {ability}: {score}')
         print('-----------------------')
-        while True: 
-            next_game = input('Will you be playing this character in the next game? (Y/N): ')
-            if next_game == 'Y':
-                character_info['next_game'] = 1
-                break
-            elif next_game == 'N': 
-                character_info['next_game'] = 0
-                break
-            else:
-                print("Your answer must be Y or N")
         while True:
             print("Confirm your new character (Y/N)?")
-            choice = input("> ")
+            choice = input("❯❯ ")
             if choice == "Y":
                 Character.create_char(
                     character_info["name"],
@@ -71,7 +68,9 @@ def create_new_char_menu():
                     character_info["abilities"]["Intelligence"],
                     character_info["abilities"]["Wisdom"],
                     character_info["abilities"]["Charisma"],
-                    character_info["alignment"]
+                    character_info["alignment"],
+                    character_info["player_id"],
+                    character_info['level']
                 )
                 print("✔ ✔ SUCCESS ✔ ✔")
                 print("Your new character has been saved!")
@@ -79,8 +78,8 @@ def create_new_char_menu():
                 return
             elif choice == "N":
                 print("✖ ✖ CANCELLED ✖ ✖")
-                print("Restarting Character Form...")
-                current_state = 'name'
+                print("Returning to your Profile...")
+                creating = False
                 break
             else:
                 print("Type Y or N to confirm or restart your new character")
@@ -113,7 +112,7 @@ def get_class():
             else:
                 print("Invalid choice. Please try again.")
         except ValueError:
-            print("Please select by number.")
+            print("Please select by number")
 
 
 def get_race():
@@ -188,10 +187,9 @@ def roll_3d6():
 def get_abilities():
     abilities = ['Strength', 'Dexterity', 'Constitution', 'Intelligence', 'Wisdom', 'Charisma']
     ability_scores = {}
-    
+    for i, ability in enumerate(abilities, 1):
+        print(f"{i}. {ability}")
     while abilities:
-        for i, ability in enumerate(abilities, 1):
-            print(f"{i}. {ability}")
         selected_ability = abilities.pop(0)
         input(f'❯❯ Press Enter to roll for {selected_ability}')
         ability_scores[selected_ability] = roll_3d6()
@@ -200,3 +198,17 @@ def get_abilities():
 
     character_info["abilities"] = ability_scores
     
+def get_level():
+    set_level = True
+    while set_level:
+        level = input('❯❯ ')
+        try:
+            int_level = int(level)
+            if 1 <= int_level <= 10:
+                character_info["level"] = int_level
+                set_level = False
+                break
+            else: 
+                print('Level must be between 1 and 10')
+        except ValueError:
+            print("Level must be a number.")

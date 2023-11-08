@@ -73,11 +73,19 @@ class Player:
     
     def characters(self):
         sql = """
-            SELECT * FROM characters WHERE player = ?
+            SELECT * FROM characters WHERE player_id = ?
         """
-        var_tuple = self.id
+        var_tuple = (self.id,)
         result = CURSOR.execute(sql, var_tuple).fetchall()
         return result
+
+    def active_char(self):
+        sql = """
+            SELECT * FROM characters WHERE player_id = ? AND active = 1
+        """
+        var_tuple = (self.id,)
+        result = CURSOR.execute(sql, var_tuple).fetchall()
+        return result[0]
 
     @classmethod
     def all(cls):
@@ -88,12 +96,16 @@ class Player:
         return [Player(player[1], player[2], player[3], player[4], player[0]) for player in players]
 
     @classmethod
-    def next_players(cls):
+    def view_next_players(cls):
         sql = """
-            SELECT * FROM players WHERE next_game = 1;
+            SELECT players.name, characters.name, characters.class, characters.race 
+            FROM players 
+            JOIN characters
+            ON characters.player_id = players.id
+            WHERE characters.active = 1;
         """
         players = CURSOR.execute(sql).fetchall()
-        return [Player(player[1], player[2], player[3], player[4], player[0]) for player in players]
+        return players
     
     @classmethod
     def reset_next(cls):
@@ -104,11 +116,15 @@ class Player:
         CONN.commit()
     
     def delete(self):
-        sql = """
+        sql1 = """
+            DELETE FROM characters WHERE player_id = ?;
+        """
+        sql2 = """
             DELETE FROM players WHERE id = ?;
         """
         var_tuple = (self.id,)
-        CURSOR.execute(sql,var_tuple)
+        CURSOR.execute(sql1,var_tuple)
+        CURSOR.execute(sql2,var_tuple)
         CONN.commit()
         self.id = None
     

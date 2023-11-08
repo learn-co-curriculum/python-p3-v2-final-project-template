@@ -16,7 +16,7 @@ from create_player import (
 def display_main_menu():
     while True:
         main_menu()
-        choice = input("> ")
+        choice = input("❯❯ ")
         if choice == "0":
             exit_program()
         elif choice == "1":
@@ -45,9 +45,10 @@ def main_menu():
 """ PLAYER PROFILE CLI """
 from helpers import (
     view_all_characters,
-    view_active_characters,
+    get_active_char,
     delete_character,
-    rsvp
+    rsvp,
+    delete_player
 )
 from create_char import (
     create_new_char_menu
@@ -57,50 +58,53 @@ def display_profile_menu():
     current_player = None
 
     def profile_menu():
-        """profile title should include player.name"""
-        print(f"{current_player.name}'s Profile:") 
+        print(f"★ {current_player.name}'s Profile ★") 
+        print('-----------------------')
         print("0. Back to Main Menu")
         print("1. Create new character")
         print("2. View all characters")
-        print("3. View your active characters")
+        print("3. View your current character")
         print("4. RSVP for next session")
         print("5. Delete a character")
         print("6. Delete your profile")
+        print('-----------------------')
 
     name = input('Name: ')
-    password = input('Password: ')
-    if (name in [player.name for player in Player.all()] and 
-        password == Player.find_by_name(name)[0].password):
-        current_player = Player.find_by_name(name)[0]
+    if name in [player.name for player in Player.all()]:
+        password = input('Password: ')
+        if password == Player.find_by_name(name)[0].password:
+            current_player = Player.find_by_name(name)[0]
+        else:
+            print("Incorrect Password!")
     else:
-        print("Incorrect Login.")
-    
+        print("No user found with that name!")
+        
+
     if current_player:
-        while True:
+        while current_player:
             profile_menu()
-            choice = input('** ')
-            if choice == '!home':
-                break
+            choice = input('❯❯ ')
             if choice == '0':
                 break
             elif choice == '1':
-                create_new_char_menu()
+                create_new_char_menu(current_player)
             elif choice == '2':
-                view_all_characters()
+                print('-----------------------')
+                print("Your Characters:")
+                view_all_characters(current_player)
             elif choice == '3':
-                view_active_characters()
+                print('-----------------------')
+                print("Your Current Character:")
+                get_active_char(current_player)
+                print("Returning to your profile...")
             elif choice == '4':
-                rsvp()
+                rsvp(current_player)
             elif choice == '5':
-                delete_character()
+                delete_character(current_player)
             elif choice == '6':
-                confirm = input('Enter Y to confirm profile deletion: ')
-                if confirm == 'Y':
-                    current_player.delete()
-                    print('PROFILE DELETED!')
+                deleted = delete_player(current_player)
+                if deleted == True:
                     break
-                else:
-                    print('Delete aborted...')
             else:
                 print("Invalid choice. Please try again.")
 

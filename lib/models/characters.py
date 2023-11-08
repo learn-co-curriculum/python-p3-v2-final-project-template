@@ -1,11 +1,10 @@
 import sqlite3
 CONN = sqlite3.connect('dnd_data.sqlite')
 CURSOR = CONN.cursor()
-from players import Player
 
 class Character:
 
-    def __init__(self, name, char_class, race, strength, dexterity, constitution, intelligence, wisdom, charisma, alignment, player_id, active, id = None):
+    def __init__(self, name, char_class, race, strength, dexterity, constitution, intelligence, wisdom, charisma, alignment, player_id, level, active = 0, id = None):
         self.name = name
         self.char_class = char_class
         self.race = race
@@ -15,128 +14,61 @@ class Character:
         self.intelligence = intelligence
         self.wisdom = wisdom
         self.charisma = charisma
-        self.align = alignment
+        self.alignment = alignment
         self.player_id = player_id
         self.active = active
         self.id = id
+        self.level = level
 
     def __repr__(self):
-        return f"<Character {self.id}: {self.name}, {self.char_class}, {self.race}, {self. strength}, {self.dexterity}, {self.constitution}, {self.intelligence}, {self.wisdom}, {self.charisma}, {self.alignment}, {self.player_id}, {self.active}>"
+        return f"<{self.name}, the {self.char_class} {self.race}, Level {self.level}>"
 
-    @property
-    def name(self):
-        return self._name
-    
-    @name.setter
-    def name(self, name):
-        if type(name) == str:
-            if len(name) >= 5:
-                self._name = name
-            else: raise ValueError('!!Name must be at least 5 characters!!')
-        else: raise ValueError('!!Name must be a string!!')
-
-    @property
-    def char_class(self):
-        return self._char_class
-    
-    @char_class.setter
-    def char_class(self, char_class):
-        self._char_class = char_class
-
-    @property
-    def race(self):
-        return self._race
-    
-    @race.setter
-    def race(self, race):
-        self._race = race
-    
-    @property
-    def strength(self):
-        return self._strength
-    
-    @strength.setter
-    def strength(self, strength):
-        self._strength = strength
-
-    @property
-    def dexterity(self):
-        return self._dexterity
-    
-    @dexterity.setter
-    def dexterity(self, dexterity):
-        self._dexterity = dexterity
-
-    @property
-    def constitution(self):
-        return self._constitution
-    
-    @constitution.setter
-    def constitution(self, constitution):
-        self._constitution = constitution
-
-    @property
-    def intelligence(self):
-        return self._intelligence
-    
-    @intelligence.setter
-    def intelligence(self, intelligence):
-        self._intelligence = intelligence
-
-    @property
-    def wisdom(self):
-        return self._wisdom
-    
-    @wisdom.setter
-    def wisdom(self, wisdom):
-        self._wisdom = wisdom
-
-    @property
-    def charisma(self):
-        return self._charisma
-    
-    @charisma.setter
-    def charisma(self, charisma):
-        self._charisma = charisma
-
-    @property
-    def alignment(self):
-        return self._alignment
-    
-    @alignment.setter
-    def alignment(self, alignment):
-        self._alignment = alignment
-
-    @property
-    def player_id(self):
-        return self._player_id
-    
-    @player_id.setter
-    def player_id(self, player_id):
-        self._player_id = player_id
-
-    @property
-    def active(self):
-        return self._active
-    
-    @active.setter
-    def active(self, active):
-        self._active = active
 
 # UPDATES if id is already in the database -- SAVES a new character to the database ans assigns id
     def save(self):
         if self.id:
             sql = """
-                UPDATE characters SET name =?, char_class = ?, race = ?, strength = ?, dexterity = ?, constitution = ?, intelligence = ?, wisdom = ?, charisma = ?, alignment = ?, player_id = ?, active = ? WHERE id = ?
+                UPDATE characters SET 
+                name =?, 
+                class = ?, 
+                race = ?, 
+                strength = ?, 
+                dexterity = ?, 
+                constitution = ?, 
+                intelligence = ?, 
+                wisdom = ?, 
+                charisma = ?, 
+                alignment = ?, 
+                player_id = ?, 
+                active = ?, 
+                level = ?, 
+                WHERE id = ?
         """
-            char_tuple = (self.name, self.char_class, self.race, self.strength, self.dexterity, self.constitution, self.intelligence, self.wisdom, self.charisma, self.alignment, self.player_id, self.active)
+            char_tuple = (self.name, 
+                self.char_class, 
+                self.race, 
+                self.strength, 
+                self.dexterity, 
+                self.constitution, 
+                self.intelligence, 
+                self.wisdom, 
+                self.charisma, 
+                self.alignment, 
+                self.player_id, 
+                self.active,
+                self.level,
+                self.id
+            )
             CURSOR.execute(sql, char_tuple)
             CONN.commit()
         else:
             sql = """
-                INSERT INTO characters (name, char_class, race, strength, dexterity, constitution, intelligence, wisdom, charisma, alignment, player_id, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO characters 
+                (name, class, race, strength, dexterity, constitution, intelligence, wisdom, charisma, alignment, player_id, active, level) 
+                VALUES 
+                (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """
-            char_tuple = (self.name, self.char_class, self.race, self.strength, self.dexterity, self.constitution, self.intelligence, self.wisdom, self.charisma, self.alignment, self.player_id, self.active)
+            char_tuple = (self.name, self.char_class, self.race, self.strength, self.dexterity, self.constitution, self.intelligence, self.wisdom, self.charisma, self.alignment, self.player_id, self.active, self.level)
             CURSOR.execute(sql, char_tuple)
             CONN.commit()
             id_sql = """
@@ -147,8 +79,8 @@ class Character:
 
 #creates a new character and saves it to the database
     @classmethod
-    def create_char(cls, name, char_class, race, strength, dexterity, constitution, intelligence, wisdom, charisma, alignment, player_id, active):
-        character = Character(name, char_class, race, strength, dexterity, constitution, intelligence, wisdom, charisma, alignment, player_id, active)
+    def create_char(cls, name, char_class, race, strength, dexterity, constitution, intelligence, wisdom, charisma, alignment, player_id, level):
+        character = Character(name, char_class, race, strength, dexterity, constitution, intelligence, wisdom, charisma, alignment, player_id, level)
         character.save()
         return character
         
@@ -179,11 +111,15 @@ class Character:
         list_of_race_tuple = CURSOR.execute(sql, race_tuple).fetchall()
         return [Character.dnd_data(row) for row in list_of_race_tuple]
 
+    # def get_active(self, )
+
 #given a row from the database---return with new instance with info from database
     @classmethod
     def dnd_data(cls, row_tuple):
-        character = Character(row_tuple[1])
-        character.id = row_tuple[0]
+        character = Character(row_tuple[1], row_tuple[2], row_tuple[3],
+            row_tuple[4], row_tuple[5], row_tuple[6], row_tuple[7], row_tuple[8], 
+            row_tuple[9], row_tuple[10], row_tuple[12], row_tuple[13], 
+            row_tuple[11], row_tuple[0])
         return character
 
 #returns a Character from dnd_data and gives instances of all Characters from the database
@@ -198,3 +134,26 @@ class Character:
     
 # view related objects, and find an object by attribute
 #char_class, race, strength, dexterity, constitution, intelligence, wisdom, charisma, alignment, player_id, active
+
+    @classmethod
+    def my_chars(cls, current_player):
+        sql = """
+            SELECT * FROM characters WHERE player_id = ?;
+        """
+        var_tuple = (current_player.id,)
+        char_list = CURSOR.execute(sql, var_tuple).fetchall()
+        return [Character.dnd_data(row) for row in char_list]
+
+    def update_active(self):
+        sql = """
+            UPDATE characters SET active = 0 WHERE player_id = ?;
+        """
+        var_tuple = (self.player_id,)
+        CURSOR.execute(sql, var_tuple)
+        CONN.commit()
+        sql = """
+            UPDATE characters SET active = 1 WHERE id = ?;
+        """
+        var_tuple = (self.id,)
+        CURSOR.execute(sql, var_tuple)
+        CONN.commit()

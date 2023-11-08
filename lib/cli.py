@@ -3,7 +3,6 @@ from models.world import World
 from models.player import Player
 from helpers import exit_program
 
-
 def main():
     while True:
         menu()
@@ -63,10 +62,13 @@ def player_options():
         player_menu()
         choice = input(">")
         if choice == "1":
-            print("What Is Your Name Traveler?")
-            Player.create(input("->"))
+            create_player_menu()
         elif choice == "2":
-            print(Player.all())
+            if Player.all() == []:
+                print("")
+                print("There Are No Players\n Please Create One")
+            else:
+                print(Player.all())
         elif choice == "3":
             id = input("Select Player Id to Delete:")
             player = Player.find_by_id(id)
@@ -80,6 +82,19 @@ def player_options():
         else:
             print("Please Make A Valid Choice")
 
+
+def create_player_menu():
+    while True:
+        print("Press 0 to go back")
+        choice = input("What Is Your Name Traveler?:>")
+        if choice == "0":
+            break
+        elif choice == "":
+            print("Please Name Yourself")
+        else:
+            print(Player.create(choice))
+            break
+
 def player_menu():
     print("________________________")
     print("Player Menu")
@@ -92,13 +107,14 @@ def player_menu():
 
 def select_world():
     while True:
-        selection = input("Select a world id or backout with 0")
+        selection = input("Select a world id or backout with 0: >")
         if selection == "0":
             break
+        elif selection == "":
+            print("Please Select a world ID or backout with 0: ")
         elif int(selection) <= len(World.all()):
-            print(World.find_by_id(selection))
+            print(f'Selected\n{World.find_by_id(selection)}')
         else:
             print("Please Select a valid world ID")
-
 if __name__ == "__main__":
     main()

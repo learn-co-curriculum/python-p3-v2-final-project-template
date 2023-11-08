@@ -38,6 +38,7 @@ def world_options():
                 print("There Are No Worlds\n Please Create One")
             else:
                 print(World.all())
+                select_world()
         elif choice == "3":
             print("Select World Id to Delete")
             id = input("->")
@@ -88,6 +89,16 @@ def player_menu():
     print("3. Remove Player")
     print('4. Find Player by name')
     print("5. Back to Main Menu")
+
+def select_world():
+    while True:
+        selection = input("Select a world id or backout with 0")
+        if selection == "0":
+            break
+        elif int(selection) <= len(World.all()):
+            print(World.find_by_id(selection))
+        else:
+            print("Please Select a valid world ID")
 
 if __name__ == "__main__":
     main()

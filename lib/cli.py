@@ -29,8 +29,7 @@ def world_options():
         world_menu()
         choice = input(">")
         if choice == "1":
-            print("What Is Your World Called Traveler?")
-            World.create(input("->"))
+            create_world_menu()
         elif choice == "2":
             if World.all() == []:
                 print("")
@@ -90,9 +89,29 @@ def create_player_menu():
         if choice == "0":
             break
         elif choice == "":
+            print("____________________")
             print("Please Name Yourself")
+        elif len(choice) > 11:
+            print("___________________________")
+            print("Please Enter A Shorter Name")
         else:
             print(Player.create(choice))
+            break
+def create_world_menu():
+    while True:
+        print("____________________")
+        print("Press 0 to go back")
+        choice = input("What Is Your World Called Traveler? >")
+        if choice == "0":
+            break
+        elif choice == "":
+            print("________________________________________")
+            print("No Input Detected: Please Name The World")
+        elif len(choice) > 16:
+            print("___________________________")
+            print("Please Enter A Shorter Name")
+        else:
+            print(World.create(choice))
             break
 
 def player_menu():
@@ -111,7 +130,7 @@ def select_world():
         if selection == "0":
             break
         elif selection == "":
-            print("Please Select a world ID or backout with 0: ")
+            print("Please Select a world ID or backout with 0: >")
         elif int(selection) <= len(World.all()):
             print(f'Selected\n{World.find_by_id(selection)}')
         else:

@@ -76,8 +76,22 @@ def player_options():
             print(player)
         elif choice == "5":
             break
+        elif choice == '6':
+            id = input('Please input a id')
+            name= input('Please input a name')
+            player = Player.find_by_name(name)
+            world_instance = World.find_by_id(id)
+            player.login(world_instance)
+            player.worlds()
+    
+    
+
+
+            
         else:
             print("Please Make A Valid Choice")
+        
+        
 
 def player_menu():
     print("________________________")

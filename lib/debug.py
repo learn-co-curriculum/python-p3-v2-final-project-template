@@ -5,7 +5,7 @@ from models.world import World
 
 from models.__init__ import CONN, CURSOR
 import ipdb
-# player1 = Player('Matt')
+player1 =
 # world1 = World('Howling Castle')
 # world2 = World('Mt Everwood')
 ipdb.set_trace()

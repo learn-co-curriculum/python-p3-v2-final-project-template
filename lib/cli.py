@@ -83,6 +83,10 @@ def player_options():
             world_instance = World.find_by_id(id)
             player.login(world_instance)
             player.worlds()
+        elif choice == '7':
+            name = input('please input player name ')
+            player = Player.find_by_name(name)
+            print(player.worlds())
     
     
 

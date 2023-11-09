@@ -59,7 +59,8 @@ class World:
         return world_instance
 
     def __repr__(self):
-        return f'\n<World id: {self.id} name: {self.location}>\n.'
+        return f'\nWorld id: {self.id}\n name: {self.location}\n'
+    
 
     @classmethod
     def find_by_id(cls, id):

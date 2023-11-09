@@ -118,16 +118,28 @@ def player_options():
             player = Player.find_by_name(name)
             print(player)
         elif choice == '5':
-            id = input('Please input a id')
-            name= input('Please input a name')
-            player = Player.find_by_name(name)
-            world_instance = World.find_by_id(id)
-            player.login(world_instance)
-            player.worlds()
+            id = input('Please input a id: ')
+            name= input('Please input a name: ')
+            if id and name:
+                player = Player.find_by_name(name)
+                world_instance = World.find_by_id(id)
+                if player and world_instance:
+                    player.login(world_instance)
+                else:
+                    print('Player or world not found')
+            else: 
+                print('Please enter a valid world id and player name')
         elif choice == '6':
+            print(Player.all())
             name = input('please input player name ')
-            player = Player.find_by_name(name)
-            print(player.worlds())   
+            if name:
+                player = Player.find_by_name(name)
+                if player:
+                    print(player.worlds())   
+                else:
+                    print('Player not found')
+            else:
+                print(' please enter a valid name')
         elif choice == "7":
             break
         else:
@@ -170,7 +182,11 @@ def player_menu():
     print("________________________")
     print("Player Menu")
     print("------------------------")
-    print("1. Create Player")
+    print('''1.                                                     
+  / __|| |_   ___  ___  ___ ___   _  _  ___  _  _  _ _   / __|| |_   __ _  _ _  __ _  __ | |_  ___  _ _ 
+ | (__ | ' \ / _ \/ _ \(_-</ -_) | || |/ _ \| || || '_| | (__ | ' \ / _` || '_|/ _` |/ _||  _|/ -_)| '_|
+  \___||_||_|\___/\___//__/\___|  \_, |\___/ \_,_||_|    \___||_||_|\__,_||_|  \__,_|\__| \__|\___||_|''')
+
     print("2. Display Player's")
     print("3. Remove Player")
     print('4. Find Player by name')

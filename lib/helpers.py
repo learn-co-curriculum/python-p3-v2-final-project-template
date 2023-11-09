@@ -13,20 +13,14 @@ def view_all_players():
         print(f'{index + 1}. {player}')
     print('-----------------------')
 
-# def view_profile_menu():
-#     name = input('Name: ')
-#     if name in [player.name for player in Player.all()]:
-#         password = input('Password: ')
-#         if password == Player.find_by_name(name)[0].name:
-
-#     print("Enter your password:")
-
 def view_players_in_next_session():
     print('-----------------------')
     print("RSVP'd Players")
-    for index, player in enumerate(Player.view_next_players()):
+    players = Player.view_next_players()
+    for index, player in enumerate(players):
         print(f'{index + 1}. {player[0]} as {player[1]} the {player[2]} {player[3]}')
     print('-----------------------')
+    return players
 
 def exit_program():
     print("Goodbye!")
@@ -88,7 +82,33 @@ def change_level():
                 print('Please select by number')
 
 def edit_active():
-    print('-----------------------')
+    next_players_names = [player[0] for player in view_players_in_next_session()]
+    print('Select a player to remove from the next game:')
+    while True:
+        char_choice = input("❯❯ ")
+        try:
+            char_choice = int(char_choice)
+            if 1 <= char_choice <= len(next_players_names):
+                print(f'★ Remove {next_players_names[char_choice - 1]} from the next game? (Y/N) ★')
+                choice = input("❯❯ ")
+                if choice == "Y":
+                    Player.find_by_name(next_players_names[char_choice - 1])[0].remove_active()
+                    print("✔ ✔ SUCCESS ✔ ✔")
+                    print(f"{next_players_names[char_choice - 1]} cancelled!")
+                    print("Returning to DM Mode...")
+                    print('-----------------------')
+                    break
+                elif choice == "N":
+                    print("✖ ✖ Cancelling Cancelled ✖ ✖")
+                    print("Returning to DM Mode...")
+                    print('-----------------------')
+                    break
+                else:
+                    print("Type Y or N to confirm or cancel")
+            else:
+                print('Please select a number that matches a character')
+        except ValueError:
+            print("Please select by number")
     
 
 def view_all_characters(current_player):

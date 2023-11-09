@@ -123,7 +123,7 @@ def run_dm_mode():
         print("0. Back to Main Menu")
         print("1. See all characters")
         print("2. Change a characters level")
-        print("3. Edit active players")
+        print("3. Remove players from next game")
         print("4. Cancel next game")
         print('-----------------------')
 

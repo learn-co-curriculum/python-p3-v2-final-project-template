@@ -140,5 +140,13 @@ class Player:
         var_tuple = (name,)
         players = CURSOR.execute(sql, var_tuple).fetchall()
         return [Player(player[1], player[2], player[3], player[0]) for player in players]
+    
+    def remove_active(self):
+        sql = """
+            UPDATE characters SET active = 0 WHERE player_id = ?;
+        """
+        var_tuple = (self.id,)
+        CURSOR.execute(sql, var_tuple)
+        CONN.commit()
 
 # ipdb.set_trace()

@@ -125,18 +125,7 @@ def login_menu():
         elif choice == "1":
             if selected_world and selected_player != None:
                 selected_player.login(selected_world)
-                while True:
-                    smol_push()
-                    print("Que Position is: 9,023,123,333,404")
-                    choice = input("Thinking Of Leaving? type: 'im not waiting' to exit que>")
-                    if choice == "no":
-                        clear_push()
-                        print("Suit Yourself.")
-                    elif choice == "im not waiting":
-                        break
-                    else:
-                        clear_push()
-                        print("Those are not the magic words.")
+                login_que()
             else:
                 print("Hmm? you can't join without a selection.")
 def world_menu():
@@ -148,6 +137,21 @@ def world_menu():
     print("2. Display Worlds")
     print("3. Delete World")
     print("4. Back to Main Menu")
+
+def login_que():
+    while True:
+        smol_push()
+        print("Logged in successfully please wait \n ...")
+        print("Que Position is: 9,023,123,333,404")
+        choice = input("Thinking Of Leaving? type: 'im not waiting' to exit que>")
+        if choice == "no":
+            clear_push()
+            print("Suit Yourself.")
+        elif choice == "im not waiting":
+            break
+        else:
+            clear_push()
+            print("Those are not the magic words.")
 
 def player_options():
     while True:
@@ -172,13 +176,15 @@ def player_options():
             player = Player.find_by_name(name)
             print(player)
         elif choice == '5':
-            id = input('Please input a id: ')
-            name= input('Please input a name: ')
+            id = input('Please input a world id: ')
+            print(f"World: {id}")
+            name= input('Please input a player name: ')
             if id and name:
                 player = Player.find_by_name(name)
                 world_instance = World.find_by_id(id)
                 if player and world_instance:
                     player.login(world_instance)
+                    login_que()
                 else:
                     print('Player or world not found')
             else: 

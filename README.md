@@ -1,16 +1,18 @@
-# NBA Team Database
+# Cars and Drivers Arcade Game
 
-Welcome to the NBA Database! Your one stop shop to quickly see who is on what team in CLI format.
+Choose your character! Then choose a car! Sound familiar? This is the beginning of most racing games. This CLI organizes the cars and drivers in a way that makes it easy to view all car options and which characters have chosen them.
 
-To run the CLI, install your pipenv and shell. Then type "python cli.py" to view the list of commands. From there it should be pretty easy to find what you're looking for! 
+To run the CLI, install your pipenv and shell. Then type "python cli.py" to view the list of commands. From there it should be pretty easy to find what you're looking for! Below is a list of commands that can be performed when running the CLI.
 
-0 Exit Program
-2 List all basketball teams
-3 List all basketball players
-4 Find basketball team by name
-5 Find basketball player by name
-6 Add player
-7 Update player
-8 Delete player
-9 List all players by team
+0. Exit the program
+1. LIST ALL car BRANDS
+2. CREATE a New Car BRAND
+3. DELETE an Existing Car BRAND
+4. FIND Car BRAND by Name
+5. LIST all BRANDS of a Specific Country
+6. LIST all Existing DRIVERS
+7. CREATE a New DRIVER
+8. DELETE an existing DRIVER
+9. FIND an existing DRIVER by name
+10. List all DRIVERS of a specific BRAND #
 

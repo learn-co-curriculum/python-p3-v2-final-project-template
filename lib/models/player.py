@@ -108,6 +108,19 @@ class Player:
     def create_table2(cls):
         sql = 'CREATE TABLE login(id INTEGER PRIMARY KEY,player_id INTEGER,world_id INTEGER)'
         CURSOR.execute(sql)
+
+    @classmethod
+    def all_player_login(cls):
+        sql = '''
+            SELECT * FROM login WHERE player_id = ? 
+        '''
+        list_of_tuples = CURSOR.execute(sql).fetchone()
+        return [Player.login_db(row) for row in list_of_tuples]
+    @classmethod
+    def login_db(cls,row_tuple):
+        player_instance = ( row_tuple[1],)
+        player_instance.id = row_tuple[0]
+        return player_instance
     # must create a table(will throw seed at project later)
     # need a player instace, and a world instance to login.
 # ipdb> player1 = Player("Test7")

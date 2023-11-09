@@ -6,8 +6,7 @@ def create_new_player():
     player_info = {
         'name' : '',
         'password' : '',
-        'age' : '',
-        'next_game' : ''
+        'age' : ''
     }   
     creating = True
     while creating:
@@ -43,22 +42,10 @@ def create_new_player():
                     return
             except ValueError:
                 print("age must be a valid number")
-        while True: 
-            print('Will you be playing in the next game? (Y/N):')
-            next_game = input('❯❯ ')
-            if next_game == 'Y':
-                player_info['next_game'] = 1
-                break
-            elif next_game == 'N': 
-                player_info['next_game'] = 0
-                break
-            else:
-                print("Your answer must be Y or N")
         print('Your profile:')
         print(f'→ Name: {player_info["name"]}')
         print(f'→ Password: {player_info["password"]}')
         print(f'→ Age: {player_info["age"]}')
-        print(f'→ Will be in next game: {"Yes" if player_info["next_game"] else "No"}')
         print("Confirm your profile (Y/N)?")
         while True:
             choice = input("❯❯ ")    
@@ -66,8 +53,7 @@ def create_new_player():
                 Player.create(
                     player_info['name'],
                     player_info['password'],
-                    player_info['age'],
-                    next_game=player_info['next_game']
+                    player_info['age']
                 )
                 print("✔ ✔ SUCCESS ✔ ✔")
                 print("Your player profile has been saved!")

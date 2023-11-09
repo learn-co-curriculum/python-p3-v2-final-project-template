@@ -5,12 +5,11 @@ CURSOR = CONN.cursor()
 # import ipdb
 
 class Player:
-    def __init__(self, name, password, age, next_game=False, id=None):
+    def __init__(self, name, password, age, id=None):
         self.id = id
         self.name = name
         self.password = password
         self.age = age
-        self.next_game = next_game
     
     def __repr__(self):
         return f'Player: {self.name}, Age: {self.age}'
@@ -56,18 +55,18 @@ class Player:
 
     def save(self):
         sql = """
-            INSERT INTO players (name, password, age, next_game) 
-            VALUES (?, ?, ?, ?);
+            INSERT INTO players (name, password, age) 
+            VALUES (?, ?, ?);
         """
-        var_tuple = (self.name, self.password, self.age, self.next_game)
+        var_tuple = (self.name, self.password, self.age)
         CURSOR.execute(sql, var_tuple)
         CONN.commit()
 
         self.id = CURSOR.lastrowid
 
     @classmethod
-    def create(cls, name, password, age, next_game):
-        player = Player(name, password, age, next_game)
+    def create(cls, name, password, age):
+        player = Player(name, password, age)
         player.save()
         return player
     
@@ -85,7 +84,10 @@ class Player:
         """
         var_tuple = (self.id,)
         result = CURSOR.execute(sql, var_tuple).fetchall()
-        return result[0]
+        try:
+            return result[0]
+        except:
+            return None
 
     @classmethod
     def all(cls):
@@ -93,7 +95,7 @@ class Player:
             SELECT * FROM players;
         """
         players = CURSOR.execute(sql).fetchall()
-        return [Player(player[1], player[2], player[3], player[4], player[0]) for player in players]
+        return [Player(player[1], player[2], player[3], player[0]) for player in players]
 
     @classmethod
     def view_next_players(cls):
@@ -106,14 +108,6 @@ class Player:
         """
         players = CURSOR.execute(sql).fetchall()
         return players
-    
-    @classmethod
-    def reset_next(cls):
-        sql = """
-            UPDATE players SET next_game = False;
-        """
-        CURSOR.execute(sql)
-        CONN.commit()
     
     def delete(self):
         sql1 = """
@@ -131,10 +125,10 @@ class Player:
     def update(self):
         sql = """
             UPDATE players 
-            SET name = ?, password = ?, age = ?, next_game = ?
+            SET name = ?, password = ?, age = ?
             WHERE id = ?;
         """
-        var_tuple = (self.name, self.password, self.age, self.next_game, self.id)
+        var_tuple = (self.name, self.password, self.age, self.id)
         CURSOR.execute(sql, var_tuple)
         CONN.commit()
     
@@ -145,6 +139,6 @@ class Player:
         """
         var_tuple = (name,)
         players = CURSOR.execute(sql, var_tuple).fetchall()
-        return [Player(player[1], player[2], player[3], player[4], player[0]) for player in players]
+        return [Player(player[1], player[2], player[3], player[0]) for player in players]
 
 # ipdb.set_trace()

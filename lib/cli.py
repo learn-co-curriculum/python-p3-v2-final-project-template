@@ -54,7 +54,8 @@ from helpers import (
     rsvp,
     delete_player,
     change_level,
-    edit_active
+    edit_active,
+    cancel_game
 )
 from create_char import (
     create_new_char_menu
@@ -104,7 +105,6 @@ def display_profile_menu():
                 print('-----------------------')
                 print("Your Current Character:")
                 get_active_char(current_player)
-                print("Returning to your profile...")
             elif choice == '4':
                 rsvp(current_player)
             elif choice == '5':
@@ -124,6 +124,7 @@ def run_dm_mode():
         print("1. See all characters")
         print("2. Change a characters level")
         print("3. Edit active players")
+        print("4. Cancel next game")
         print('-----------------------')
 
     while True:
@@ -137,15 +138,10 @@ def run_dm_mode():
             change_level()
         elif choice == '3':
             edit_active()
+        elif choice == '4':
+            cancel_game()
         else:
             print('Invalid choice. Please try again.')
-
-
-
-    
-
-
-
 
 if __name__ == "__main__":
     display_main_menu()

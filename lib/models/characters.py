@@ -157,3 +157,19 @@ class Character:
         var_tuple = (self.id,)
         CURSOR.execute(sql, var_tuple)
         CONN.commit()
+
+    def update_level(self, new_level):
+        sql = """
+            UPDATE characters SET level = ? WHERE id = ?;
+        """
+        var_tuple = (new_level, self.id)
+        CURSOR.execute(sql, var_tuple)
+        CONN.commit()
+
+    @classmethod
+    def cancel_game(cls):
+        sql = """
+            UPDATE characters SET active = 0;
+        """
+        CURSOR.execute(sql)
+        CONN.commit()

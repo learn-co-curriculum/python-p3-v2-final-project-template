@@ -11,19 +11,23 @@ from helpers import (
     list_drivers,
     delete_driver,
     find_driver_by_name,
-    list_drivers_by_brand
+    list_drivers_by_brand,
 )
 
 def main():
+
+    
     print("----------------------------------")
     print("                                  ")
     print("    🏁 FLATIRON ARCADE RACER 🏁    ")
     print("                                  ")
     print("      🚕    🏎️💨    🚗    🚚        ")
     print("----------------------------------")
+
+
     while True:
         menu()
-        choice = input("Select an option (0-10): ")
+        choice = input("Select an option (0-11): ")
         if choice == "0":
             exit_program()
         elif choice == "1":
@@ -46,6 +50,8 @@ def main():
             find_driver_by_name()
         elif choice == "10":
             list_drivers_by_brand()
+        elif choice == "11":
+            start_game()
         else:
             print("Invalid choice. Please select a valid option.")
 
@@ -74,7 +80,37 @@ def menu():
     print("------------------------------------------")
     print("10. 🏁List all drivers of a specific brand")
     print("------------------------------------------")
-    print("")
+    print("------------------------------------------")
+    print("------------------------------------------")
+    print("11. \033[1m\033[33m--------------- START GAME ---------------\033[0m")
+    print("------------------------------------------")
+    print("------------------------------------------")
+
+
+def start_game():
+    print("Welcome to the START GAME page.")
+    while True:
+        start_game_menu()
+        choice = input("Choose from the menu below:")
+
+        if choice == "0":
+            return  # Return to the main menu
+        elif choice == "1":
+            list_drivers()
+        else:
+            print("Invalid choice. Please select a valid option.")
+
+
+def start_game_menu():
+    print("START GAME MENU")
+    print("------------------------------------------")
+    print("0.  Return to main menu")
+    print("------------------------------------------")
+    print("1.  PICK YOUR DRIVER")
+    print("------------------------------------------")
+
+ 
 
 if __name__ == "__main__":
     main()
+

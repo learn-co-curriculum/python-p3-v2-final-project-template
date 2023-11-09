@@ -1,7 +1,7 @@
 # lib/cli.py
 from models.world import World
 from models.player import Player
-from helpers import exit_program
+from helpers import exit_program,clear_push
 
 selected_world = None
 selected_player = None
@@ -9,11 +9,15 @@ def main():
     while True:
         menu()
         choice = input(">")
+        clear_push()
         if choice == "1":
+            clear_push()
             world_options()
         elif choice == "2":
+            clear_push()
             player_options()
         elif choice == "3":
+            clear_push()
             login_menu()
             # Would be a menu()
                 # while True:
@@ -23,11 +27,14 @@ def main():
                     # choice == "2":
                     #     select_world()
         elif choice == "4":
+            clear_push()
             exit_program()
         else:
+            clear_push()
             print("Please Make A Valid Choice")
 
 def menu():
+    clear_push()
     print("""
             .,-:;//;:=,
          . :H@@@MM@M#H/.,+%;,
@@ -64,19 +71,39 @@ def world_options():
         print(selected_world)
         choice = input(">")
         if choice == "1":
+            clear_push()
             create_world_menu()
         elif choice == "2":
             if World.all() == []:
+                clear_push()
                 print("")
                 print("There Are No Worlds\n Please Create One")
             else:
+                clear_push()
                 print(World.all())
                 select_world()
         elif choice == "3":
-            print("Select World Id to Delete")
-            id = input("->")
-            world = World.find_by_id(id)
-            world.shatter()
+            while True:
+                print("___________")
+                print(World.all())
+                print("-----------")
+                print("Select World Id to Delete")
+                print("Press 0 to return")
+                ids = input("->")
+                if ids == "0":
+                    break
+                elif ids == "":
+                    clear_push()
+                    print("? You gonna smash some worlds?, if not you can leave with 0")
+                elif int(ids) > len(World.all()):
+                    clear_push()
+                    print("we destory worlds here not made up stuff, leave with 0")
+                else:
+                    world = World.find_by_id(ids)
+                    world.shatter()
+                    clear_push()
+                    print("World Destroyed")
+                    print("Odd thing for a player Aint it?")
         elif choice == "4":
             break
         else:
@@ -88,6 +115,7 @@ def login_menu():
     print(f"Player Selected:{selected_player}")
 
 def world_menu():
+    clear_push()
     print("________________________")
     print("World Menu")
     print("------------------------")
@@ -101,6 +129,7 @@ def player_options():
         player_menu()
         choice = input(">")
         if choice == "1":
+            clear_push()
             create_player_menu()
         elif choice == "2":
             if Player.all() == []:
@@ -153,14 +182,24 @@ def create_player_menu():
         if choice == "0":
             break
         elif choice == "":
+            clear_push()
             print("____________________")
             print("Please Name Yourself")
         elif len(choice) > 11:
+            clear_push()
             print("___________________________")
             print("Please Enter A Shorter Name")
         else:
-            print(Player.create(choice))
-            break
+            clear_push()
+            print("A New Challenger Approachs!")
+            Player.create(choice)
+            print("")
+            print(f"And Their Name is: {choice}")
+            print("")
+            print("You Sure you want that name? Perhaps you should try from scratch again...")
+            print("")
+            global selected_player
+            selected_player = Player.find_by_id(choice)
 def create_world_menu():
     while True:
         print("____________________")
@@ -169,16 +208,22 @@ def create_world_menu():
         if choice == "0":
             break
         elif choice == "":
+            clear_push()
             print("________________________________________")
             print("No Input Detected: Please Name The World")
         elif len(choice) > 16:
+            clear_push()
             print("___________________________")
-            print("Please Enter A Shorter Name")
+            print("Please Enter A Shorter Name....")
         else:
             print(World.create(choice))
-            break
+            clear_push()
+            print("Very Creative with your names are you?")
+            print(f"Created: {choice}")
+            print(f"By all means make another")
 
 def player_menu():
+    clear_push()
     print("________________________")
     print("Player Menu")
     print("------------------------")

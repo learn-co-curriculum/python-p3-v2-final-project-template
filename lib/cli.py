@@ -124,9 +124,10 @@ def login_menu():
             break
         elif choice == "1":
             if selected_world and selected_player != None:
+                selected_player.login(selected_world)
                 while True:
                     smol_push()
-                    print("Que Position is:")
+                    print("Que Position is: 9,023,123,333,404")
                     choice = input("Thinking Of Leaving? type: 'im not waiting' to exit que>")
                     if choice == "no":
                         clear_push()

@@ -64,7 +64,7 @@ class Player:
         return player_instance
 
     def __repr__(self):
-        return f'\n<Player id: {self.id} name: {self.name} strength: {self.strength} hp: {self.hp}>\n.'
+        return f'\n<Player id: {self.id}\n name: {self.name}\n  strength: {self.strength}\n  hp: {self.hp}>\n.'
     
     @classmethod
     def find_by_id(cls,id):

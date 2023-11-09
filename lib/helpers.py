@@ -80,6 +80,7 @@ def change_level():
                     print('Please select a number that matches a character')
             except ValueError:
                 print('Please select by number')
+
 def edit_active():
     next_players_names = [player[0] for player in view_players_in_next_session()]
     print('Select a player to remove from the next game:')

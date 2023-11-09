@@ -29,3 +29,9 @@ def clear_push():
     print("")
     print("")
     print("")
+def smol_push():
+    print("")
+    print("")
+    print("")
+    print("")
+    print("")

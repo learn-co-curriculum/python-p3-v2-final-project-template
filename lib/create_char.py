@@ -89,7 +89,7 @@ def create_new_char_menu(current_player):
 def get_name():
     while True:
         name = input("❯❯ ")
-        if 3 <= len(name) <= 20:
+        if 1 <= len(name) <= 20:
             character_info["name"] = name
             print(f'★ Character\'s name: {character_info["name"]} ★')
             break

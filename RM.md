@@ -1,4 +1,9 @@
 Welcome to Adventures of your choice
+
+To start the program the user will need to type in the command line:
+     
+     python lib/cli.py  
+
 Here the user will see a menu that displays the choices.
 From there they can choose to login or start with world or player options.
 If the user decides to play later they can choose to exit.

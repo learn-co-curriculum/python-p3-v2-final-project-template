@@ -66,13 +66,13 @@ def change_level():
                                     to_change.update_level(level)
                                     print("✔ ✔ SUCCESS ✔ ✔")
                                     print(f"{to_change.name}'s level has been changed to {level}!")
-                                    print("Returning to your profile...")
+                                    print("Returning to DM mode...")
                                     print('-----------------------')
                                     editing =  False
                                     break
                                 elif choice == "N":
                                     print("✖ ✖ Edit Cancelled ✖ ✖")
-                                    print("Returning to your profile")
+                                    print("Returning to DM mode...")
                                     print('-----------------------')
                                     editing =  False
                                     break
@@ -86,7 +86,6 @@ def change_level():
                     print('Please select a number that matches a character')
             except ValueError:
                 print('Please select by number')
-
 def edit_active():
     print('-----------------------')
     

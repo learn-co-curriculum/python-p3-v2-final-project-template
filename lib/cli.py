@@ -1,28 +1,109 @@
 # lib/cli.py
 
+""" MAIN MENU CLI """
 from helpers import (
     exit_program,
-    helper_1
+    create_new_player,
+    view_all_players,
+    view_players_in_next_session,  
 )
 
-
-def main():
+def display_main_menu():
     while True:
-        menu()
+        main_menu()
         choice = input("> ")
         if choice == "0":
             exit_program()
         elif choice == "1":
-            helper_1()
+            create_new_player()
+        elif choice == "3":
+            view_all_players()
+        elif choice == "2":
+            display_profile_menu()
+        elif choice == "4":
+            view_players_in_next_session()
+        # elif choice == "5":
+            # delete_player()
         else:
-            print("Invalid choice")
+            print("Invalid choice. Please try again.")
 
-
-def menu():
-    print("Please select an option:")
+def main_menu():
+    print("D&D Character Creator:")
     print("0. Exit the program")
-    print("1. Some useful function")
+    print("1. Create new player")
+    print("2. View your profile")
+    print("3. View all players")
+    print("4. View players attending next session")
+    # print("5. Delete a player")
+
+
+""" PLAYER PROFILE CLI """
+from helpers import (
+    player_name,
+    view_all_characters,
+    view_active_characters,
+    delete_player,
+    delete_character,
+    rsvp
+)
+from create_char import (
+    create_new_char_menu
+)
+
+def display_profile_menu():
+    password = input('Enter your password: ')
+    if password == '123':
+        while True:
+            profile_menu()
+            choice = input('** ')
+            if choice == '0':
+                break
+            elif choice == '1':
+                create_new_char_menu()
+            elif choice == '2':
+                view_all_characters()
+            elif choice == '3':
+                view_active_characters()
+            elif choice == '4':
+                rsvp()
+            elif choice == '5':
+                delete_character()
+            elif choice == '6':
+                delete_player()    
+            else:
+                print("Invalid choice. Please try again.")
+    else:
+        print("Incorrect Password.")
+                
+def profile_menu():
+    """profile title should include player.name"""
+    print(f"{player_name}'s Profile:") 
+    print("0. Back to Main Menu")
+    print("1. Create new character")
+    print("2. View all characters")
+    print("3. View your active characters")
+    print("4. RSVP for next session")
+    print("5. Delete a character")
+    print("6. Delete your profile")
 
 
 if __name__ == "__main__":
-    main()
+    display_main_menu()
+
+
+# import helpers
+# 
+# profile_choice = input("> ")
+# 
+# if profile_choice == '0':
+#   break
+# elif profile_choice in ['1', '2', '3']:
+#   profile_actions ={
+#       '1': helpers.create_character,
+#       '2': helpers.view_characters
+# } 
+#   profile_actions[profile_choice]()
+# 
+# 
+# 
+# 

@@ -1,66 +1,61 @@
-import sqlite3
+from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, DateTime
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker, relationship
+from sqlalchemy.exc import SQLAlchemyError
+import datetime
 
-def create_connection(db_file):
-    """ Create a database connection to the SQLite database specified by db_file """
-    conn = None
-    try:
-        conn = sqlite3.connect(db_file)
-    except sqlite3.Error as e:
-        print(e)
-    return conn
+Base = declarative_base()
 
-def create_table(conn, create_table_sql):
-    """ Create a table from the create_table_sql statement """
-    try:
-        c = conn.cursor()
-        c.execute(create_table_sql)
-    except sqlite3.Error as e:
-        print(e)
+class User(Base):
+    __tablename__ = 'users'
+
+    id = Column(Integer, primary_key=True)
+    username = Column(String, unique=True, nullable=False)
+    password = Column(String, nullable=False)  # Password should be hashed in real application
+    time_logs = relationship("TimeLog", back_populates="user")
+
+    # ORM Methods for User
+    @classmethod
+    def create(cls, username, password, session):
+        new_user = cls(username=username, password=password)
+        try:
+            session.add(new_user)
+            session.commit()
+            return new_user
+        except SQLAlchemyError as e:
+            print(f"Error creating user: {e}")
+            session.rollback()
+            return None
+
+    # Additional ORM methods like delete, find by id, etc., can be added here
+
+class TimeLog(Base):
+    __tablename__ = 'time_logs'
+
+    id = Column(Integer, primary_key=True)
+    clock_in_time = Column(DateTime, default=datetime.datetime.now)
+    clock_out_time = Column(DateTime, nullable=True)
+    user_id = Column(Integer, ForeignKey('users.id'))
+    user = relationship("User", back_populates="time_logs")
+
+    # ORM Methods for TimeLog
+    @classmethod
+    def create(cls, user, session):
+        new_log = cls(user=user)
+        try:
+            session.add(new_log)
+            session.commit()
+            return new_log
+        except SQLAlchemyError as e:
+            print(f"Error creating time log: {e}")
+            session.rollback()
+            return None
+
+    # Additional ORM methods like delete, find by id, etc., can be added here
 
 def initialize_db():
-    """ Initialize the database with required tables """
-    database = "timeclock.db"  # Name of the SQLite database file
-
-    sql_create_users_table = """
-    CREATE TABLE IF NOT EXISTS users (
-        id integer PRIMARY KEY,
-        username text NOT NULL,
-        password text NOT NULL
-    ); """
-
-    sql_create_time_logs_table = """
-    CREATE TABLE IF NOT EXISTS time_logs (
-        id integer PRIMARY KEY,
-        user_id integer NOT NULL,
-        clock_in_time text,
-        clock_out_time text,
-        FOREIGN KEY (user_id) REFERENCES users (id)
-    ); """
-
-    # Create a database connection
-    conn = create_connection(database)
-
-    # Create tables
-    if conn is not None:
-        create_table(conn, sql_create_users_table)
-        create_table(conn, sql_create_time_logs_table)
-        conn.close()
-    else:
-        print("Error! Cannot create the database connection.")
-
-def add_user(username, password):
-    """Add a new user to the database using a context manager."""
-    sql = ''' INSERT INTO users(username, password) VALUES(?, ?) '''
-    database = "timeclock.db"
-
-    with create_connection(database) as conn:
-        cur = conn.cursor()
-        cur.execute(sql, (username, password))
-        conn.commit()
-        return cur.lastrowid  # Returns the id of the inserted user
+    engine = create_engine('sqlite:///timeclock.db')
+    Base.metadata.create_all(engine)
 
 if __name__ == '__main__':
     initialize_db()
-    # Example usage of add_user (remove or comment out in production)
-    new_user_id = add_user('john_doe', 'secure_password123')
-    print(f"Added new user with ID: {new_user_id}")

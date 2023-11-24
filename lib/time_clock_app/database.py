@@ -48,5 +48,19 @@ def initialize_db():
     else:
         print("Error! Cannot create the database connection.")
 
+def add_user(username, password):
+    """Add a new user to the database using a context manager."""
+    sql = ''' INSERT INTO users(username, password) VALUES(?, ?) '''
+    database = "timeclock.db"
+
+    with create_connection(database) as conn:
+        cur = conn.cursor()
+        cur.execute(sql, (username, password))
+        conn.commit()
+        return cur.lastrowid  # Returns the id of the inserted user
+
 if __name__ == '__main__':
     initialize_db()
+    # Example usage of add_user (remove or comment out in production)
+    new_user_id = add_user('john_doe', 'secure_password123')
+    print(f"Added new user with ID: {new_user_id}")

@@ -1,3 +1,7 @@
+from time_clock_app.database import Session
+
+session = Session()
+
 from helpers import (
     exit_program,
     register_user,
@@ -31,5 +35,5 @@ def menu():
     print("3. Clock out")
     print("4. View user information")
 
-if name == "main":
+if __name__ == "__main__":  
     main()

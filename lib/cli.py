@@ -1,12 +1,10 @@
-# lib/cli.py
-
 from helpers import (
     exit_program,
-    create_username,
-    create_password,
-    user_info
+    register_user,
+    user_info,
+    clock_in_user,
+    clock_out_user
 )
-
 
 def main():
     while True:
@@ -15,22 +13,23 @@ def main():
         if choice == "0":
             exit_program()
         elif choice == "1":
-            create_username()
+            register_user()
         elif choice == "2":
-            create_password()
+            clock_in_user()
         elif choice == "3":
+            clock_out_user()
+        elif choice == "4":
             user_info()
         else:
             print("Invalid choice")
 
-
 def menu():
     print("Please select an option:")
     print("0. Exit the program")
-    print("1. create username")
-    print("2. create password")
-    print("3. user_info menu")
+    print("1. Register new user")
+    print("2. Clock in")
+    print("3. Clock out")
+    print("4. View user information")
 
-
-if __name__ == "__main__":
+if name == "main":
     main()

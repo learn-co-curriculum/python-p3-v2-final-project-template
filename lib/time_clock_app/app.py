@@ -1,5 +1,6 @@
 import click
 from database import User, TimeLog, initialize_db, sessionmaker, create_engine
+import datetime
 
 # Initialize the database
 initialize_db()

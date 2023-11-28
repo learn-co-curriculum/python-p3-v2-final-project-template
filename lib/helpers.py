@@ -1,7 +1,10 @@
 # lib/helpers.py
 
-def helper_1():
-    print("Performing useful function#1.")
+def create_username():
+    user = input("unsername, password: ")
+    print (f'your user name is: {user}')
+    exit()
+
 
 
 def exit_program():

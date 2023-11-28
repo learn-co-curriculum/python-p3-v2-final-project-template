@@ -6,6 +6,10 @@ import datetime
 
 engine = create_engine('sqlite:///timeclock.db')
 
+
+Session = sessionmaker(bind=engine)
+
+
 Base = declarative_base()
 
 class User(Base):

@@ -1,5 +1,8 @@
 import os
-from ./database import User, TimeLog, Session
+from time_clock_app.database import User, TimeLog, Session
+
+
+session = Session()
 
 def register_user():
     os.system('cls' if os.name == 'nt' else 'clear')

@@ -1,8 +1,10 @@
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, DateTime
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.exc import SQLAlchemyError
 import datetime
+
+engine = create_engine('sqlite:///timeclock.db')
 
 Base = declarative_base()
 

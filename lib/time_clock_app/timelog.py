@@ -1,14 +1,13 @@
 import datetime
-from sqlalchemy import create_engine, Column, Integer, ForeignKey, DateTime
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, relationship
+from sqlalchemy import Column, Integer, ForeignKey, DateTime
+from sqlalchemy.orm import relationship
 from sqlalchemy.exc import SQLAlchemyError
-from database import User  # Ensure this import matches your project structure
-
-Base = declarative_base()
+from base import Base
+from models import User
 
 class TimeLog(Base):
     __tablename__ = 'time_logs'
+    __table_args__ = {'extend_existing': True}
 
     id = Column(Integer, primary_key=True)
     clock_in_time = Column(DateTime, default=datetime.datetime.now)
@@ -49,13 +48,4 @@ class TimeLog(Base):
             print(f"Database error: {e}")
             session.rollback()
 
-# Initialize database connection and session
-engine = create_engine('sqlite:///timeclock.db')
-Base.metadata.create_all(engine)
-Session = sessionmaker(bind=engine)
-session = Session()
 
-# Example usage
-# Assuming 'user' is an instance of the User class
-# time_log = TimeLog.clock_in(user, session)
-# time_log = TimeLog.clock_out(user, session)

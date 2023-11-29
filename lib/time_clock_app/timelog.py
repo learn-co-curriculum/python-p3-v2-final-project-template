@@ -36,7 +36,6 @@ class TimeLog(Base):
     def clock_out(cls, user, session):
         """ Record the clock-out time for the user """
         try:
-            # Find the latest time log without a clock_out_time
             log = session.query(cls).filter_by(user=user, clock_out_time=None).first()
             if log:
                 log.clock_out_time = datetime.datetime.now()

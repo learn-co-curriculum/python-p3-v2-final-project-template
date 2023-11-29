@@ -1,5 +1,5 @@
 # models.py
-from base import Base  # Import Base from base.py
+from base import Base 
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 import datetime
@@ -24,4 +24,13 @@ class User(Base):
             print(f"Error creating user: {e}")
             session.rollback()
             return None
-    # Define any additional ORM methods like create, delete, etc., for User
+        
+    def total_hours_worked(self):
+        total_duration = 0
+        for log in self.time_logs:
+            if log.clock_in_time and log.clock_out_time:
+                duration = log.clock_out_time - log.clock_in_time
+                total_duration += duration.total_seconds()
+
+        total_hours = total_duration / 3600
+        return total_hours

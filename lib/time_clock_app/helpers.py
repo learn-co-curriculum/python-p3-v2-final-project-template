@@ -6,7 +6,7 @@ from timelog import TimeLog
 def register_user(session):
     os.system('cls' if os.name == 'nt' else 'clear')
     username = input("Enter username: ")
-    password = input("Enter password: ")  # Hash this password in real applications
+    password = input("Enter password: ") 
     new_user = User.create(username, password, session)
     if new_user:
         print(f"User {username} created successfully. User ID is: {new_user.id}")
@@ -19,10 +19,11 @@ def user_info(session):
     user = session.query(User).get(user_id)
     if user:
         print(f"Username: {user.username}")
-        for log in user.time_logs:
-            print(f"Clock-in: {log.clock_in_time}, Clock-out: {log.clock_out_time}")
+        total_hours = user.total_hours_worked()
+        print(f"Total hours worked: {total_hours:.2f} hours")
     else:
         print("User not found.")
+
 
 def exit_program():
     print("Goodbye!")

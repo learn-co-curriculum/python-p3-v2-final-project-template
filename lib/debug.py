@@ -27,17 +27,5 @@ print(Boxing.membership_required)
 # L1.save()
 # Boxing.save()
 
-t2 = Trainer("Tony", "Little")
-t3 = Trainer("Tracy", "Anderson")
-t4 = Trainer("Jillian", "Michales")
-t5 = Trainer("Bob", "Harper")
-t6 = Trainer("Kathy", "Smith")
-
-e2 = Exercise("Boxing")
-e3 = Exercise("Spin Class")
-e4 = Exercise("Zumba")
-e5 = Exercise("Cycling")
-e6 = Exercise("Yoga")   
-
 
 ipdb.set_trace()

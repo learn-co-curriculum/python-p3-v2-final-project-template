@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # lib/debug.py
-import ipdb; 
+
+import ipdb
 from models.__init__ import CONN, CURSOR
 
 from models.program import Program
@@ -87,6 +88,7 @@ MemberID = 2
 MemberFirstName = "Katie"   
 MemberLastName = "Nowicki"  
 MemberMembership = "Premium"
+
 
 
 ipdb.set_trace()

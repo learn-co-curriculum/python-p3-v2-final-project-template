@@ -72,7 +72,8 @@ def menu():
     console.print("5. Add New Exercise Program")
     console.print("6. Delete Members")
     console.print("7. Delete Exercise Program")
-    console.print("8. Delete Trainer")
+    console.print("8. Add Trainer")
+    console.print("9. Delete Trainer")
 print("Thank you for using JKH Gym.")
 
 if __name__ == "__main__":

@@ -23,6 +23,12 @@ class Exercise:
     def display_info(self):
         print(f"Exercise Name: {self.name}")
 
+    def add_exercise(self):
+        query = "INSERT INTO exercise (name) VALUES (?);"
+        values = (self.name,)
+        self.CURSOR.execute(query, values)
+        self.CONN.commit()
+
     @classmethod #affects the whole table, not just one row
     def create_table(cls): #this class as a parameter
         query = """

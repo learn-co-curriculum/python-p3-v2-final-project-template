@@ -62,7 +62,7 @@ def menu():
     console.print("            ///\     /\\\\", style="bold green")
     console.print("            '''       '''", style="bold green")
     
-    console.print("Welcome to JKH Gym", style="bold purple")
+    console.print("Welcome to JKH Gym", style="bold blue")
     console.print("Please select an option:", style="bold")
     console.print("0. Exit the program")
     console.print("1. Add New Gym Member")
@@ -73,7 +73,7 @@ def menu():
     console.print("6. Delete Members")
     console.print("7. Delete Exercise Program")
     console.print("8. Delete Trainer")
-print("Thank you for using JKH Gym. Goodbye.")
+print("Thank you for using JKH Gym.")
 
 if __name__ == "__main__":
     main()

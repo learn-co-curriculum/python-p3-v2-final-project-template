@@ -132,6 +132,14 @@ def delete_program():
     program.delete()
     print(f"{program} has been deleted.")
 
+def add_trainer():
+    first_name = input("Enter trainers first name: ")
+    last_name = input("Enter trainers last name: ")
+    new_trainer = Trainer.create_trainer_row(first_name, last_name)
+    print(f'Trainer {new_trainer.id} {new_trainer.first_name} {new_trainer.last_name} has been added.')
+
+    return new_trainer
+
 def delete_trainer():
     first_name = input("Enter trainers first name: ")
     last_name = input("Enter trainers last name: ")

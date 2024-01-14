@@ -1,6 +1,7 @@
 # lib/cli.py
 from rich.console import Console
 console = Console()
+
 from helpers import (
     exit_program,
     add_member,
@@ -10,6 +11,7 @@ from helpers import (
     add_program,
     delete_member, 
     delete_program,
+    add_trainer,
     delete_trainer
 )
 
@@ -35,6 +37,8 @@ def main():
         elif choice == "7":
             delete_program()
         elif choice == "8":
+            add_trainer()
+        elif choice == "9":
             delete_trainer()
         else:
             print("Invalid choice")

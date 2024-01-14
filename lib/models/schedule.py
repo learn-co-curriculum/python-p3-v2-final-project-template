@@ -115,7 +115,7 @@ class Schedule:
             VALUES (?, ?, ?, ?, ?)
         """
 
-        CURSOR.execute(sql, (self.program, self.room, self.date, self.start_time, self.end_time))
+        CURSOR.execute(sql, (self.program, self.room, self.date, self.start_time, self.end_time,))
         CONN.commit()
         self.id = CURSOR.lastrowid
     

@@ -5,11 +5,11 @@ CURSOR = CONN.cursor()
 
 class Member:
     all = []
-    def __init__(self, id, first_name, last_name, membership_type="Basic"):
+    def __init__(self, first_name, last_name, membership_type="Basic", id=None):
         self.id = id
-        self._first_name = first_name # Needs to be property
+        self._first_name = first_name
         self._last_name = last_name
-        self._membership_type = membership_type # Needs to be property
+        self._membership_type = membership_type
         Member.all.append(self)
         # self.classes_attended = [] 
 
@@ -21,6 +21,8 @@ class Member:
     def first_name(self, first_name):
         if isinstance(first_name, str) and len(first_name) > 0 and not hasattr(self, 'first_name'):
             self._first_name = first_name
+        else:
+            raise Exception("first name needs to be of type string and greater than 0 characters long.")
 
     @property 
     def last_name(self):
@@ -30,6 +32,8 @@ class Member:
     def last_name(self, last_name):
         if isinstance(last_name, str) and len(last_name) > 0 and not hasattr(self, 'last_name'):
             self._last_name = last_name
+        else:
+            raise Exception("last name needs to be of type string and greater than 0 characters long.")
 
     @property 
     def membership_type(self):
@@ -37,28 +41,15 @@ class Member:
     
     @membership_type.setter 
     def membership_type(self, value):
-        if value in ["Basic", "Premium"]:
+        if value.lower() in ["basic", "premium"]:
             self._membership_type = value
-
-    def upgrade_membership(self):
-        if self._membership_type == "Basic":
-            self._membership_type = "Premium"
-            print(f"{self._first_name} {self._last_name}'s membership upgraded to Premium.")
-
-    def attend_class(self, exercise):
-        self.classes_attended.append(exercise)
-        print(f"{self.name} attended {exercise.name} class.")
-
-    def display_info(self):
-        membership_info = f"Membership Type: {self.membership_type}"
-        classes_info = f"Classes Attended: {', '.join([exercise.name for exercise in self.classes_attended])}"
-
-        print(f"Member Name: {self.name}\n{membership_info}\n{classes_info}")
+        else:
+            raise Exception("membership_type be either basic or premium.")
 
     @classmethod 
     def create_table(cls):
         query = """
-            CREATE TABLE IF NOT EXISTS `member_table` (
+            CREATE TABLE IF NOT EXISTS members (
             id INTEGER PRIMARY KEY, 
             first_name TEXT, 
             last_name TEXT, 
@@ -67,28 +58,28 @@ class Member:
         CURSOR.execute(query)
         CONN.commit()
 
-    # @classmethod 
-    # def drop_table(cls):
-    #     query = """
-    #         DROP TABLE IF EXISTS `member_table`;
-    #     """
-    #     CURSOR.execute(query)
-    #     CONN.commit()
+    @classmethod 
+    def drop_table(cls):
+        query = """
+            DROP TABLE IF EXISTS members;
+        """
+        CURSOR.execute(query)
+        CONN.commit()
 
     def save(self):
         query = """
-            INSERT INTO member_table ( first_name, last_name, membership_type )
+            INSERT INTO members (first_name, last_name, membership_type)
             VALUES (?, ?, ?);
         """
-        CURSOR.execute(query, (self._first_name, self._last_name, self._membership_type))
+        CURSOR.execute(query, (self.first_name, self.last_name, self.membership_type,))
         CONN.commit()
         self.id = CURSOR.lastrowid 
 
-    @classmethod 
-    def create_member_row(cls, id, first_name, last_name, membership_type="Basic"):
-        member = cls(id, first_name, last_name, membership_type)
-        member.save()
-        return member 
+    # @classmethod 
+    # def create_member_row(cls, id, first_name, last_name, membership_type="Basic"):
+    #     member = cls(id, first_name, last_name, membership_type)
+    #     member.save()
+    #     return member 
     
     @classmethod 
     def new_member_db(cls, row):
@@ -104,14 +95,14 @@ class Member:
     @classmethod 
     def get_all_members(cls):
         sql = """
-            SELECT * FROM member_table
+            SELECT * FROM members
         """
         return [cls.new_member_db(one_row) for one_row in CURSOR.execute(sql).fetchall()]
     
     @classmethod 
     def find_by_name(cls, first_name, last_name):
         sql = """
-            SELECT * FROM member_table
+            SELECT * FROM members
             WHERE first_name = ? 
             AND last_name = ?
             LIMIT 1
@@ -125,4 +116,19 @@ class Member:
             last_name = row[2],
             membership_type = [3]
         )
+
+    # def upgrade_membership(self):
+    #     if self._membership_type == "Basic":
+    #         self._membership_type = "Premium"
+    #         print(f"{self._first_name} {self._last_name}'s membership upgraded to Premium.")
+
+    # def attend_class(self, exercise):
+    #     self.classes_attended.append(exercise)
+    #     print(f"{self.name} attended {exercise.name} class.")
+
+    # def display_info(self):
+    #     membership_info = f"Membership Type: {self.membership_type}"
+    #     classes_info = f"Classes Attended: {', '.join([exercise.name for exercise in self.classes_attended])}"
+
+    #     print(f"Member Name: {self.name}\n{membership_info}\n{classes_info}")
 

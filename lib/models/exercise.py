@@ -69,7 +69,7 @@ class Exercise:
     @classmethod
     def get_all(cls):
         sql = """
-            SELECT * FROM exercise;
+            SELECT * FROM exercises;
         """
         CURSOR.execute(sql)
         rows = CURSOR.fetchall()
@@ -78,12 +78,3 @@ class Exercise:
             exercise = cls.new_form_db(row)
             exercises.append(exercise)
         return exercises
-
-
-
-
-# Exercises
-spin_class = Exercise("Spin Class")
-boxing = Exercise("Boxing")
-zumba = Exercise("Zumba")
-step_class = Exercise("Step Class")

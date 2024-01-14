@@ -1,8 +1,5 @@
 import sqlite3
 
-CONN = sqlite3.connect("lib/gym.db") #connection
-CURSOR = CONN.cursor() 
-
 class Trainer:
     CONN = sqlite3.connect("gym.db")
     CURSOR = CONN.cursor()
@@ -26,6 +23,12 @@ class Trainer:
     def display_info(self):
         print(f"Trainer Name: {self.first_name} {self.last_name}")
 
+    def add_trainer(self):
+        query = "INSERT INTO trainer (first_name, last_name) VALUES (?, ?);"
+        values = (self.first_name, self.last_name)
+        self.CURSOR.execute(query, values)
+        self.CONN.commit()
+        
     @classmethod #affects the whole table, not just one row
     def create_table(cls): #this class as a parameter
         query = """

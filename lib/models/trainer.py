@@ -1,17 +1,16 @@
-import sqlite3
-
-from models.__init__ import CONN, CURSOR
-
-CONN = sqlite3.connect("lib/gym.db") #connection
-CURSOR = CONN.cursor() 
+from models.__init__ import CURSOR, CONN
 
 class Trainer:
+
+    all = {}
 
     def __init__(self, first_name, last_name, id=None):
         self.id = id
         self.first_name = first_name
         self.last_name = last_name
-        self.create_table()
+    
+    def __repr__(self):
+        return f"<Trainer {self.id}: {self.first_name} {self.last_name}>"
     
     @property
     def first_name(self):
@@ -33,7 +32,8 @@ class Trainer:
         else:
             raise Exception("last name needs to be of type string and greater than 0 characters long.")
 
-    def create_table(self):
+    @classmethod
+    def create_table(cls):
         query = """
             CREATE TABLE IF NOT EXISTS trainers (
                 id INTEGER PRIMARY KEY,
@@ -41,25 +41,13 @@ class Trainer:
                 last_name TEXT
             );
         """
-        self.CURSOR.execute(query)
-        self.CONN.commit()
-
-    @classmethod #affects the whole table, not just one row
-    def create_table(cls): #this class as a parameter
-        query = """
-            CREATE TABLE IF NOT EXISTS trainers (
-            id INTEGER PRIMARY KEY,
-            first_name TEXT,
-            last_name TEXT
-            );
-        """
-        CURSOR.execute(query) #CURSOR takes the 'query' and executes it
-        CONN.commit() #save the changes
+        CURSOR.execute(query)
+        CONN.commit()
 
     @classmethod
     def drop_table(cls):
         query = """
-            DROP TABLE trainers;
+            DROP TABLE IF EXISTS trainers;
         """
         CURSOR.execute(query)
         CONN.commit()
@@ -70,24 +58,66 @@ class Trainer:
             INSERT INTO trainers (first_name, last_name)
             VALUES (?, ?);
         """
-        CURSOR.execute(query, (self.first_name, self.last_name,))
+        CURSOR.execute(query, (self.first_name, self.last_name))
         CONN.commit() #save the changes
         self.id = CURSOR.lastrowid #update the id
-        # return self.id #return the id
+        type(self).all[self.id] = self
     
     @classmethod
-    def create(cls, name):
-        trainer = Trainer(name)
-        return trainer.save() #return the id
-    
-    @classmethod
-    def new_form_db(cls, row):
-        trainer = cls(
-            name = row[1], #row at index 1 is the name
-            id = row[0] #row at index 0 is the id
-        )
-        print(trainer.name, trainer.id)
+    def create(cls, first_name, last_name):
+        trainer = cls(first_name, last_name)
+        trainer.save()
+
         return trainer
+    
+    def update(self):
+        sql = """
+            UPDATE trainers
+            SET first_name = ?, last_name = ?
+            WHERE id = ?
+        """
+
+        CURSOR.execute(sql, (self.first_name, self.last_name, self.id))
+        CONN.commit()
+    
+    def delete(self):
+        sql = """
+            DELETE FROM trainers
+            WHERE id = ?
+        """
+
+        CURSOR.execute(sql, (self.id,))
+        CONN.commit()
+
+        del type(self).all[self.id]
+        self.id = None
+    
+    @classmethod
+    def instance_from_db(cls, row):
+        trainer = cls.all.get(row[0])
+
+        if trainer:
+            trainer.first_name = row[1]
+            trainer.last_name = row[2]
+
+        else:
+            trainer = cls(row[1], row[2])
+            trainer.id = row[0]
+            cls.all[trainer.id] = trainer
+
+        return trainer
+    
+    @classmethod
+    def find_by_id(cls, id):
+        sql = """
+            SELECT *
+            FROM trainers
+            WHERE id = ?
+        """
+
+        row = CURSOR.execute(sql, (id,)).fetchone()
+
+        return cls.instance_from_db(row) if row else None
     
     @classmethod
     def get_all(cls):
@@ -105,9 +135,41 @@ class Trainer:
     def display_info(self):
         print(f"Trainer Name: {self.first_name} {self.last_name}")
 
+    # @classmethod
+    # def new_form_db(cls, row):
+    #     trainer = cls(
+    #         first_name = row[1], #row at index 1 is the name
+    #         last_name = row[2]
+    #         id = row[0] #row at index 0 is the id
+    #     )
 
+    #     return trainer
 
-
-
-#trainer = Trainer("Kathy")
+    @classmethod
+    def find_by_name(cls, first_name, last_name):
+        sql = """
+            SELECT * FROM trainers
+            WHERE first_name = ? AND last_name = ?
+            LIMIT 1;
+        """
+        CURSOR.execute(sql, (first_name, last_name))
+        row = CURSOR.fetchone()
+        if row:
+            return cls.instance_from_db(row)
+        else:
+            return None
+        
+    @classmethod
+    def delete_by_name(cls, first_name, last_name):
+        sql = """
+            DELETE FROM trainers
+            WHERE first_name = ? AND last_name = ?;
+        """
+        CURSOR.execute(sql, (first_name, last_name))
+        affected_rows = CURSOR.rowcount
+        CONN.commit()
+        if affected_rows > 0:
+            print(f"Trainer {first_name} {last_name} deleted successfully.")
+        else:
+            print("Trainer not found or already deleted.")
 

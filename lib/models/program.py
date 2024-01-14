@@ -1,81 +1,87 @@
+
 import sqlite3
 
-CONN = sqlite3.connect("lib/gym.db")
-CURSOR = CONN.cursor()
+from models.__init__ import CURSOR, CONN
+
+from models.location import Location
+from models.trainer import Trainer
 
 class Program:
 
-    all = []
+    all = {}
 
-    def __init__(self, location, trainer, exercise, membership_required="Basic", id=None):
+    def __init__(self, location_id, trainer_id, exercise_name, membership_required, id=None):
         self.id = id
-        self.location = location
-        self.trainer = trainer
-        self.exercise = exercise
+        self.location_id = location_id
+        self.trainer_id = trainer_id
+        self.exercise_name = exercise_name
         self.membership_required = membership_required
-
         Program.all.append(self)
+
+
+    def __repr__(self):
+        return (
+            f"""<Program {self.id}
+            Exercise Name: {self.exercise_name}
+            Location ID: {self.location_id}
+            Trainer ID: {self.trainer_id}
+            Membership Level Needed: {self.membership_required}>"""
+        )
     
     @property
-    def location(self):
-        return self._location
-    @location.setter
-    def location(self, value):
-        from models.location import Location
-
-        if isinstance(value, Location):
-            self._location = value
+    def location_id(self):
+        return self._location_id
+    @location_id.setter
+    def location_id(self, value):
+        if isinstance(value, int) and Location.find_by_id(value):
+            self._location_id = value
         else:
-            raise Exception("location must be of type class Location.")
+            raise Exception("location_id must reference a location in the database.")
     
     @property
-    def trainer(self):
-        return self._trainer
-    @trainer.setter
-    def trainer(self, value):
-        from models.trainer import Trainer
-
-        if isinstance(value, Trainer):
-            self._trainer = value
+    def trainer_id(self):
+        return self._trainer_id
+    @trainer_id.setter
+    def trainer_id(self, value):
+        if isinstance(value, int) and Trainer.find_by_id(value):
+            self._trainer_id = value
         else:
-            raise Exception("trainer must be of type class Trainer.")
+            raise Exception("trainer_id must reference a trainer in the database.")
     
     @property
-    def exercise(self):
-        return self._exercise
-    @exercise.setter
-    def exercise(self, value):
-        from models.exercise import Exercise
-
-        if isinstance(value, Exercise):
-            self._exercise = value
+    def exercise_name(self):
+        return self._exercise_name
+    @exercise_name.setter
+    def exercise_name(self, value):
+        if isinstance(value, str) and 0 < len(value):
+            self._exercise_name = value
         else:
-            raise Exception("exercise must be of type class Exercise.")
+            raise Exception("exercise_name must be of type string and longer than 0 characters.")
     
     @property
     def membership_required(self):
         return self._membership_required
+    
     @membership_required.setter
     def membership_required(self, value):
-        if value.lower() in ["basic", "premium"]:
+        if isinstance(value, str) and (value.lower() == "basic" or value.lower() == "premium"):
             self._membership_required = value
         else:
-            raise Exception("membership_required be either basic or premium.")
+            raise Exception("membership_required must be of type string and must be either basic or premium.")
     
     @classmethod
     def create_table(cls):
-        # Create a new table to track all Program instances
         sql = """
             CREATE TABLE IF NOT EXISTS programs (
                 id INTEGER PRIMARY KEY,
+                location_id INTEGER,
                 trainer_id INTEGER,
-                exercise_id INTEGER,
+                exercise_name TEXT,
                 membership_required TEXT,
-                FOREIGN KEY (trainer_id) REFERENCES trainers(id),
-                FOREIGN KEY (exercise_id) REFERENCES exercises(id)
+                FOREIGN KEY (location_id) REFERENCES locations(id),
+                FOREIGN KEY (trainer_id) REFERENCES trainers(id)
             );
         """
-
         CURSOR.execute(sql)
         CONN.commit()
     
@@ -84,31 +90,94 @@ class Program:
         sql = """
             DROP TABLE IF EXISTS programs;
         """
-
         CURSOR.execute(sql)
         CONN.commit()
     
     def save(self):
         sql = """
-            INSERT INTO programs (trainer_id, exercise_id, membership_required)
-            VALUES (?, ?, ?)
+            INSERT INTO programs (location_id, trainer_id, exercise_name, membership_required)
+            VALUES (?, ?, ?, ?)
         """
 
-        CURSOR.execute(sql, (self.trainer.id, self.exercise.id, self.membership_required))
+        CURSOR.execute(sql, (self.location_id, self.trainer_id, self.exercise_name, self.membership_required))
         CONN.commit()
+
         self.id = CURSOR.lastrowid
+        type(self).all[self.id] = self
     
-    # @classmethod
-    # def create(cls, )
+    @classmethod
+    def create(cls, location_id, trainer_id, exercise_name, membership_required):
+        program = cls(location_id, trainer_id, exercise_name, membership_required)
+        program.save()
+
+        return program
+    
+    def update(self):
+        sql = """
+            Update programs
+            SET location_id = ?, trainer_id = ?, exercise_name = ?, membership_required = ?
+            WHERE id = ?
+        """
+
+        CURSOR.execute(sql, (self.location_id, self.trainer_id, self.exercise_name, self.membership_required, self.id))
+        CONN.commit()
+    
+    def delete(self):
+        sql = """
+            DELETE FROM programs
+            WHERE id = ?
+        """
+
+        CURSOR.execute(sql, (self.id,))
+        CONN.commit()
+
+        del type(self).all[self.id]
+        self.id = None
+    
+    @classmethod
+    def instance_from_db(cls, row): 
+        program = cls(row[1], row[2], row[3], row[4])
+        program.id = row[0]
+        cls.all[program.id] = program
+        return program
+
+    
+    @classmethod
+    def find_by_id(cls, id):
+        sql = """
+            SELECT *
+            FROM programs
+            WHERE id = ?
+        """
+
+        row = CURSOR.execute(sql, (id,)).fetchone()
+
+        return cls.instance_from_db(row) if row else None
     
     @classmethod
     def fetch_table(cls):
         pass
 
-    # def display_info(self):
-    #     location_info = f"Location: {self.location.name}"
-    #     trainer_info = f"Trainer: {self.trainer.name}"
-    #     exercise_info = f"Exercise: {self.exercise.name}"
-    #     membership_info = f"Membership Type: {self.membership_type}"
+    @classmethod
+    def get_all(cls):
+        sql = """
+            SELECT * FROM programs;
+        """
+        return [cls.instance_from_db(row) for row in CURSOR.execute(sql).fetchall()]
 
-    #     print(f"Premium Information:\n{location_info}\n{trainer_info}\n{exercise_info}\n{membership_info}")
+
+
+    # @classmethod
+    # def get_all(cls):
+    #     sql = """
+    #         SELECT * FROM programs;
+    #     """
+    #     CURSOR.execute(sql)
+    #     rows = CURSOR.fetchall()
+    #     programs = []
+    #     for row in rows:
+    #         program = cls.instance_from_db(row)
+    #         programs.append(program)
+    #     return programs
+    
+    

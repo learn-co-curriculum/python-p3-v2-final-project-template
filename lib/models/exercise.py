@@ -1,21 +1,28 @@
-import sqlite3 #database
-
-CONN = sqlite3.connect("lib/gym.db") #connection
-CURSOR = CONN.cursor() #pointer for the connection, row by row
+from models.__init__ import CURSOR, CONN
 
 class Exercise:
+
+    all = {}
 
     # constructor
     def __init__(self, name, id=None):
         self.id = id # unknown now
         self.name = name
+        Exercise.all.append(self)
+
     
+    def __repr__(self):
+        return f"<Exercise {self.id}: {self.name}>"
+
     @property
     def name(self):
         return self._name
+    
     @name.setter
     def name(self, value):
-        if isinstance(value, str) and 0 < len(value):
+
+        if isinstance(value, str) and len(value) > 0:
+
             self._name = value
         else:
             raise Exception("exercise must be of type string and longer than 0 characters.")
@@ -56,31 +63,77 @@ class Exercise:
         CURSOR.execute(query, (self.name,))
         CONN.commit() #save the changes
         self.id = CURSOR.lastrowid #update the id
-        return self.id #return the id
+        type(self).all[self.id] = self
+
     
     @classmethod
     def create(cls, name):
-        exercise = Exercise(name)
-        return exercise.save() #return the id
+        exercise = cls(name)
+        exercise.save()
+
+        return exercise
+
+    def update(self):
+        sql = """
+            UPDATE exercises
+            SET name = ?
+            WHERE id = ?
+        """
+
+        CURSOR.execute(sql, (self.name, self.id))
+        CONN.commit()
+    
+    def delete(self):
+        sql = """
+            DELETE FROM exercises
+            WHERE id = ?
+        """
+
+        CURSOR.execute(sql, (self.id,))
+        CONN.commit()
+
+        del type(self).all[self.id]
+        self.id = None
     
     @classmethod
-    def new_form_db(cls, row):
-        exercise = cls(
-            name = row[1], #row at index 1 is the name
-            id = row[0] #row at index 0 is the id
-        )
-        print(exercise.name, exercise.id)
+    def instance_from_db(cls, row):
+        exercise = cls.all.get(row[0])
+
+        if exercise:
+            exercise.name = row[1]
+        
+        else:
+            exercise = cls(row[1])
+            exercise.id = row[0]
+            cls.all[exercise.id] = exercise
+
         return exercise
     
     @classmethod
-    def get_all(cls):
+    def find_by_id(cls, id):
         sql = """
-            SELECT * FROM exercises;
+            SELECT *
+            FROM exercises
+            WHERE id = ?
         """
-        CURSOR.execute(sql)
-        rows = CURSOR.fetchall()
-        exercises = []
-        for row in rows:
-            exercise = cls.new_form_db(row)
-            exercises.append(exercise)
-        return exercises
+
+        row = CURSOR.execute(sql, (id,)).fetchone()
+
+        return cls.instance_from_db(row) if row else None
+
+
+    @classmethod
+    def new_from_db(cls, row):
+        return cls(name=row[1], id=row[0])
+        sql = """
+            SELECT * FROM exercises
+            WHERE name = ?
+            LIMIT 1;
+        """
+        CURSOR.execute(sql, (name,))
+        row = CURSOR.fetchone()
+        if row:
+            return cls.instance_from_db(row)  # Assuming new_form_db constructs a Trainer instance
+        else:
+            return None
+    

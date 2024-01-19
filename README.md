@@ -1,3 +1,40 @@
+# art-tracker
+
+
+# One sentence app description:
+A database that tracks the location, owner, and artist of an artwork when art is on loan.
+
+# Many-to-Many 3 model classes:
+Artwork
+Artist
+Owner
+Museum
+more...
+
+# Domain Model Table (due today):
+Draw.io
+
+ERD (due Monday):
+
+
+MVP CRUD plan:
+
+
+plan for the property methods with constraints to each model class
+bonus: classmethods
+
+
+
+Start with the project template (provided in the following lesson). You are free to adapt the template structure, as long as you adhere to the project requirements.
+Think about the user interaction. How will you prompt the user? What information will the user enter? How will you provide feedback to the user?
+Think about your data model. How will you organize and store the information received from the user?
+If you get stuck trying to accomplish a specific task, check online to see if there's a Python library that will make it easier.
+Consider using Click or Fire to take care of basic CLI tasks for you.
+
+
+
+
+
 # Phase 3 CLI+ORM Project Template
 
 ## Learning Goals

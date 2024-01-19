@@ -28,10 +28,6 @@ Take a look at the directory structure:
     └── helpers.py
 ```
 
-Note: The directory also includes two files named `CONTRIBUTING.md` and
-`LICENSE.md` that are specific to Flatiron's curriculum. You can disregard or
-delete the files if you want.
-
 ---
 
 ## Generating Your Environment

@@ -1,11 +1,16 @@
 # lib/helpers.py
 from models.player import Player
 from models.level import Level
+from models.game import Game
 
 def create_new_player():
     name = input("What's your name? ")
     player = Player.create(name)
     print(f"Welcome, {name}!")
+    return player
+
+def new_game():
+    print("New game starts now!")
 
 def list_all_players():
     for player in Player.get_all():

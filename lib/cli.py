@@ -6,10 +6,16 @@ from helpers import (
     list_all_players,
     update_player,
     delete_player,
-    list_all_levels
+    list_all_levels,
+    new_game
 )
+
 from models.player import Player
-from models.pet import Pet
+from models.level import Level
+from models.game import Game
+from termcolor import colored, cprint
+from difflib import Differ, SequenceMatcher
+import time
 
 def main():
     while True:
@@ -21,7 +27,63 @@ def main():
         if choice == "0":
             exit_program()
         elif choice == "1":
-            create_new_player()
+            
+            playing = True
+            player = None
+            level = 1
+
+            while playing == True:
+                if player == None:
+                    player = create_new_player()
+                else:
+                    #get the string from level:
+                    current_level = Level.find_by_id(level)
+
+                    if current_level == None:
+                        print("Congrats, you've reached the end of the game!")
+                        exit()
+
+                    print(f"{current_level.name} - {current_level.difficulty}")
+                    cprint(current_level.string, "cyan")
+
+                    #start timer
+                    start_timer = time.time()
+
+                    # prompt user for input:
+                    player_input = input()
+                    print(f"You entered: {player_input}")
+
+                    # stop timer
+                    stop_timer = time.time()
+
+                    # compute diff between string and input:
+                    d = Differ()
+                    s = SequenceMatcher(None, current_level.string, player_input)
+                    result = list(d.compare(current_level.string, player_input))
+
+                    formatted_result = [colored(letter, "red") if letter[0] == "-" or letter[0] == "+" else colored(letter, "green") for letter in result]
+
+                    # calculate accuracy and speed
+                    accuracy = s.quick_ratio() * 100
+                    speed = stop_timer - start_timer
+                    
+                    # instantiate a new game to store data
+                    new_game = Game.create(player.id, current_level.id, player_input, speed, accuracy)
+
+                    #print game results (player input, time and accuracy)
+                    print(''.join(formatted_result))
+                    print(f"Accuracy: {accuracy}%")
+                    print(f"Speed: {speed} seconds")
+
+                    keep_playing = input("Would you like to keep playing? ")
+
+                    if keep_playing == "Y":
+                        level += 1
+                    elif keep_playing == "N":
+                        exit()
+                    else:
+                        print("Please answer Y or N")
+                    # ask player to keep playing, Y will iterate level by 1 and start a new game, N  will set playing to False and stop iterating.
         elif choice == "2":
             list_all_players()
         elif choice == "3":

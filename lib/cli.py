@@ -5,7 +5,8 @@ from helpers import (
     create_new_player,
     list_all_players,
     update_player,
-    delete_player
+    delete_player,
+    list_all_levels
 )
 from models.player import Player
 from models.pet import Pet
@@ -28,7 +29,7 @@ def main():
         elif choice == "4":
             delete_player()
         elif choice == "5":
-            pass
+            list_all_levels()
         elif choice == "6":
             pass
         elif choice == "7":
@@ -46,6 +47,7 @@ def menu():
     print("2. List all players")
     print("3. Update player")
     print("4. Delete player")
+    print("5. List all levels")
 
 if __name__ == "__main__":
     main()

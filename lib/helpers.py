@@ -1,5 +1,6 @@
 # lib/helpers.py
 from models.player import Player
+from models.level import Level
 
 def create_new_player():
     name = input("What's your name? ")
@@ -35,6 +36,10 @@ def delete_player():
             print("Error deleting employee: ", exc)
     else:
         print(f'Employee {_id} not found')
+
+def list_all_levels():
+    for level in Level.get_all():
+        print(level)
 
 def exit_program():
     print("Goodbye!")

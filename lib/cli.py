@@ -12,6 +12,9 @@ from models.pet import Pet
 
 def main():
     while True:
+        print("---Python Type-On---")
+        print("Welcome to Python Type-On!")
+        
         menu()
         choice = input("> ")
         if choice == "0":
@@ -37,17 +40,12 @@ def main():
 
 
 def menu():
-    print("---TAMAGOPI---")
-    print("Welcome to Tamagopi!")
+    
     print("0. Exit the program")
-    print("1. Create new player")
+    print("1. New game")
     print("2. List all players")
     print("3. Update player")
     print("4. Delete player")
-    print("5. Create new pet")
-    print("6. List all pets")
-    print("7. Update pet")
-    print("8. Delete pet")
 
 if __name__ == "__main__":
     main()

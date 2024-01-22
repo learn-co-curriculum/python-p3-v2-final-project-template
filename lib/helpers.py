@@ -3,10 +3,8 @@ from models.player import Player
 
 def create_new_player():
     name = input("What's your name? ")
-    favorite_color = input("What's your favorite color?")
-    player = Player.create(name, favorite_color)
+    player = Player.create(name)
     print(f"Welcome, {name}!")
-
 
 def list_all_players():
     for player in Player.get_all():
@@ -19,8 +17,6 @@ def update_player():
         try:
             name = input("Enter player name: ")
             player.name = name
-            favorite_color = input("Enter player's favorite color: ")
-            player.favorite_color = favorite_color
             player.update()
             print(f'Success: {player} updated')
         except Exception as exc:

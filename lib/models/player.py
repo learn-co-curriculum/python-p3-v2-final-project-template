@@ -51,7 +51,7 @@ class Player:
             VALUES (?)
         """
 
-        CURSOR.execute(sql, (self.name))
+        CURSOR.execute(sql, (self.name,))
         CONN.commit()
 
         # Assign the id of the instance to be the table's last row id:

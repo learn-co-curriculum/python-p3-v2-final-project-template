@@ -20,8 +20,5 @@
     Hadil
     Katie 
 
-## drawio
-[drawio](.png)
-
 ## ERD Link
 https://dbdiagram.io/d/Gym-65ae9eeaac844320ae768ffa

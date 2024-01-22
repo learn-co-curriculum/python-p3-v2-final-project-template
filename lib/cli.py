@@ -75,15 +75,24 @@ def main():
                     print(f"Accuracy: {accuracy}%")
                     print(f"Speed: {speed} seconds")
 
-                    keep_playing = input("Would you like to keep playing? ")
-
-                    if keep_playing == "Y":
-                        level += 1
-                    elif keep_playing == "N":
-                        exit()
+                    if accuracy < 80:
+                        try_again = input("Your accuracy was less than 80%. Would you like to try again? ")
+                        if try_again == "Y":
+                            level
+                        elif try_again == "N":
+                            exit()
+                        else:
+                            print("Please answer Y or N")
                     else:
-                        print("Please answer Y or N")
-                    # ask player to keep playing, Y will iterate level by 1 and start a new game, N  will set playing to False and stop iterating.
+                        keep_playing = input("Would you like to keep playing? ")
+                        
+                        if keep_playing == "Y":
+                            level += 1
+                        elif keep_playing == "N":
+                            exit()
+                        else:
+                            print("Please answer Y or N")
+                   
         elif choice == "2":
             list_all_players()
         elif choice == "3":
@@ -110,6 +119,9 @@ def menu():
     print("3. Update player")
     print("4. Delete player")
     print("5. List all levels")
+    print("6. Player avg accuracy and speed")
+    print("7. List of players by avg accuracy")
+    print("8. List of players by avg speed")
 
 if __name__ == "__main__":
     main()

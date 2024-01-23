@@ -5,15 +5,25 @@ from lib.models.model_1 import *
 
 from models.__init__ import CONN, CURSOR
 import ipdb
+from models.program import Program
+from models.schedule import Schedule
+from models.location import Location
+from models.trainer import Trainer
+from models.exercise import Exercise
 
-location1 = Location("Chicago")
-location2 = Location("St.Louis")
-location3 = Location("Memphis")
+print("In Debugger!")
 
-member1 = Member("Jeffrey", "Davis", "basic")
-member2 = Member("Katie", "Nowicki", "premium")
-member3 = Member("Hadil", "Hijazi", "premium")
+L1 = Location("Chicago")
+t1 = Trainer("Bob", "Thornton")
+e1 = Exercise("Boxing")
 
-
+Program.create_table()
+Boxing = Program(L1, t1, e1, "Basic")
+print(Boxing)
+print(Boxing.location.city)
+print(Boxing.trainer.first_name)
+print(Boxing.exercise.name)
+print(Boxing.membership_required)
+Boxing.save()
 
 ipdb.set_trace()

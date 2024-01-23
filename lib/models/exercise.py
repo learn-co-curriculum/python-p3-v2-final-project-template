@@ -1,5 +1,6 @@
 class Exercise:
-    def __init__(self, name):
+    def __init__(self, name, id=None):
+        self.id=id
         self.name = name # Need to make a property
 
     def display_info(self):

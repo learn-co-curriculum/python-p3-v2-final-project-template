@@ -1,9 +1,7 @@
-from exercise import Exercise
-from location import Location
-
 class Trainer:
-    def __init__(self, name):
-        self.name = name
+    def __init__(self, first_name, last_name):
+        self.first_name = first_name
+        self.last_name = last_name
         #self.current_location = None
 
     #def set_location(self, location):

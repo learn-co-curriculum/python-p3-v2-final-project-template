@@ -1,8 +1,6 @@
-
-
 class Exercise:
     def __init__(self, name):
-        self.name = name
+        self.name = name # Need to make a property
 
     def display_info(self):
         print(f"Exercise Name: {self.name}")

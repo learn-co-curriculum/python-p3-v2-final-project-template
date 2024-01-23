@@ -1,11 +1,11 @@
 
 
-class Premium:
+class Program:
     def __init__(self, location, trainer, exercise, membership_type="Premium"):
-        self.location = location
-        self.trainer = trainer
-        self.exercise = exercise
-        self.membership_type = membership_type
+        self.location = location # Needs to be a property
+        self.trainer = trainer # Needs to be a property
+        self.exercise = exercise # Needs to be a property
+        self.membership_type = membership_type # Needs to be a property
 
     def display_info(self):
         location_info = f"Location: {self.location.name}"

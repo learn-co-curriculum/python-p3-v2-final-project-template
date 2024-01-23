@@ -1,8 +1,6 @@
-
-
 class Location:
-    def __init__(self, name):
-        self.name = name
+    def __init__(self, city):
+        self.city = city # Needs to be property
 
     def display_info(self):
         print(f"Location: {self.name}")

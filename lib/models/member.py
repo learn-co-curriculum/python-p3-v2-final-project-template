@@ -1,10 +1,9 @@
-
-
 class Member:
-    def __init__(self, name, membership_type="Basic"):
-        self.name = name
-        self.membership_type = membership_type
-        self.classes_attended = []
+    def __init__(self, first_name, last_name, membership_type="Basic"):
+        self.first_name = first_name # Needs to be property
+        self.last_name = last_name
+        self.membership_type = membership_type # Needs to be property
+        # self.classes_attended = [] 
 
     def upgrade_membership(self):
         if self.membership_type == "Basic":

@@ -59,14 +59,14 @@ class Member:
     @classmethod 
     def get_all_members(cls):
         sql = """
-            SELECT * FROM members
+            SELECT * FROM member_table
         """
         return [cls.new_member_db(one_row) for one_row in CURSOR.execute(sql).fetchall()]
     
     @classmethod 
     def find_by_name(cls, first_name, last_name):
         sql = """
-            SELECT * FROM members
+            SELECT * FROM member_table
             WHERE first_name = ? 
             AND last_name = ?
             LIMIT 1
@@ -131,14 +131,14 @@ class Location:
     @classmethod 
     def get_all_locations(cls):
         sql = """
-            SELECT * FROM location
+            SELECT * FROM location_table
         """
         return [cls.new_location_db(one_row) for one_row in CURSOR.execute(sql).fetchall()]
     
     @classmethod 
     def find_by_name(cls, city):
         sql = """
-            SELECT * FROM location
+            SELECT * FROM location_table
             WHERE city = ? 
             LIMIT 1
         """

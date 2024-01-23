@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # lib/debug.py
 
-from lib.models.model_1 import *
-
 from models.__init__ import CONN, CURSOR
 import ipdb
 from models.program import Program
@@ -18,12 +16,15 @@ t1 = Trainer("Bob", "Thornton")
 e1 = Exercise("Boxing")
 
 Program.create_table()
+Exercise.create_table()
+Location.create_table()
 Boxing = Program(L1, t1, e1, "Basic")
 print(Boxing)
 print(Boxing.location.city)
 print(Boxing.trainer.first_name)
 print(Boxing.exercise.name)
 print(Boxing.membership_required)
-Boxing.save()
+# L1.save()
+# Boxing.save()
 
 ipdb.set_trace()

@@ -13,9 +13,9 @@ class Location:
         print(f"Location: {self.name}")
 
     @classmethod
-    def create_location_table(cls):
+    def create_table(cls):
         query = """
-            CREATE TABLE IS NOT EXISTS `location_table` (
+            CREATE TABLE IF NOT EXISTS locations (
             id INTEGER PRIMARY KEY,
             city TEXT);
         """
@@ -33,7 +33,7 @@ class Location:
 
     def save(self):
         query = """
-            INSERT INTO `location_table` ( `city`)
+            INSERT INTO locations (city)
             VALUES (?)
         """
         CURSOR.execute(query, (self.city))

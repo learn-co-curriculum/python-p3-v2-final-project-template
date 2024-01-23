@@ -8,7 +8,17 @@ class Exercise:
     # constructor
     def __init__(self, name, id=None):
         self.id = id # unknown now
-        self.name = name # Need to make a property
+        self.name = name
+    
+    @property
+    def name(self):
+        return self._name
+    @name.setter
+    def name(self, value):
+        if isinstance(value, str) and 0 < len(value):
+            self._name = value
+        else:
+            raise Exception("exercise must be of type string and longer than 0 characters.")
 
     def display_info(self):
         print(f"Exercise Name: {self.name}")
@@ -16,7 +26,7 @@ class Exercise:
     @classmethod #affects the whole table, not just one row
     def create_table(cls): #this class as a parameter
         query = """
-            CREATE TABLE IF NOT EXISTS exercise (
+            CREATE TABLE IF NOT EXISTS exercises (
             id INTEGER PRIMARY KEY,
             name TEXT);
         """
@@ -26,7 +36,7 @@ class Exercise:
     @classmethod
     def drop_table(cls):
         query = """
-            DROP TABLE exercise;
+            DROP TABLE exercises;
         """
         CURSOR.execute(query)
         CONN.commit()
@@ -34,7 +44,7 @@ class Exercise:
     #instance method / not class method
     def save(self):
         query = """
-            INSERT INTO exercise (name)
+            INSERT INTO exercises (name)
             VALUES (?);
         """
         CURSOR.execute(query, (self.name,))

@@ -30,7 +30,7 @@ print(Boxing.location.city)
 print(Boxing.trainer.first_name)
 print(Boxing.exercise.name)
 print(Boxing.membership_required)
-# L1.save()
+L1.save()
 # Boxing.save()
 
 ipdb.set_trace()

@@ -1,10 +1,13 @@
 from models.__init__ import CURSOR, CONN
 
 class Location:
+
     all = []
+
     def __init__(self, city, id = None):
         self._city = city
         self.id = id
+        
         Location.all.append(self)
     
     def __repr__(self):

@@ -1,7 +1,4 @@
-import sqlite3 #database
-
-CONN = sqlite3.connect("lib/gym.db") #connection
-CURSOR = CONN.cursor() #pointer for the connection, row by row
+from models.__init__ import CURSOR, CONN
 
 class Exercise:
 

@@ -1,20 +1,31 @@
-import sqlite3
-
-CONN = sqlite3.connect("lib/gym.db")
-CURSOR = CONN.cursor()
+from models.__init__ import CURSOR, CONN
 
 class Program:
 
     all = []
 
     def __init__(self, location, trainer, exercise, membership_required="Basic", id=None):
+
         self.id = id
         self.location = location
         self.trainer = trainer
         self.exercise = exercise
         self.membership_required = membership_required
 
+        # self.location_id = location_id
+        # self.trainer_id = trainer_id
+        # self.exercise_id = exercise_id
+
         Program.all.append(self)
+
+    def __repr__(self):
+        return (
+            f"""<Program {self.id}
+            Location: {self.location.city}
+            Trainer: {self.trainer.first_name} {self.trainer.last_name}
+            Exercise: {self.exercise.name}
+            Membership Level Needed: {self.membership_required}"""
+        )
     
     @property
     def location(self):
@@ -68,9 +79,11 @@ class Program:
         sql = """
             CREATE TABLE IF NOT EXISTS programs (
                 id INTEGER PRIMARY KEY,
+                location_id INTEGER,
                 trainer_id INTEGER,
                 exercise_id INTEGER,
                 membership_required TEXT,
+                FOREIGN KEY (location_id) REFERENCES locations(id),
                 FOREIGN KEY (trainer_id) REFERENCES trainers(id),
                 FOREIGN KEY (exercise_id) REFERENCES exercises(id)
             );
@@ -90,11 +103,11 @@ class Program:
     
     def save(self):
         sql = """
-            INSERT INTO programs (trainer_id, exercise_id, membership_required)
-            VALUES (?, ?, ?)
+            INSERT INTO programs (location_id, trainer_id, exercise_id, membership_required)
+            VALUES (?, ?, ?, ?)
         """
 
-        CURSOR.execute(sql, (self.trainer.id, self.exercise.id, self.membership_required))
+        CURSOR.execute(sql, (self.location.id, self.trainer.id, self.exercise.id, self.membership_required))
         CONN.commit()
         self.id = CURSOR.lastrowid
     

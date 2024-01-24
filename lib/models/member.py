@@ -61,7 +61,7 @@ class Member:
     @classmethod 
     def drop_table(cls):
         query = """
-            DROP TABLE IF EXISTS member;
+            DROP TABLE IF EXISTS members;
         """
         CURSOR.execute(query)
         CONN.commit()
@@ -71,7 +71,7 @@ class Member:
             INSERT INTO members (first_name, last_name, membership_type)
             VALUES (?, ?, ?);
         """
-        CURSOR.execute(query, (self._first_name, self._last_name, self._membership_type))
+        CURSOR.execute(query, (self.first_name, self.last_name, self.membership_type,))
         CONN.commit()
         self.id = CURSOR.lastrowid 
 

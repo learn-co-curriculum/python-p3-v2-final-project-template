@@ -10,6 +10,26 @@ class Trainer:
         self.first_name = first_name
         self.last_name = last_name
         self.create_table()
+    
+    @property
+    def first_name(self):
+        return self._first_name
+    @first_name.setter
+    def first_name(self, value):
+        if isinstance(value, str) and 0 < len(value):
+            self._first_name = value
+        else:
+            raise Exception("first name needs to be of type string and greater than 0 characters long.")
+    
+    @property
+    def last_name(self):
+        return self._last_name
+    @last_name.setter
+    def last_name(self, value):
+        if isinstance(value, str) and 0 < len(value):
+            self._last_name = value
+        else:
+            raise Exception("last name needs to be of type string and greater than 0 characters long.")
 
     def create_table(self):
         query = """
@@ -22,15 +42,14 @@ class Trainer:
         self.CURSOR.execute(query)
         self.CONN.commit()
 
-    def display_info(self):
-        print(f"Trainer Name: {self.first_name} {self.last_name}")
-
     @classmethod #affects the whole table, not just one row
     def create_table(cls): #this class as a parameter
         query = """
             CREATE TABLE IF NOT EXISTS trainers (
             id INTEGER PRIMARY KEY,
-            name TEXT);
+            first_name TEXT,
+            last_name TEXT
+            );
         """
         CURSOR.execute(query) #CURSOR takes the 'query' and executes it
         CONN.commit() #save the changes
@@ -46,13 +65,13 @@ class Trainer:
     #instance method / not class method
     def save(self):
         query = """
-            INSERT INTO trainers (name)
-            VALUES (?);
+            INSERT INTO trainers (first_name, last_name)
+            VALUES (?, ?);
         """
-        CURSOR.execute(query, (self.name,))
+        CURSOR.execute(query, (self.first_name, self.last_name,))
         CONN.commit() #save the changes
         self.id = CURSOR.lastrowid #update the id
-        return self.id #return the id
+        # return self.id #return the id
     
     @classmethod
     def create(cls, name):
@@ -75,11 +94,14 @@ class Trainer:
         """
         CURSOR.execute(sql)
         rows = CURSOR.fetchall()
-        exercises = []
+        trainers = []
         for row in rows:
-            exercise = cls.new_form_db(row)
-            exercises.append(exercise)
-        return exercises
+            trainer = cls.new_form_db(row)
+            trainers.append(trainer)
+        return trainers
+    
+    def display_info(self):
+        print(f"Trainer Name: {self.first_name} {self.last_name}")
 
 
 

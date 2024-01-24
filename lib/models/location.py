@@ -5,9 +5,27 @@ CURSOR = CONN.cursor()
 
 
 class Location:
+    all = []
     def __init__(self, city, id = None):
         self.city = city
         self.id = id
+        Location.all.append(self)
+
+    @property
+    def city(self):
+        return self._city
+    
+    @city.setter
+    def city(self, value):
+        self._city = value
+
+    @staticmethod 
+    def display_all_locations():
+        for location in Location.all:
+            print(location.city)
+
+
+    
 
     def display_info(self):
         print(f"Location: {self.name}")
@@ -77,8 +95,3 @@ class Location:
             id = row[0]
         )
 
-
-# Example locations
-chicago_location = Location("Chicago")
-st_louis_location = Location("St. Louis")
-memphis_location = Location("Memphis")

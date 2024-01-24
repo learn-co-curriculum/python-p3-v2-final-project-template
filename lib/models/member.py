@@ -4,12 +4,41 @@ CONN = sqlite3.connect('lib/gym.db')
 CURSOR = CONN.cursor()
 
 class Member:
+    all = []
     def __init__(self, id, first_name, last_name, membership_type="Basic"):
         self.id = id
         self.first_name = first_name # Needs to be property
         self.last_name = last_name
         self.membership_type = membership_type # Needs to be property
+        Member.all.append(self)
         # self.classes_attended = [] 
+
+    @property 
+    def first_name(self):
+        return self.first_name 
+    
+    @first_name.setter 
+    def first_name(self, first_name):
+        if isinstance(first_name, str) and len(first_name) > 0 and not hasattr(self, 'first_name'):
+            self.first_name = first_name
+
+    @property 
+    def last_name(self):
+        return self.last_name 
+    
+    @last_name.setter 
+    def last_name(self, last_name):
+        if isinstance(last_name, str) and len(last_name) > 0 and not hasattr(self, 'last_name'):
+            self.last_name = last_name
+
+    @property 
+    def membership_type(self):
+        return self._membership_type == "Basic"
+    
+    @membership_type.setter 
+    def membership_type(self, is_basic):
+        self._membership_type = "Basic" if is_basic else "Premium"
+    
 
     def upgrade_membership(self):
         if self.membership_type == "Basic":
@@ -27,7 +56,7 @@ class Member:
         print(f"Member Name: {self.name}\n{membership_info}\n{classes_info}")
 
     @classmethod 
-    def create_member_table(cls):
+    def create_table(cls):
         query = """
             CREATE TABLE IF NOT EXISTS `member_table` (
             id INTEGER PRIMARY KEY, 
@@ -49,7 +78,7 @@ class Member:
     def save(self):
         query = """
             INSERT INTO `member_table` ( `first_name`, `last_name`, `membership_type` )
-            VALUES (?, ?, ?)
+            VALUES (?, ?, ?);
         """
         CURSOR.execute(query, (self.first_name, self.last_name, self.membership_type))
         CONN.commit()
@@ -96,6 +125,3 @@ class Member:
             id = row[0]
         )
 
-# Members
-basic_member = Member("Jeffery")
-premium_member = Member("Katie", membership_type="Premium")

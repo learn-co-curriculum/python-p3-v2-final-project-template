@@ -19,7 +19,7 @@ class Exercise:
         return self._name
     @name.setter
     def name(self, value):
-        if isinstance(value, str) and 0 < len(value) and not in Exercise.all:
+        if isinstance(value, str) and len(value) > 0 and value not in Exercise.all:
             self._name = value
         else:
             raise Exception("exercise must be of type string and longer than 0 characters.")
@@ -94,4 +94,23 @@ class Exercise:
             return cls.new_form_db(row)  # Assuming new_form_db constructs a Trainer instance
         else:
             return None
+        
+    @classmethod
+    def find_by_name(cls, name):
+        sql = """
+            SELECT * FROM exercises
+            WHERE name = ?
+            LIMIT 1;
+        """
+        CURSOR.execute(sql, (name,))
+        row = CURSOR.fetchone()
+        if row:
+            return cls.new_from_db(row)
+        else:
+            return None
+
+    @classmethod
+    def new_from_db(cls, row):
+        exercise = cls(name=row[1], id=row[0])
+        return exercise
 

@@ -1,7 +1,5 @@
 import sqlite3
 
-from models.__init__ import CONN, CURSOR
-
 CONN = sqlite3.connect("lib/gym.db")
 CURSOR = CONN.cursor()
 
@@ -59,10 +57,10 @@ class Program:
         return self._membership_required
     @membership_required.setter
     def membership_required(self, value):
-        if isinstance(value, str) and (value.lower() == "basic" or value.lower() == "premium"):
+        if value.lower() in ["basic", "premium"]:
             self._membership_required = value
         else:
-            raise Exception("membership_required must be of type string and must be either basic or premium.")
+            raise Exception("membership_required be either basic or premium.")
     
     @classmethod
     def create_table(cls):

@@ -1,7 +1,5 @@
 import sqlite3 #database
 
-from models.__init__ import CONN, CURSOR
-
 CONN = sqlite3.connect("lib/gym.db") #connection
 CURSOR = CONN.cursor() #pointer for the connection, row by row
 
@@ -71,7 +69,7 @@ class Exercise:
     @classmethod
     def get_all(cls):
         sql = """
-            SELECT * FROM exercise;
+            SELECT * FROM exercises;
         """
         CURSOR.execute(sql)
         rows = CURSOR.fetchall()
@@ -80,6 +78,7 @@ class Exercise:
             exercise = cls.new_form_db(row)
             exercises.append(exercise)
         return exercises
+
     
     @classmethod
     def find_by_name(cls, first_name, last_name):
@@ -95,11 +94,3 @@ class Exercise:
         else:
             return None
 
-
-
-
-# Exercises
-spin_class = Exercise("Spin Class")
-boxing = Exercise("Boxing")
-zumba = Exercise("Zumba")
-step_class = Exercise("Step Class")

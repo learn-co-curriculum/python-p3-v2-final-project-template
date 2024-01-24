@@ -1,7 +1,5 @@
 import sqlite3 
 
-from models.__init__ import CONN, CURSOR
-
 CONN = sqlite3.connect('lib/gym.db')
 CURSOR = CONN.cursor()
 
@@ -19,15 +17,10 @@ class Location:
     
     @city.setter
     def city(self, value):
-        self._city = value
-
-    @staticmethod 
-    def display_all_locations():
-        for location in Location.all:
-            print(location.city)
-
-    def display_info(self):
-        print(f"Location: {self.name}")
+        if isinstance(value, str) and 0 < len(value):
+            self._city = value
+        else:
+            raise Exception("city must be of type string and greater than 0 characters long.")
 
     @classmethod
     def create_table(cls):
@@ -39,13 +32,13 @@ class Location:
         CURSOR.execute(query)
         CONN.commit()
 
-    # @classmethod 
-    # def drop_table(cls):
-    #     query = """
-    #         DROP TABLE IF EXISTS `location_table`;
-    #     """
-    #     CURSOR.execute(query)
-    #     CONN.commit()
+    @classmethod 
+    def drop_table(cls):
+        query = """
+            DROP TABLE IF EXISTS locations;
+        """
+        CURSOR.execute(query)
+        CONN.commit()
 
 
     def save(self):
@@ -92,4 +85,12 @@ class Location:
             city = row[1],
             id = row[0]
         )
+
+    # @staticmethod 
+    # def display_all_locations():
+    #     for location in Location.all:
+    #         print(location.city)
+
+    # def display_info(self):
+    #     print(f"Location: {self.name}")
 

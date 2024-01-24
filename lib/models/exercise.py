@@ -1,27 +1,28 @@
-import sqlite3 #database
-
-CONN = sqlite3.connect("lib/gym.db") #connection
-CURSOR = CONN.cursor() #pointer for the connection, row by row
+from models.__init__ import CURSOR, CONN
 
 class Exercise:
+
+    all = []
 
     # constructor
     def __init__(self, name, id=None):
         self.id = id # unknown now
         self.name = name
+
+        Exercise.all.append(self)
     
+    def __repr__(self):
+        return f"<Exercise {self.id}: {self.name}>"
+
     @property
     def name(self):
         return self._name
     @name.setter
     def name(self, value):
-        if isinstance(value, str) and 0 < len(value):
+        if isinstance(value, str) and 0 < len(value) and not in Exercise.all:
             self._name = value
         else:
             raise Exception("exercise must be of type string and longer than 0 characters.")
-
-    def display_info(self):
-        print(f"Exercise Name: {self.name}")
 
     @classmethod #affects the whole table, not just one row
     def create_table(cls): #this class as a parameter

@@ -1,15 +1,17 @@
-import sqlite3 
-
-CONN = sqlite3.connect('lib/gym.db')
-CURSOR = CONN.cursor()
-
+from models.__init__ import CURSOR, CONN
 
 class Location:
+
     all = []
+
     def __init__(self, city, id = None):
         self._city = city
         self.id = id
+        
         Location.all.append(self)
+    
+    def __repr__(self):
+        return f"<Location {self.id}: {self.city}>"
 
     @property
     def city(self):
@@ -51,10 +53,29 @@ class Location:
         self.id = CURSOR.lastrowid 
 
     @classmethod 
-    def create_location_row(cls, city):
+    def create(cls, city):
         location = cls(city)
         location.save()
         return location
+    
+    def update(self):
+        sql = """
+            UPDATE locations
+            SET city = ?
+            Where id = ?
+        """
+
+        CURSOR.execute(sql, (self.city, self.id))
+        CONN.commit()
+    
+    def delete(self):
+        sql = """
+            DELETE FROM locations
+            WHERE id = ?
+        """
+
+        CURSOR.execute(sql, (self.id,))
+        CONN.commit()
     
     @classmethod 
     def new_location_db(cls, row):

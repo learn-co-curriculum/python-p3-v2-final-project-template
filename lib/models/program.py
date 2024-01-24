@@ -7,7 +7,7 @@ class Program:
 
     all = []
 
-    def __init__(self, location, trainer, exercise, membership_required="Premium", id=None):
+    def __init__(self, location, trainer, exercise, membership_required="Basic", id=None):
         self.id = id
         self.location = location
         self.trainer = trainer

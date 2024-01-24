@@ -95,7 +95,10 @@ class Member:
     @classmethod 
     def get_all_members(cls):
         sql = """
+
             SELECT * FROM members
+            ORDER BY last_name, first_name
+
         """
         return [cls.new_member_db(one_row) for one_row in CURSOR.execute(sql).fetchall()]
     
@@ -114,7 +117,7 @@ class Member:
             id = row[0],
             first_name = row[1],
             last_name = row[2],
-            membership_type = [3]
+            membership_type = row[3]
         )
 
     # def upgrade_membership(self):

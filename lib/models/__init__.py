@@ -1,6 +1,4 @@
 import sqlite3
 
-from models.__init__ import CONN, CURSOR
-
-CONN = sqlite3.connect('company.db')
+CONN = sqlite3.connect('lib/gym.db')
 CURSOR = CONN.cursor()

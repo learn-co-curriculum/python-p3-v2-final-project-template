@@ -7,43 +7,43 @@ class Member:
     all = []
     def __init__(self, id, first_name, last_name, membership_type="Basic"):
         self.id = id
-        self.first_name = first_name # Needs to be property
-        self.last_name = last_name
-        self.membership_type = membership_type # Needs to be property
+        self._first_name = first_name # Needs to be property
+        self._last_name = last_name
+        self._membership_type = membership_type # Needs to be property
         Member.all.append(self)
         # self.classes_attended = [] 
 
     @property 
     def first_name(self):
-        return self.first_name 
+        return self._first_name 
     
     @first_name.setter 
     def first_name(self, first_name):
         if isinstance(first_name, str) and len(first_name) > 0 and not hasattr(self, 'first_name'):
-            self.first_name = first_name
+            self._first_name = first_name
 
     @property 
     def last_name(self):
-        return self.last_name 
+        return self._last_name 
     
     @last_name.setter 
     def last_name(self, last_name):
         if isinstance(last_name, str) and len(last_name) > 0 and not hasattr(self, 'last_name'):
-            self.last_name = last_name
+            self._last_name = last_name
 
     @property 
     def membership_type(self):
-        return self._membership_type == "Basic"
+        return self._membership_type 
     
     @membership_type.setter 
-    def membership_type(self, is_basic):
-        self._membership_type = "Basic" if is_basic else "Premium"
-    
+    def membership_type(self, value):
+        if value in ["Basic", "Premium"]:
+            self._membership_type = value
 
     def upgrade_membership(self):
-        if self.membership_type == "Basic":
-            self.membership_type = "Premium"
-            print(f"{self.name}'s membership upgraded to Premium.")
+        if self._membership_type == "Basic":
+            self._membership_type = "Premium"
+            print(f"{self._first_name} {self._last_name}'s membership upgraded to Premium.")
 
     def attend_class(self, exercise):
         self.classes_attended.append(exercise)
@@ -77,16 +77,16 @@ class Member:
 
     def save(self):
         query = """
-            INSERT INTO `member_table` ( `first_name`, `last_name`, `membership_type` )
+            INSERT INTO member_table ( first_name, last_name, membership_type )
             VALUES (?, ?, ?);
         """
-        CURSOR.execute(query, (self.first_name, self.last_name, self.membership_type))
+        CURSOR.execute(query, (self._first_name, self._last_name, self._membership_type))
         CONN.commit()
         self.id = CURSOR.lastrowid 
 
     @classmethod 
-    def create_member_row(cls, first_name, last_name, membership_type):
-        member = cls(first_name, last_name, membership_type)
+    def create_member_row(cls, id, first_name, last_name, membership_type="Basic"):
+        member = cls(id, first_name, last_name, membership_type)
         member.save()
         return member 
     
@@ -119,9 +119,10 @@ class Member:
         row = CURSOR.execute(sql, (first_name, last_name)).fetchone()
         if not row:
             return None
-        return Member(
+        return cls(
+            id = row[0],
             first_name = row[1],
             last_name = row[2],
-            id = row[0]
+            membership_type = [3]
         )
 

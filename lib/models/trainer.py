@@ -100,6 +100,35 @@ class Trainer:
     def display_info(self):
         print(f"Trainer Name: {self.first_name} {self.last_name}")
 
+    @classmethod
+    def find_by_name(cls, first_name, last_name):
+        sql = """
+            SELECT * FROM trainer
+            WHERE first_name = ? AND last_name = ?
+            LIMIT 1;
+        """
+        CURSOR.execute(sql, (first_name, last_name))
+        row = CURSOR.fetchone()
+        if row:
+            return cls.new_form_db(row)  # Assuming new_form_db constructs a Trainer instance
+        else:
+            return None
+        
+    @classmethod
+    def delete_by_name(cls, first_name, last_name):
+        sql = """
+            DELETE FROM trainers
+            WHERE first_name = ? AND last_name = ?;
+        """
+        CURSOR.execute(sql, (first_name, last_name))
+        affected_rows = CURSOR.rowcount
+        CONN.commit()
+        if affected_rows > 0:
+            print(f"Trainer {first_name} {last_name} deleted successfully.")
+        else:
+            print("Trainer not found or already deleted.")
+
+
 
 
 

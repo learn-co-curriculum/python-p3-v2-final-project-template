@@ -7,3 +7,7 @@ from models.member import Member
 from models.program import Program
 from models.trainer import Trainer
 from models.schedule import Schedule
+
+def seed_database():
+    Member.drop_table()
+    

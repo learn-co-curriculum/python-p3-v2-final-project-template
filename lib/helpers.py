@@ -4,7 +4,11 @@ from models.location import Location
 from models.member import Member
 from models.program import Program
 from models.trainer import Trainer
-from models.schedule import Schedule
+# from models.schedule import Schedule
+
+def exit_program():
+    print("Goodbye!")
+    exit()
 
 def add_member():
     first_name = input("Enter your first name: ")
@@ -47,13 +51,47 @@ def add_class():
     exercise_name = input("Enter name of class: ")
     location_name = input("Enter location: ")
     membership_required = input("Choose Basic or Premium")
-    new_class = Program.create_program_row(None, trainer_name, exercise_name, location_name, membership_required)
+
+    trainer = Trainer.find_by_name(trainer_name)
+    exercise = Exercise.find_by_name(exercise_name)
+    location = Location.find_by_name(location_name)
+
+    if not trainer or not exercise or not location:
+        print("Invalid")
+        return
+    if membership_required not in ["Basic", "Premium"]:
+        print("Invalid membership type.")
+        return
+
+    new_class = Program(location, trainer, exercise, membership_required)
+    new_class.save()
+
+    print(f"Class added: {exercise_name} at {location_name} with Trainer {trainer_name}, Membership Required: {membership_required}")
+    return new_class 
+
+def delete_member():
+    first_name = input("Enter members first name: ")
+    last_name = input("Enter members last_name: ")
+    if member := Member.find_by_name(first_name,last_name):
+        member.delete()
+        print(f"{first_name}{last_name} has been deleted from Flatiron Gym")
+    else:
+        print("Member not found.")
     
+def delete_class():
+    program_id = input("Enter program ID to delete: ")
+    program = Program.find_by_id(program_id)
+    if not program:
+        print("Program not found.")
+        return 
+    Program.delete_by_id(program_id)
+    print(f"Program with ID {program_id} has been deleted.")
 
-
-
-
-
-def exit_program():
-    print("Goodbye!")
-    exit()
+def delete_trainer():
+    first_name = input("Enter trainers first name: ")
+    last_name = input("Enter trainers last name: ")
+    if trainer := Trainer.find_by_name(first_name, last_name):
+        trainer.delete()
+        print(f"Trainer {first_name} has been deleted.")
+    else:
+        print("Trainer not found.")

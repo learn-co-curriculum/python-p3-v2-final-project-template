@@ -46,7 +46,7 @@ class Location:
             INSERT INTO locations (city)
             VALUES (?);
         """
-        CURSOR.execute(query, (self.city))
+        CURSOR.execute(query, (self.city,))
         CONN.commit()
         self.id = CURSOR.lastrowid 
 

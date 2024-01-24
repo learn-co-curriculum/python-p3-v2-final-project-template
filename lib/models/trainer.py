@@ -4,17 +4,16 @@ CONN = sqlite3.connect("lib/gym.db") #connection
 CURSOR = CONN.cursor() 
 
 class Trainer:
-    CONN = sqlite3.connect("gym.db")
-    CURSOR = CONN.cursor()
 
-    def __init__(self, first_name, last_name):
+    def __init__(self, first_name, last_name, id=None):
+        self.id = id
         self.first_name = first_name
         self.last_name = last_name
         self.create_table()
 
     def create_table(self):
         query = """
-            CREATE TABLE IF NOT EXISTS trainer (
+            CREATE TABLE IF NOT EXISTS trainers (
                 id INTEGER PRIMARY KEY,
                 first_name TEXT,
                 last_name TEXT
@@ -29,7 +28,7 @@ class Trainer:
     @classmethod #affects the whole table, not just one row
     def create_table(cls): #this class as a parameter
         query = """
-            CREATE TABLE IF NOT EXISTS exercise (
+            CREATE TABLE IF NOT EXISTS trainers (
             id INTEGER PRIMARY KEY,
             name TEXT);
         """
@@ -39,7 +38,7 @@ class Trainer:
     @classmethod
     def drop_table(cls):
         query = """
-            DROP TABLE exercise;
+            DROP TABLE trainers;
         """
         CURSOR.execute(query)
         CONN.commit()
@@ -47,7 +46,7 @@ class Trainer:
     #instance method / not class method
     def save(self):
         query = """
-            INSERT INTO exercise (name)
+            INSERT INTO trainers (name)
             VALUES (?);
         """
         CURSOR.execute(query, (self.name,))
@@ -72,7 +71,7 @@ class Trainer:
     @classmethod
     def get_all(cls):
         sql = """
-            SELECT * FROM exercise;
+            SELECT * FROM trainers;
         """
         CURSOR.execute(sql)
         rows = CURSOR.fetchall()

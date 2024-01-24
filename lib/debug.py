@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # lib/debug.py
 import ipdb; 
-from models.__init__ import CONN, CURSOR
 
 from models.program import Program
 from models.schedule import Schedule
@@ -24,6 +23,12 @@ Member.create_table()
 Program.create_table()
 Exercise.create_table()
 Location.create_table()
+
+# Member.drop_table()
+# Location.drop_table()
+# Exercise.drop_table()
+# Program.drop_table()
+
 Boxing = Program(L1, t1, e1, "Basic")
 print(Boxing)
 print(Boxing.location.city)

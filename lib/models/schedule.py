@@ -116,6 +116,22 @@ class Schedule:
         CONN.commit()
         self.id = CURSOR.lastrowid
     
+
+
+
+
+    @classmethod
+    def find_by_id(cls, id):
+        sql = """
+            SELECT *
+            FROM locations
+            WHERE id = ?
+        """
+
+        row = CURSOR.execute(sql, (id,)).fetchone()
+
+        return cls.instance_from_db(row) if row else None
+    
     @classmethod
     def fetch_table(cls):
         pass

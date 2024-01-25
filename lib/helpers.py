@@ -118,7 +118,7 @@ def delete_member():
             member.delete()
             print(f"Member {first_name} {last_name} has been deleted.")
         else:
-            print("Member not found or details do not match."
+            print("Member not found or details do not match.")
 
 
 def delete_program():

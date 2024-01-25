@@ -8,6 +8,8 @@ class Exercise:
     def __init__(self, name, id=None):
         self.id = id # unknown now
         self.name = name
+        Exercise.all.append(self)
+
     
     def __repr__(self):
         return f"<Exercise {self.id}: {self.name}>"
@@ -15,9 +17,12 @@ class Exercise:
     @property
     def name(self):
         return self._name
+    
     @name.setter
     def name(self, value):
-        if isinstance(value, str) and 0 < len(value):
+
+        if isinstance(value, str) and len(value) > 0:
+
             self._name = value
         else:
             raise Exception("exercise must be of type string and longer than 0 characters.")
@@ -107,8 +112,10 @@ class Exercise:
 
         return cls.instance_from_db(row) if row else None
 
+
     @classmethod
-    def find_by_name(cls, name):
+    def new_from_db(cls, row):
+        return cls(name=row[1], id=row[0])
         sql = """
             SELECT * FROM exercises
             WHERE name = ?
@@ -133,3 +140,4 @@ class Exercise:
     #         exercise = cls.new_form_db(row)
     #         exercises.append(exercise)
     #     return exercises
+

@@ -13,33 +13,48 @@ def add_member():
     first_name = input("Enter your first name: ")
     last_name = input("Enter your last name: ")
     membership_type = input("Do you want Basic or Premium membership?: ")
-    new_member = Member.create(first_name, last_name, membership_type)
-    print(f'Member {new_member.first_name} {new_member.last_name} has been added with the {new_member.membership_type} membership.')
+    new_member = Member.create_member_row(first_name, last_name, membership_type)
+    print(f'Member {new_member.id} {new_member.first_name} {new_member.last_name} has been added with the {new_member.membership_type} membership.')
+
     return new_member
 
 def change_membership():
-    first_name = input("Enter members first name: ")
-    last_name = input("Enter members last name: ")
-    member = Member.find_by_name(first_name, last_name)
-    if member is None:
+    member_id = input("Enter the member's ID: ")
+    first_name = input("Enter the member's first name: ")
+    last_name = input("Enter the member's last name: ")
+
+    try:
+        member_id = int(member_id)
+    except ValueError:
+        print("Invalid ID format. Please enter a numerical ID.")
+        return
+
+    member = Member.find_by_id(member_id)
+    if not member:
         print("Member not found")
-        return 
-    new_membership_type = input(f"Current Membership is {member.membership_type}. Enter new membership type (Basic/Premium): ")
-    if new_membership_type not in ["Basic", "Premium"]:
-        print("Invalid membership type")
-        return 
-    elif member.membership_type == new_membership_type:
-        print(f'{member.first_name} already has a {new_membership_type} membership.')
-        return 
-    member.membership_type = new_membership_type
-    member.update()
-    print(f"{member.first_name} {member.last_name}'s membership has been changed to {new_membership_type}.")
+        return
+
+    if member.first_name == first_name and member.last_name == last_name:
+        new_membership_type = input("Enter new membership type (Basic/Premium): ")
+        if new_membership_type not in ["Basic", "Premium"]:
+            print("Invalid membership type")
+            return
+        elif member.membership_type == new_membership_type:
+            print(f"{member.first_name} already has a {new_membership_type} membership.")
+            return
+        member.membership_type = new_membership_type
+        member.save()
+        print(f"{member.first_name} {member.last_name}'s membership has been changed to {new_membership_type}.")
+    else:
+        print("Member details do not match.")
+
 
 def view_members():
     members = Member.get_all()
     for member in members:
-        print(member)
-        # print(f"{member.first_name} {member.last_name} Membership Type: {member.membership_type}")
+
+        print(f"ID: {member.id}, First Name: {member.first_name}, Last Name: {member.last_name}, Membership Type: {member.membership_type}")
+
 
 def view_all_programs():
     programs = Program.get_all()
@@ -47,6 +62,7 @@ def view_all_programs():
         location = Location.find_by_id(program.location_id)
         trainer = Trainer.find_by_id(program.trainer_id)
         print(f"Program Info: Program ID: {program.id}, Exercise Name: {program.exercise_name}, Trainer: {trainer.first_name} {trainer.last_name}, Location: {location.city}, Membership Required: {program.membership_required}")
+
 
 def add_program():
     exercise_name = input("Enter name of class/exercise: ")
@@ -75,16 +91,36 @@ def add_program():
     return new_program
 
 def delete_member():
-    first_name = input("Enter members first name: ")
-    last_name = input("Enter members last_name: ")
-    member = Member.find_by_name(first_name, last_name)
 
-    if member:
-        member.delete()
-        print(f"{first_name} {last_name} has been deleted from Flatiron Gym")
-    else:
-        print("Member not found.")
-    
+    method = input("Delete by ID(1)  or Name(2) ? Enter 1 or 2: ")
+
+    if method == "1":
+        member_id = input("Enter the member ID: ")
+        try:
+            member_id = int(member_id)
+        except ValueError:
+            print("Invalid ID format. Please enter a numerical ID.")
+            return
+
+        member = Member.find_by_id(member_id)
+        if member:
+            member.delete()
+            print(f"Member with ID {member_id} has been deleted.")
+        else:
+            print("Member not found.")
+
+    elif method == "2":
+        first_name = input("Enter the member's first name: ")
+        last_name = input("Enter the member's last name: ")
+
+        member = Member.find_by_name(first_name, last_name)
+        if member:
+            member.delete()
+            print(f"Member {first_name} {last_name} has been deleted.")
+        else:
+            print("Member not found or details do not match."
+
+
 def delete_program():
     program_id = input("Enter program ID to delete: ")
     program = Program.find_by_id(program_id)

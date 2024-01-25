@@ -127,11 +127,13 @@ class Location:
             id = row[0]
         )
 
-    # @staticmethod 
-    # def display_all_locations():
-    #     for location in Location.all:
-    #         print(location.city)
+    def save(self):
+        query = """
+            INSERT INTO locations (city)
+            VALUES (?);
+        """
+        CURSOR.execute(query, (self.city,))
+        CONN.commit()
+        self.id = CURSOR.lastrowid
 
-    # def display_info(self):
-    #     print(f"Location: {self.name}")
 

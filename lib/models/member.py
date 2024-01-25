@@ -46,6 +46,18 @@ class Member:
         else:
             raise Exception("membership_type has to be either basic or premium.")
 
+    def delete(self):
+        if self.id is not None:
+            sql = "DELETE FROM members WHERE id = ?"
+            CURSOR.execute(sql, (self.id,))
+            CONN.commit()
+            print(f"Member with ID {self.id} - {self.first_name} {self.last_name} has been deleted from the database.")
+        else:
+            print("Member not found or already deleted.")
+
+    def delete_from_all(self):
+        Member.all = [member for member in Member.all if member.id != self.id]
+
     @classmethod 
     def create_table(cls):
         query = """
@@ -67,6 +79,41 @@ class Member:
         CONN.commit()
 
     def save(self):
+
+        if self.id is None:
+            query = """
+                INSERT INTO members (first_name, last_name, membership_type)
+                VALUES (?, ?, ?);
+            """
+            CURSOR.execute(query, (self.first_name, self.last_name, self.membership_type))
+            CONN.commit()
+            self.id = CURSOR.lastrowid
+        else:
+            query = """
+                UPDATE members
+                SET first_name = ?, last_name = ?, membership_type = ?
+                WHERE id = ?;
+            """
+            CURSOR.execute(query, (self.first_name, self.last_name, self.membership_type, self.id))
+            CONN.commit()
+ 
+
+    @classmethod 
+    def create_member_row(cls, id, first_name, last_name, membership_type="Basic"):
+        member = cls(id, first_name, last_name, membership_type)
+        member.save()
+        return member 
+    
+    @classmethod 
+    def new_member_db(cls, row):
+        member = cls (
+                id = row[0],
+                first_name = row[1],
+                last_name = row[2],
+                membership_type = row[3]
+            )
+        print(member.first_name, member.last_name, member.membership_type)
+
         query = """
             INSERT INTO members (first_name, last_name, membership_type)
             VALUES (?, ?, ?);
@@ -81,7 +128,6 @@ class Member:
     def create(cls, first_name, last_name, membership_type="Basic"):
         member = cls(first_name, last_name, membership_type)
         member.save()
-
         return member
     
     def update(self):
@@ -143,14 +189,24 @@ class Member:
             LIMIT 1
         """
         row = CURSOR.execute(sql, (first_name, last_name)).fetchone()
-        if not row:
-            return None
-        return cls(
+        if row:
+            return cls(
             id = row[0],
             first_name = row[1],
             last_name = row[2],
             membership_type = row[3]
         )
+        return None
+    
+    @classmethod
+    def find_by_id(cls, id):
+        sql = "SELECT * FROM members WHERE id = ?"
+        CURSOR.execute(sql, (id,))
+        row = CURSOR.fetchone()
+        if row:
+            return cls(id=row[0], first_name=row[1], last_name=row[2], membership_type=row[3])
+        return None
+    
 
     @classmethod 
     def get_all(cls):

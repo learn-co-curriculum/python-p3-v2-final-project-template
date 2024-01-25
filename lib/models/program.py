@@ -1,3 +1,9 @@
+
+import sqlite3
+
+CONN = sqlite3.connect("lib/gym.db")
+CURSOR = CONN.cursor()
+
 from models.__init__ import CURSOR, CONN
 
 from models.location import Location
@@ -8,12 +14,13 @@ class Program:
     all = {}
 
     def __init__(self, location_id, trainer_id, exercise_name, membership_required, id=None):
-
         self.id = id
         self.location_id = location_id
         self.trainer_id = trainer_id
         self.exercise_name = exercise_name
         self.membership_required = membership_required
+        Program.all.append(self)
+
 
     def __repr__(self):
         return (
@@ -57,6 +64,7 @@ class Program:
     @property
     def membership_required(self):
         return self._membership_required
+    
     @membership_required.setter
     def membership_required(self, value):
         if isinstance(value, str) and (value.lower() == "basic" or value.lower() == "premium"):
@@ -66,7 +74,6 @@ class Program:
     
     @classmethod
     def create_table(cls):
-        # Create a new table to track all Program instances
         sql = """
             CREATE TABLE IF NOT EXISTS programs (
                 id INTEGER PRIMARY KEY,
@@ -78,7 +85,6 @@ class Program:
                 FOREIGN KEY (trainer_id) REFERENCES trainers(id)
             );
         """
-
         CURSOR.execute(sql)
         CONN.commit()
     
@@ -87,7 +93,6 @@ class Program:
         sql = """
             DROP TABLE IF EXISTS programs;
         """
-
         CURSOR.execute(sql)
         CONN.commit()
     

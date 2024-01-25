@@ -16,8 +16,6 @@ class Program:
         self.trainer_id = trainer_id
         self.exercise_name = exercise_name
         self.membership_required = membership_required
-        Program.all.append(self)
-
 
     def __repr__(self):
         return (

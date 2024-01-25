@@ -9,19 +9,12 @@ from models.trainer import Trainer
 
 def seed_database():
     # Create tables
-    Exercise.create_table()
+
     Location.create_table()
     Member.create_table()
     Program.create_table()
     Trainer.create_table()
 
-    # Create and save exercises
-    exercise1 = Exercise("Spin")
-    exercise1.save()
-    exercise2 = Exercise("Boxing")
-    exercise2.save()
-    exercise3 = Exercise("Zumba")
-    exercise3.save()
 
     # Create and save locations
     location1 = Location("Chicago")
@@ -45,13 +38,13 @@ def seed_database():
     trainer3.save()
 
     # Create and save programs
-    program1 = Program(location1, trainer1, exercise1, "Basic")
+    program1 = Program(location1, trainer1, "Basic")
     program1.save()
-    program2 = Program(location2, trainer2, exercise2, "Premium")
+    program2 = Program(location2, trainer2, "Premium")
     program2.save()
-    program3 = Program(location3, trainer3, exercise3, "Premium")
+    program3 = Program(location3, trainer3, "Premium")
     program3.save()
-    program4 = Program(location2, trainer2, exercise1, "Basic")
+    program4 = Program(location2, trainer2, "Basic")
     program4.save()
 
 if __name__ == "__main__":

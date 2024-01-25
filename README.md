@@ -15,6 +15,13 @@
 
   -Make a GUI for the calendar portion for when scheduling a program.
 
+## Getting Started:
+  To get started with this repo, in the terminal run the following commands:
+     
+    $ pipenv install 
+    $ pipenv shell 
+    $ pip install rich
+
 ## Collaborators:
     Jefferey
     Hadil
@@ -22,3 +29,7 @@
 
 ## ERD Link
 https://dbdiagram.io/d/Gym-65ae9eeaac844320ae768ffa
+
+## Trello Board:
+https://trello.com/b/KyUFcJNo/phase-3
+

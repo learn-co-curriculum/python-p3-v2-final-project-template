@@ -93,34 +93,31 @@ def add_program():
     return new_program
 
 def delete_member():
-
-    method = input("Delete by ID(1)  or Name(2) ? Enter 1 or 2: ")
+    method = input("Delete by ID(1) or Name(2)? Enter 1 or 2: ")
 
     if method == "1":
         member_id = input("Enter the member ID: ")
         try:
             member_id = int(member_id)
+            member = Member.find_by_id(member_id)
+            if member:
+                member.delete()
+                print(f"Member with ID {member_id} has been deleted.")
+            else:
+                print("Member not found.")
         except ValueError:
             print("Invalid ID format. Please enter a numerical ID.")
-            return
-
-        member = Member.find_by_id(member_id)
-        if member:
-            member.delete()
-            print(f"Member with ID {member_id} has been deleted.")
-        else:
-            print("Member not found.")
 
     elif method == "2":
         first_name = input("Enter the member's first name: ")
         last_name = input("Enter the member's last name: ")
-
         member = Member.find_by_name(first_name, last_name)
         if member:
             member.delete()
             print(f"Member {first_name} {last_name} has been deleted.")
         else:
             print("Member not found or details do not match.")
+
 
 
 def delete_program():

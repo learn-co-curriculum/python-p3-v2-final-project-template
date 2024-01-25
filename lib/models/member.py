@@ -118,18 +118,20 @@ class Member:
 
         CURSOR.execute(sql, (self.first_name, self.last_name, self.membership_type, self.id))
         CONN.commit()
-    
+
     def delete(self):
-        sql = """
-            DELETE FROM members
-            WHERE id = ?
-        """
-
-        CURSOR.execute(sql, (self.id,))
-        CONN.commit()
-
-        del type(self).all[self.id]
-        self.id = None
+        if self.id is not None:
+            try:
+                sql = "DELETE FROM members WHERE id = ?"
+                CURSOR.execute(sql, (self.id,))
+                CONN.commit()
+                print(f"Member with ID {self.id} - {self.first_name} {self.last_name} has been deleted from the database.")
+                del type(self).all[self.id]
+                self.id = None
+            except Exception as e:
+                print(f"An error occurred: {e}")
+        else:
+            print("Member not found or already deleted.")
 
     @classmethod
     def instance_from_db(cls, row):

@@ -119,16 +119,56 @@ class Trainer:
 
         return cls.instance_from_db(row) if row else None
     
-    # @classmethod
-    # def get_all(cls):
-    #     sql = """
-    #         SELECT * FROM trainers;
-    #     """
-    #     CURSOR.execute(sql)
-    #     rows = CURSOR.fetchall()
-    #     trainers = []
-    #     for row in rows:
-    #         trainer = cls.new_form_db(row)
-    #         trainers.append(trainer)
-    #     return trainers
+    @classmethod
+    def get_all(cls):
+        sql = """
+            SELECT * FROM trainers;
+        """
+        CURSOR.execute(sql)
+        rows = CURSOR.fetchall()
+        trainers = []
+        for row in rows:
+            trainer = cls.new_form_db(row)
+            trainers.append(trainer)
+        return trainers
     
+    def display_info(self):
+        print(f"Trainer Name: {self.first_name} {self.last_name}")
+
+    @classmethod
+    def new_form_db(cls, row):
+        trainer = cls(
+            name = row[1], #row at index 1 is the name
+            id = row[0] #row at index 0 is the id
+        )
+        print(trainer.name, trainer.id)
+        return trainer
+
+    @classmethod
+    def find_by_name(cls, first_name, last_name):
+        sql = """
+            SELECT * FROM trainer
+            WHERE first_name = ? AND last_name = ?
+            LIMIT 1;
+        """
+        CURSOR.execute(sql, (first_name, last_name))
+        row = CURSOR.fetchone()
+        if row:
+            return cls.new_form_db(row)  # Assuming new_form_db constructs a Trainer instance
+        else:
+            return None
+        
+    @classmethod
+    def delete_by_name(cls, first_name, last_name):
+        sql = """
+            DELETE FROM trainers
+            WHERE first_name = ? AND last_name = ?;
+        """
+        CURSOR.execute(sql, (first_name, last_name))
+        affected_rows = CURSOR.rowcount
+        CONN.commit()
+        if affected_rows > 0:
+            print(f"Trainer {first_name} {last_name} deleted successfully.")
+        else:
+            print("Trainer not found or already deleted.")
+

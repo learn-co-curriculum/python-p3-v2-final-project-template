@@ -78,8 +78,13 @@ class Member:
         CURSOR.execute(query)
         CONN.commit()
 
-    def save(self):
+    @classmethod 
+    def create_member_row(cls, first_name, last_name, membership_type="Basic"):
+        member = cls(first_name, last_name, membership_type)
+        member.save()
+        return member 
 
+    def save(self):
         if self.id is None:
             query = """
                 INSERT INTO members (first_name, last_name, membership_type)
@@ -96,33 +101,7 @@ class Member:
             """
             CURSOR.execute(query, (self.first_name, self.last_name, self.membership_type, self.id))
             CONN.commit()
- 
 
-    @classmethod 
-    def create_member_row(cls, id, first_name, last_name, membership_type="Basic"):
-        member = cls(id, first_name, last_name, membership_type)
-        member.save()
-        return member 
-    
-    @classmethod 
-    def new_member_db(cls, row):
-        member = cls (
-                id = row[0],
-                first_name = row[1],
-                last_name = row[2],
-                membership_type = row[3]
-            )
-        print(member.first_name, member.last_name, member.membership_type)
-
-        query = """
-            INSERT INTO members (first_name, last_name, membership_type)
-            VALUES (?, ?, ?);
-        """
-        CURSOR.execute(query, (self.first_name, self.last_name, self.membership_type))
-        CONN.commit()
-
-        self.id = CURSOR.lastrowid 
-        type(self).all[self.id] = self
 
     @classmethod
     def create(cls, first_name, last_name, membership_type="Basic"):
@@ -211,27 +190,8 @@ class Member:
     @classmethod 
     def get_all(cls):
         sql = """
-
             SELECT * FROM members
             ORDER BY last_name, first_name
-
         """
         return [cls.instance_from_db(one_row) for one_row in CURSOR.execute(sql).fetchall()]
     
-    
-
-    # def upgrade_membership(self):
-    #     if self._membership_type == "Basic":
-    #         self._membership_type = "Premium"
-    #         print(f"{self._first_name} {self._last_name}'s membership upgraded to Premium.")
-
-    # def attend_class(self, exercise):
-    #     self.classes_attended.append(exercise)
-    #     print(f"{self.name} attended {exercise.name} class.")
-
-    # def display_info(self):
-    #     membership_info = f"Membership Type: {self.membership_type}"
-    #     classes_info = f"Classes Attended: {', '.join([exercise.name for exercise in self.classes_attended])}"
-
-    #     print(f"Member Name: {self.name}\n{membership_info}\n{classes_info}")
-

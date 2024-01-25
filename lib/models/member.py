@@ -129,50 +129,40 @@ class Member:
             FROM members
             WHERE id = ?
         """
-        print("here")
 
         row = CURSOR.execute(sql, (id,)).fetchone()
 
         return cls.instance_from_db(row) if row else None
     
-    # @classmethod 
-    # def new_member_db(cls, row):
-    #     member = cls (
-    #             id = row[0],
-    #             first_name = row[1],
-    #             last_name = row[2],
-    #             membership_type = row[3]
-    #         )
-    #     print(member.first_name, member.last_name, member.membership_type)
-    #     return member
-    
-    # @classmethod 
-    # def get_all_members(cls):
-    #     sql = """
+    @classmethod 
+    def find_by_name(cls, first_name, last_name):
+        sql = """
+            SELECT * FROM members
+            WHERE first_name = ? 
+            AND last_name = ?
+            LIMIT 1
+        """
+        row = CURSOR.execute(sql, (first_name, last_name)).fetchone()
+        if not row:
+            return None
+        return cls(
+            id = row[0],
+            first_name = row[1],
+            last_name = row[2],
+            membership_type = row[3]
+        )
 
-    #         SELECT * FROM members
-    #         ORDER BY last_name, first_name
+    @classmethod 
+    def get_all(cls):
+        sql = """
 
-    #     """
-    #     return [cls.new_member_db(one_row) for one_row in CURSOR.execute(sql).fetchall()]
+            SELECT * FROM members
+            ORDER BY last_name, first_name
+
+        """
+        return [cls.instance_from_db(one_row) for one_row in CURSOR.execute(sql).fetchall()]
     
-    # @classmethod 
-    # def find_by_name(cls, first_name, last_name):
-    #     sql = """
-    #         SELECT * FROM members
-    #         WHERE first_name = ? 
-    #         AND last_name = ?
-    #         LIMIT 1
-    #     """
-    #     row = CURSOR.execute(sql, (first_name, last_name)).fetchone()
-    #     if not row:
-    #         return None
-    #     return cls(
-    #         id = row[0],
-    #         first_name = row[1],
-    #         last_name = row[2],
-    #         membership_type = row[3]
-    #     )
+    
 
     # def upgrade_membership(self):
     #     if self._membership_type == "Basic":

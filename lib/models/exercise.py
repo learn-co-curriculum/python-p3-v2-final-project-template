@@ -56,6 +56,7 @@ class Exercise:
     def create(cls, name):
         exercise = cls(name)
         exercise.save()
+
         return exercise
 
     def update(self):
@@ -105,6 +106,20 @@ class Exercise:
         row = CURSOR.execute(sql, (id,)).fetchone()
 
         return cls.instance_from_db(row) if row else None
+
+    @classmethod
+    def find_by_name(cls, name):
+        sql = """
+            SELECT * FROM exercises
+            WHERE name = ?
+            LIMIT 1;
+        """
+        CURSOR.execute(sql, (name,))
+        row = CURSOR.fetchone()
+        if row:
+            return cls.instance_from_db(row)  # Assuming new_form_db constructs a Trainer instance
+        else:
+            return None
     
     # @classmethod
     # def get_all(cls):
@@ -118,19 +133,3 @@ class Exercise:
     #         exercise = cls.new_form_db(row)
     #         exercises.append(exercise)
     #     return exercises
-
-    
-    # @classmethod
-    # def find_by_name(cls, first_name, last_name):
-    #     sql = """
-    #         SELECT * FROM trainer
-    #         WHERE first_name = ? AND last_name = ?
-    #         LIMIT 1;
-    #     """
-    #     CURSOR.execute(sql, (first_name, last_name))
-    #     row = CURSOR.fetchone()
-    #     if row:
-    #         return cls.new_form_db(row)  # Assuming new_form_db constructs a Trainer instance
-    #     else:
-    #         return None
-

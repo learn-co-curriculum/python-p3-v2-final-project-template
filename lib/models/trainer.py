@@ -135,26 +135,27 @@ class Trainer:
     def display_info(self):
         print(f"Trainer Name: {self.first_name} {self.last_name}")
 
-    @classmethod
-    def new_form_db(cls, row):
-        trainer = cls(
-            name = row[1], #row at index 1 is the name
-            id = row[0] #row at index 0 is the id
-        )
-        print(trainer.name, trainer.id)
-        return trainer
+    # @classmethod
+    # def new_form_db(cls, row):
+    #     trainer = cls(
+    #         first_name = row[1], #row at index 1 is the name
+    #         last_name = row[2]
+    #         id = row[0] #row at index 0 is the id
+    #     )
+
+    #     return trainer
 
     @classmethod
     def find_by_name(cls, first_name, last_name):
         sql = """
-            SELECT * FROM trainer
+            SELECT * FROM trainers
             WHERE first_name = ? AND last_name = ?
             LIMIT 1;
         """
         CURSOR.execute(sql, (first_name, last_name))
         row = CURSOR.fetchone()
         if row:
-            return cls.new_form_db(row)  # Assuming new_form_db constructs a Trainer instance
+            return cls.instance_from_db(row)
         else:
             return None
         

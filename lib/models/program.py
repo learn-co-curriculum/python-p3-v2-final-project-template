@@ -1,9 +1,6 @@
 
 import sqlite3
 
-CONN = sqlite3.connect("lib/gym.db")
-CURSOR = CONN.cursor()
-
 from models.__init__ import CURSOR, CONN
 
 from models.location import Location

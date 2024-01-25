@@ -5,10 +5,10 @@ from helpers import (
     add_member,
     change_membership, 
     view_members,
-    view_classes,
-    add_class,
+    view_all_programs,
+    add_program,
     delete_member, 
-    delete_class,
+    delete_program,
     delete_trainer
 )
 
@@ -26,13 +26,13 @@ def main():
         elif choice == "3":
             view_members()
         elif choice == "4":
-            view_classes()
+            view_all_programs()
         elif choice == "5":
-            add_class()
+            add_program()
         elif choice == "6":
             delete_member()
         elif choice == "7":
-            delete_class()
+            delete_program()
         elif choice == "8":
             delete_trainer()
         else:
@@ -45,10 +45,10 @@ def menu():
     print("1. Add New Gym Member")
     print("2. Change Membership Plan")
     print("3. View Members")
-    print("4. View Exercise Classes")
-    print("5. Add New Exercise Class")
+    print("4. View All Programs")
+    print("5. Add New Exercise Program")
     print("6. Delete Members")
-    print("7. Delete Exercise Classes")
+    print("7. Delete Exercise Program")
     print("8. Delete Trainer")
 
 

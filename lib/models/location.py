@@ -2,13 +2,11 @@ from models.__init__ import CURSOR, CONN
 
 class Location:
 
-    all = []
+    all = {}
 
     def __init__(self, city, id = None):
-        self._city = city
         self.id = id
-        
-        Location.all.append(self)
+        self.city = city
     
     def __repr__(self):
         return f"<Location {self.id}: {self.city}>"
@@ -16,7 +14,6 @@ class Location:
     @property
     def city(self):
         return self._city
-    
     @city.setter
     def city(self, value):
         if isinstance(value, str) and 0 < len(value):
@@ -42,7 +39,6 @@ class Location:
         CURSOR.execute(query)
         CONN.commit()
 
-
     def save(self):
         query = """
             INSERT INTO locations (city)
@@ -50,19 +46,22 @@ class Location:
         """
         CURSOR.execute(query, (self.city,))
         CONN.commit()
+
         self.id = CURSOR.lastrowid 
+        type(self).all[self.id] = self
 
     @classmethod 
     def create(cls, city):
         location = cls(city)
         location.save()
+
         return location
     
     def update(self):
         sql = """
             UPDATE locations
             SET city = ?
-            Where id = ?
+            WHERE id = ?
         """
 
         CURSOR.execute(sql, (self.city, self.id))
@@ -76,14 +75,35 @@ class Location:
 
         CURSOR.execute(sql, (self.id,))
         CONN.commit()
+
+        del type(self).all[self.id]
+        self.id = None
     
     @classmethod 
-    def new_location_db(cls, row):
-        location = cls (
-                id = row[0],
-                city = row[1]
-            )
-        return location 
+    def instance_from_db(cls, row):
+        location = cls.all.get(row[0])
+
+        if location:
+            location.city = row[1]
+        
+        else:
+            location = cls(row[1])
+            location.id = row[0]
+            cls.all[location.id] = location
+        
+        return location
+    
+    @classmethod
+    def find_by_id(cls, id):
+        sql = """
+            SELECT *
+            FROM locations
+            WHERE id = ?
+        """
+
+        row = CURSOR.execute(sql, (id,)).fetchone()
+
+        return cls.instance_from_db(row) if row else None
     
     @classmethod 
     def get_all_locations(cls):

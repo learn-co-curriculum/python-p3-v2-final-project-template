@@ -1,10 +1,9 @@
 # lib/helpers.py
-from models.exercise import Exercise
 from models.location import Location
 from models.member import Member
 from models.program import Program
 from models.trainer import Trainer
-# from models.schedule import Schedule
+from models.schedule import Schedule
 
 def exit_program():
     print("Goodbye!")
@@ -13,9 +12,10 @@ def exit_program():
 def add_member():
     first_name = input("Enter your first name: ")
     last_name = input("Enter your last name: ")
-    membership_type = input("Enter your membership type: ")
+    membership_type = input("Do you want Basic or Premium membership?: ")
     new_member = Member.create_member_row(first_name, last_name, membership_type)
     print(f'Member {new_member.id} {new_member.first_name} {new_member.last_name} has been added with the {new_member.membership_type} membership.')
+
     return new_member
 
 def change_membership():
@@ -49,42 +49,49 @@ def change_membership():
         print("Member details do not match.")
 
 
-
 def view_members():
-    members = Member.get_all_members()
+    members = Member.get_all()
     for member in members:
+
         print(f"ID: {member.id}, First Name: {member.first_name}, Last Name: {member.last_name}, Membership Type: {member.membership_type}")
 
-def view_classes():
-    programs = Program.get_all_programs()
+
+def view_all_programs():
+    programs = Program.get_all()
     for program in programs:
-        print(f"Program ID: {program.id}, Exercise: {exercise.name}, Trainer: {trainer.first_name}, Location: {location.city}, Membership Required: {membership_required}")
+        location = Location.find_by_id(program.location_id)
+        trainer = Trainer.find_by_id(program.trainer_id)
+        print(f"Program Info: Program ID: {program.id}, Exercise Name: {program.exercise_name}, Trainer: {trainer.first_name} {trainer.last_name}, Location: {location.city}, Membership Required: {program.membership_required}")
 
 
-def add_class():
-    trainer_name = input("Enter trainers name: ")
-    exercise_name = input("Enter name of class: ")
+def add_program():
+    exercise_name = input("Enter name of class/exercise: ")
+    trainer_first_name = input("Enter trainer's first name: ")
+    trainer_last_name = input("Enter trainer's last name: ")
     location_name = input("Enter location: ")
-    membership_required = input("Choose Basic or Premium")
+    membership_required = input("Which membership level is required: Basic or Premium? ")
 
-    trainer = Trainer.find_by_name(trainer_name)
-    exercise = Exercise.find_by_name(exercise_name)
+    trainer = Trainer.find_by_name(trainer_first_name, trainer_last_name)
     location = Location.find_by_name(location_name)
 
-    if not trainer or not exercise or not location:
-        print("Invalid")
+    if not trainer:
+        print("No trainer registered by that name.")
+    elif not location:
+        print("This location does not exist.")
         return
     if membership_required not in ["Basic", "Premium"]:
         print("Invalid membership type.")
         return
 
-    new_class = Program(location, trainer, exercise, membership_required)
-    new_class.save()
+    new_program = Program.create(location.id, trainer.id, exercise_name, membership_required)
+    # new_program = Program(exercise_name, location.id, trainer.id, membership_required)
+    # new_program.save()
 
-    print(f"Class added: {exercise_name} at {location_name} with Trainer {trainer_name}, Membership Required: {membership_required}")
-    return new_class 
+    print(f"Program added: {exercise_name} at {location_name} with Trainer {trainer_first_name} {trainer_last_name}, Membership Required: {membership_required}")
+    return new_program
 
 def delete_member():
+
     method = input("Delete by ID(1)  or Name(2) ? Enter 1 or 2: ")
 
     if method == "1":
@@ -111,22 +118,17 @@ def delete_member():
             member.delete()
             print(f"Member {first_name} {last_name} has been deleted.")
         else:
-            print("Member not found or details do not match.")
-
-    else:
-        print("Invalid selection.")
+            print("Member not found or details do not match."
 
 
-
-    
-def delete_class():
+def delete_program():
     program_id = input("Enter program ID to delete: ")
     program = Program.find_by_id(program_id)
     if not program:
         print("Program not found.")
         return 
-    Program.delete_by_id(program_id)
-    print(f"Program with ID {program_id} has been deleted.")
+    program.delete()
+    print(f"{program} has been deleted.")
 
 def delete_trainer():
     first_name = input("Enter trainers first name: ")

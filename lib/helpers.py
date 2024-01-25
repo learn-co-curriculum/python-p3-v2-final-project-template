@@ -18,6 +18,8 @@ def add_member():
 
     return new_member
 
+
+
 def change_membership():
     member_id = input("Enter the member's ID: ")
     first_name = input("Enter the member's first name: ")

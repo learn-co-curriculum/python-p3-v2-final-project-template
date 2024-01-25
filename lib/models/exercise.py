@@ -128,16 +128,3 @@ class Exercise:
         else:
             return None
     
-    # @classmethod
-    # def get_all(cls):
-    #     sql = """
-    #         SELECT * FROM exercises;
-    #     """
-    #     CURSOR.execute(sql)
-    #     rows = CURSOR.fetchall()
-    #     exercises = []
-    #     for row in rows:
-    #         exercise = cls.new_form_db(row)
-    #         exercises.append(exercise)
-    #     return exercises
-

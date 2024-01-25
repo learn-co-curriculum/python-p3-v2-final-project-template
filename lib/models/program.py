@@ -135,21 +135,12 @@ class Program:
         self.id = None
     
     @classmethod
-    def instance_from_db(cls, row):
-        program = cls.all.get(row[0])
-
-        if program:
-            program.location_id = row[1]
-            program.trainer_id = row[2]
-            program.exercise_name = row[3]
-            program.membership_required = row[4]
-        
-        else:
-            program = cls(row[1], row[2], row[3], row[4])
-            program.id = row[0]
-            cls.all[program.id] = program
-        
+    def instance_from_db(cls, row): 
+        program = cls(row[1], row[2], row[3], row[4])
+        program.id = row[0]
+        cls.all[program.id] = program
         return program
+
     
     @classmethod
     def find_by_id(cls, id):
@@ -172,25 +163,21 @@ class Program:
         sql = """
             SELECT * FROM programs;
         """
-        CURSOR.execute(sql)
-        rows = CURSOR.fetchall()
-        programs = []
-        for row in rows:
-            program = cls.instance_from_db(row)
-            programs.append(program)
-        return programs
-    
+        return [cls.instance_from_db(row) for row in CURSOR.execute(sql).fetchall()]
+
+
+
     # @classmethod
-    # def get_all_programs(cls):
+    # def get_all(cls):
     #     sql = """
-    #         SELECT p.id, t.name, e.name, l.name, p.membership_required
-    #         FROM programs p
-    #         JOIN trainers t ON p.trainer_id = t.id
-    #         JOIN exercises e ON p.exercise_id = e.id
-    #         JOIN locations l ON p.location_id = l.id;
+    #         SELECT * FROM programs;
     #     """
     #     CURSOR.execute(sql)
-    #     programs = CURSOR.fetchall()
+    #     rows = CURSOR.fetchall()
+    #     programs = []
+    #     for row in rows:
+    #         program = cls.instance_from_db(row)
+    #         programs.append(program)
     #     return programs
-   
-    #     type(self).all[self.id] = self
+    
+    

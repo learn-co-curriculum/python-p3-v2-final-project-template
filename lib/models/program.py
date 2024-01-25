@@ -1,42 +1,32 @@
-
 import sqlite3
-
 from models.__init__ import CONN, CURSOR
+from models.location import Location
+from models.trainer import Trainer
+from models.exercise import Exercise
+
 
 CONN = sqlite3.connect("lib/gym.db")
 CURSOR = CONN.cursor()
 
 
 class Program:
-
     all = []
 
     def __init__(self, location, trainer, exercise, membership_required="Basic", id=None):
-
         self.id = id
         self.location = location
         self.trainer = trainer
         self.exercise = exercise
         self.membership_required = membership_required
-
-        # self.location_id = location_id
-        # self.trainer_id = trainer_id
-        # self.exercise_id = exercise_id
-
         Program.all.append(self)
 
     def __repr__(self):
-        return (
-            f"""<Program {self.id}
-            Location: {self.location.city}
-            Trainer: {self.trainer.first_name} {self.trainer.last_name}
-            Exercise: {self.exercise.name}
-            Membership Level Needed: {self.membership_required}"""
-        )
+       return (f"<Program {self.id}: Location: {self.location.city}, Trainer: {self.trainer.first_name} {self.trainer.last_name}, Exercise: {self.exercise.name}, Membership Required: {self.membership_required}>") 
     
     @property
     def location(self):
         return self._location
+    
     @location.setter
     def location(self, value):
         from models.location import Location
@@ -49,6 +39,7 @@ class Program:
     @property
     def trainer(self):
         return self._trainer
+    
     @trainer.setter
     def trainer(self, value):
         from models.trainer import Trainer
@@ -61,6 +52,7 @@ class Program:
     @property
     def exercise(self):
         return self._exercise
+    
     @exercise.setter
     def exercise(self, value):
         from models.exercise import Exercise
@@ -73,6 +65,7 @@ class Program:
     @property
     def membership_required(self):
         return self._membership_required
+    
     @membership_required.setter
     def membership_required(self, value):
         if isinstance(value, str) and (value.lower() == "basic" or value.lower() == "premium"):
@@ -82,7 +75,6 @@ class Program:
     
     @classmethod
     def create_table(cls):
-        # Create a new table to track all Program instances
         sql = """
             CREATE TABLE IF NOT EXISTS programs (
                 id INTEGER PRIMARY KEY,
@@ -95,7 +87,6 @@ class Program:
                 FOREIGN KEY (exercise_id) REFERENCES exercises(id)
             );
         """
-
         CURSOR.execute(sql)
         CONN.commit()
     
@@ -104,48 +95,32 @@ class Program:
         sql = """
             DROP TABLE IF EXISTS programs;
         """
-
         CURSOR.execute(sql)
         CONN.commit()
     
     def save(self):
-        sql = """
-            INSERT INTO programs (location_id, trainer_id, exercise_id, membership_required)
-            VALUES (?, ?, ?, ?)
-        """
-
-        CURSOR.execute(sql, (self.location.id, self.trainer.id, self.exercise.id, self.membership_required))
-        CONN.commit()
-        self.id = CURSOR.lastrowid
+        if self.id is None:
+            sql = "INSERT INTO programs (location_id, trainer_id, exercise_id, membership_required) VALUES (?, ?, ?, ?)"
+            CURSOR.execute(sql, (self.location.id, self.trainer.id, self.exercise.id, self.membership_required))
+            CONN.commit()
+            self.id = CURSOR.lastrowid
+        else:
+            sql = "UPDATE programs SET location_id = ?, trainer_id = ?, exercise_id = ?, membership_required = ? WHERE id = ?"
+            CURSOR.execute(sql, (self.location.id, self.trainer.id, self.exercise.id, self.membership_required, self.id))
+            CONN.commit()
 
     @classmethod
     def get_all_programs(cls):
         sql = """
-            SELECT p.id, t.name, e.name, l.name, p.membership_required
+            SELECT p.id, p.location_id, p.trainer_id, p.exercise_id, p.membership_required, e.name, l.city, t.first_name, t.last_name
             FROM programs p
-            JOIN trainers t ON p.trainer_id = t.id
             JOIN exercises e ON p.exercise_id = e.id
-            JOIN locations l ON p.location_id = l.id;
+            JOIN locations l ON p.location_id = l.id
+            JOIN trainers t ON p.trainer_id = t.id
+            ORDER BY e.name, l.city, t.first_name, t.last_name, p.membership_required
         """
-        CURSOR.execute(sql)
-        programs = CURSOR.fetchall()
-        return programs
-   
-    
-    # @classmethod
-    # def create(cls, )
-    
-    @classmethod
-    def fetch_table(cls):
-        pass
+        return [cls.new_from_db(one_row) for one_row in CURSOR.execute(sql).fetchall()]
 
-    # def display_info(self):
-    #     location_info = f"Location: {self.location.name}"
-    #     trainer_info = f"Trainer: {self.trainer.name}"
-    #     exercise_info = f"Exercise: {self.exercise.name}"
-    #     membership_info = f"Membership Type: {self.membership_type}"
-
-    #     print(f"Premium Information:\n{location_info}\n{trainer_info}\n{exercise_info}\n{membership_info}")
 
     @classmethod
     def delete_by_id(cls, id):
@@ -159,19 +134,14 @@ class Program:
         CURSOR.execute(sql, (id,))
         row = CURSOR.fetchone()
         if row:
-            return cls.new_from_db(row)  # Assuming new_from_db constructs a Program instance
-        else:
-            return None
+            return cls.new_from_db(row)
+        return None
+
 
     # Assuming new_from_db constructs a Program instance from a database row
     @classmethod
     def new_from_db(cls, row):
-        program = cls (
-                    id = row[0],
-                    location = row[1],
-                    trainer = row[2],
-                    exercise = row[3],
-                    membership_required = row[4]
-            )
-        print(program.location, program.trainer, program.exercise, program.membership_required)
-        return program
+        location = Location.find_by_id(row[1])
+        trainer = Trainer.find_by_id(row[2])
+        exercise = Exercise.find_by_id(row[3])
+        return cls(location=location, trainer=trainer, exercise=exercise, membership_required=row[4], id=row[0])

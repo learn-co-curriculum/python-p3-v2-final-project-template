@@ -93,7 +93,6 @@ def delete_program():
         return 
     program.delete()
     print(f"{program} has been deleted.")
-    pass # Having issues with program.id
 
 def delete_trainer():
     first_name = input("Enter trainers first name: ")

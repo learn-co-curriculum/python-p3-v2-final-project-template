@@ -1,15 +1,33 @@
-class Tokens:
-    def __init__(self, name, package, price):
-        self.name = name
+class Local:
+    def __init__(self, location):
+        self.location = location
+
+    @property
+    def location(self):
+        return self._location
+
+    @location.setter 
+    def location(self, new_location)
+         if not hasattr(self, "_location")
+         self._location = new_location
+
+
+
+
+
+
+
 
 class Player:
-    def __init__(self, name):
+    def __init__(self, name, tag, membership):
         self.name = name
+        self.tag = tag
+        self.membership = membership
 
-class Purchase:
-    def __init__(self, player, package, price):
-        self.player = player
-        self.package = package
-        self.price = price
+class Arcade:
+    def __init__(self, name, location, member):
+        self.name = name
+        self.location = location 
+        self.member = member
         
 

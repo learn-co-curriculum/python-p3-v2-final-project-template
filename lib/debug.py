@@ -3,11 +3,13 @@
 
 import ipdb
 
-from models.many_to_many import Local
+from models.many_to_many import Local, Player
 from models.__init__ import CONN, CURSOR
 
 
 
-l1 = Location("Down Town")
+l1 = Local("Down Town")
+n1 = Player("Ashe", "asheman", 3)
+
 
 ipdb.set_trace()

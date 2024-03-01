@@ -1,8 +1,8 @@
 class Band:
-    def __init__(self, name, members, gender, home_city):
+    def __init__(self, name, members, genre, home_city):
         self.name = name   
         self.members = members
-        self.gender = gender
+        self.genre = genre
         self.home_city = home_city
 
     @property
@@ -14,7 +14,7 @@ class Band:
         if isinstance(name, str) and len(name) > 0:
             self._name = name
         else:
-            raise Exception("Band name must be a non-empty string")  # Changed ValueError to Exception
+            raise Exception("Band name must be a non-empty string")  
 
     @property
     def members(self):
@@ -27,17 +27,11 @@ class Band:
         else:
             raise Exception("Members must be a non-empty list") 
     @property
-    def gender(self):
-        return self._gender
+    def genre(self):
+        return self._genre
 
-    @gender.setter
-    def gender(self, gender):
-        if isinstance(gender, str) and gender in ['male', 'female', 'mixed', 'other']:
-            self._gender = gender
-        else:
-            raise Exception("Gender must be 'male', 'female', 'mixed', or 'other'")  
-
-    @property
+    @genre.setter
+    
     def home_city(self):
         return self._home_city
 
@@ -48,30 +42,8 @@ class Band:
         else:
             raise Exception("Home city must be a non-empty string") 
         
-# This code must be in concert.py
-        #concert band 
-        #must be of type band
-        #should be able ti change after the cocert is instantiated
 
-
-    @property 
-    def band(self):
-        return self._band
-    
-    @band.setter
-    def band(self, band):
-        #from band import Band
-        if isinstance(band, Band):
-           self._band + band 
-        else :
-            raise Exception("Band must be an instrance of Band class!")
-   
-
-    def home_city_show(self):
-        return f"The band {self.band.name} is playing a show in their home city, {self.band.home_city}, at {self.venue} on {self.date}."
-    
-
-
+  
 
 # City band 
     

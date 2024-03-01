@@ -7,9 +7,9 @@ class Local:
         return self._location
 
     @location.setter 
-    def location(self, new_location)
-         if not hasattr(self, "_location")
-         self._location = new_location
+    def location(self, new_location):
+         if not hasattr(self, "_location"):
+             self._location = new_location
 
 
 

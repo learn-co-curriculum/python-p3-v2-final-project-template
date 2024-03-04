@@ -70,5 +70,23 @@ class City:
 city.select_city_and_display_concerts()
 
 
+#list of all concert but for the city
+def concerts(self):
+       from models.concert import Concert
+       return [concert for concert in Concert.all if concert.city == self]
 
+       concert_list = [concert for concert in Concert.all if concert.venue == self]
+
+       return concerts_list if len(concerts_list)> 0 else None
     
+
+#city band 
+def bands(self):
+    return list(set([concert.band for concert in self.concerts()]))
+
+def concert(self, date):
+    for concert in self.concerts():
+        if concert.date == date:
+            return concert
+    return None 
+

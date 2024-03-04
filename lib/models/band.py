@@ -1,9 +1,11 @@
 class Band:
-    def __init__(self, name, members, gender, home_city):
+    def __init__(self, name, members, genre , home_city):
         self.name = name   
         self.members = members
-        self.gender = gender
+        self.genre  = genre 
         self.home_city = home_city
+    
+ 
 
     @property
     def name(self):
@@ -27,15 +29,15 @@ class Band:
         else:
             raise Exception("Members must be a non-empty list") 
     @property
-    def gender(self):
-        return self._gender
+    def genre (self):
+        return self._genre 
 
-    @gender.setter
-    def gender(self, gender):
-        if isinstance(gender, str) and gender in ['male', 'female', 'mixed', 'other']:
-            self._gender = gender
+    @genre .setter
+    def genre (self, genre ):
+        if isinstance(genre , str) and genre  in ['male', 'female', 'mixed', 'other']:
+            self._genre  = genre 
         else:
-            raise Exception("Gender must be 'male', 'female', 'mixed', or 'other'")  
+            raise Exception("genre  must be 'male', 'female', 'mixed', or 'other'")  
 
     @property
     def home_city(self):
@@ -48,36 +50,17 @@ class Band:
         else:
             raise Exception("Home city must be a non-empty string") 
         
-# This code must be in concert.py
-        #concert band 
-        #must be of type band
-        #should be able ti change after the cocert is instantiated
-
-
-    @property 
-    def band(self):
-        return self._band
-    
-    @band.setter
-    def band(self, band):
-        #from band import Band
-        if isinstance(band, Band):
-           self._band + band 
-        else :
-            raise Exception("Band must be an instrance of Band class!")
+#
    
 
-    def home_city_show(self):
+    def home_city(self):
         return f"The band {self.band.name} is playing a show in their home city, {self.band.home_city}, at {self.venue} on {self.date}."
     
 
-
-
-# City band 
-    
-    #Return a unique list of all the bands for the city
-   # Bands must be of type Band 
+    def concert(self):
+        from models.concert import Concert
+        return [concert for concert in Concert.all if concert.band == self]
     
 
-    def bands(self):
-         return list(set([concert.band for concert in self.concert()]))
+    def city(self):
+        return list(set([concert.venue for concert in self.concerts()]))

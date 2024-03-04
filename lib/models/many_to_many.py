@@ -11,20 +11,27 @@ class Local:
          if not hasattr(self, "_location"):
              self._location = new_location
 
-class Player:
-    def __init__(self, name, tag, membership):
-        self.name = name
+class Member:
+    all = []
+
+    def __init__(self, member, tag, membership):
+        self.member =  member
         self.tag = tag
         self.membership = membership
+        Member.add_new_member(self)
+
+    @classmethod
+    def add_new_member(cls, new_instance):
+        cls.all.append(new_instance)
 
     @property
-    def name(self):
-        return self._name
+    def member(self):
+        return self._member
     
-    @name.setter
-    def name(self, new_name):
-        if not hasattr(self, "_name"):
-            self._name = new_name
+    @member.setter
+    def member(self, new_member):
+        if not hasattr(self, "_member"):
+            self._member = new_member
 
     @property
     def tag(self):
@@ -54,9 +61,31 @@ class Player:
         
 
 class Arcade:
-    def __init__(self, name, location, member):
-        self.name = name
-        self.location = location 
+    def __init__(self, member, location, ):
         self.member = member
+        self.location = location 
         
+
+    @property
+    def member(self,):
+        return self._member
+    
+    @name.setter
+    def name(self, new_member):
+        return []
+   
+   
+   
+   
+   
+    # @property
+    # def location(self):
+    #     return self._location
+
+    # @location.setter 
+    # def location(self, new_location):
+    #      if not hasattr(self, "_location"):
+    #          self._location = new_location
+
+    
 

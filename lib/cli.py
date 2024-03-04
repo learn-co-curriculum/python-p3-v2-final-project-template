@@ -4,7 +4,8 @@ from helpers import (
     exit_program,
     helper_1
 )
-
+from helpers import app
+import typer
 
 def main():
     while True:
@@ -25,4 +26,5 @@ def menu():
 
 
 if __name__ == "__main__":
-    main()
+    # typer.run(main)
+    app()

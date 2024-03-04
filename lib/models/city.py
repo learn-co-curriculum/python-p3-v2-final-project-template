@@ -1,5 +1,5 @@
 from __init__ import CURSOR, CONN
-from utils import custom_property, SQLDropTable
+from utils import custom_property, SQL_drop_table
 
 def name_conds(name):
     if not isinstance(name, str):
@@ -23,8 +23,8 @@ class City:
 
     name = custom_property(name_conds)
 
-    @classmethod
-    def create_table(cls):
+    @staticmethod
+    def create_table():
         sql = """
             CREATE TABLE IF NOT EXISTS cities (
             id INTEGER PRIMARY KEY,
@@ -33,16 +33,9 @@ class City:
         CURSOR.execute(sql)
         CONN.commit()
 
-    @classmethod
-    def drop_table(cls):
-            sql = """
-                DROP TABLE IF EXISTS cities
-                """
+    # create_table = SQL_create_table("cities")
 
-        CURSOR.execute(sql)
-        CONN.commit()
-
-    drop_table = classmethod(SQLDropTable("cities"))
+    drop_table = SQL_drop_table("cities")
 
     def save(self):
         sql = """
@@ -63,15 +56,63 @@ class City:
         return city
 
     @classmethod
-    # i don't like this method ill probably use something different
     def instance_from_db(cls, row):
         city = cls.working_insts.get(row[0])
         if city:
             city.name = row[1]
         else:
-            city = cls(row[1])
-            city.id = row[0]
+            # city = cls(row[1])
+            # city.id = row[0]
+            # i don't like making this new city object
+            # and returning it as if it was in the db without adding it
+            raise Error("Cannot find row")
         return city
+
+    @classmethod
+    def find_by_id(cls, id):
+        sql = """
+        SELECT *
+        FROM cities
+        WHERE id = ?
+        """
+
+        row = CURSOR.execute(sql, (id,)).fetchone()
+        return cls.instance_from_db(row) if row else None
+
+    def update(self):
+        sql = """
+            UPDATE cities
+            SET name = ?
+            WHERE id = ?
+        """
+
+        CURSOR.execute(sql, (self.name, self.id))
+        CONN.commit()
+
+    def delete(self):
+        sql = """
+            DELETE FROM cities
+            WHERE id = ?
+        """
+
+        CURSOR.execute(sql, (self.id,))
+        CONN.commit()
+
+        del type(self).working_insts[self.id]
+        self.id = None
+
+    @classmethod
+    def get_all(cls):
+        sql = """
+            SELECT *
+            FROM cities
+        """
+
+        rows = CURSOR.execute(sql).fetchall()
+        return [cls.instance_from_db(row) for row in rows]
 
 City.create_table()
 City.create('New York')
+c = City("Anchorage")
+
+# City.drop_table()

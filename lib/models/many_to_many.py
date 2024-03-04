@@ -24,44 +24,44 @@ class Locale:
         return [arcade for arcade in Arcade.all if arcade.location == self]
              
     def members(self):
-        return [member for member in Arcade.all if member.location == self ]
+        return list({arcade.members for arcade in self.arcade()})
     
 
 class Member:
     all = []
 
-    def __init__(self, name):
-        self.name = name
+    def __init__(self, member):
+        self.member = member
         Member.all.append(self)
 
     @property
-    def name(self):
-        return self._name
+    def member(self):
+        return self.member
     
-    @name.setter
-    def name(self, new_name):
-        if not hasattr(self, "_name"):
-            self._name = new_name
+    @member.setter
+    def member(self, new_member):
+        if not hasattr(self, "_member"):
+            self._member = new_member
 
     def __repr__(self):
-        return f' Member name = "{self.name}" '
+        return f' Member name = "{self.member}" '
     
     def locale(self):
-        return [location for location in Arcade.all if location.name == self]
+        return [location for location in Arcade.all if location.member == self]
     
     def arcade(self):
-        return [arcade for arcade in Arcade.all if arcade.name == self]
+        return [arcade for arcade in Arcade.all if arcade.member == self]
+
 
 class Arcade:
     all = []
 
-    def __init__(self, name, location, membership):
+    def __init__(self, member, location):
         #this will pull the name from member
-        self.name = name
+        self.member = member
         #based on membership level the person has access to 1, 2, or 3 locations
-        self.location = location 
+        self._location = location 
         #this will pull the membership 
-        self.membership = membership
         # self.tag = tag
         Arcade.add_access(self)
 
@@ -70,18 +70,16 @@ class Arcade:
         cls.all.append(new_access)
 
     @property
-    def membership(self):
-        return self._membership
+    def location(self):
+        return self._location
     
-    @membership.setter
-    def membership(self, new_membership):
-        if new_membership == 1 or new_membership == 2 or new_membership == 3:
-            self._membership = new_membership
+    @location.setter
+    def location(self, new_location):
+        if new_location is Locale:
+            self._location = new_location
         else:
-            raise ValueError("Please input a valid membership level of 1, 2, or 3")
+            raise ValueError("Please input a valid location")
     
-    def __repr__(self):
-        return f' Member name = "{self.name}" Location = "{self.location}" Memership level = "{self.membership}" '
     
     @classmethod
     def locations(cls):
@@ -89,7 +87,10 @@ class Arcade:
     
     @classmethod
     def members(cls):
-        return [members.name for members in Member.all]
+        return [members.member for members in Member.all]
+    
+    def __repr__(self):
+        return f' Member name = "{self.members}" Location = "{self.locations}"'
 
     
     # @property

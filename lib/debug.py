@@ -12,6 +12,7 @@ l1 = Locale("Down Town")
 l2 = ("Harlem")
 l3 = ("Murray Hill")
 a1 = Arcade("Ashe", "Down Town", 3)
+a2 = Arcade("ryan", "Harlem", 2)
 
 
 ipdb.set_trace()

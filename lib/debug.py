@@ -13,8 +13,8 @@ l2 = Locale("Harlem")
 l3 = Locale("Murray Hill")
 m1 = Member("Isaac")
 m2 = Member("Asheee")
-a1 = Arcade("Ashe", l1)
-a2 = Arcade("ryan", l2)
+a1 = Arcade(m1, l1)
+a2 = Arcade(m2, l2)
 
 
 ipdb.set_trace()

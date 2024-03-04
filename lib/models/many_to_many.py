@@ -1,8 +1,10 @@
 class Locale:
+    all = []
 
     def __init__(self, location):
         self.location = location
-        
+        Locale.all.append(self)
+
     @property
     def location(self):
         return self._location
@@ -17,15 +19,20 @@ class Locale:
     
     def __repr__(self):
         return f' Location name = "{self.location}" '
+    
+    def arcade(self):
+        return [arcade for arcade in Arcade.all if arcade.location == self]
              
     def members(self):
-        [member for member in Arcade.all if member.location == self ]
+        return [member for member in Arcade.all if member.location == self ]
     
-      
 
 class Member:
+    all = []
+
     def __init__(self, name):
         self.name = name
+        Member.all.append(self)
 
     @property
     def name(self):
@@ -38,11 +45,17 @@ class Member:
 
     def __repr__(self):
         return f' Member name = "{self.name}" '
+    
+    def locale(self):
+        return [location for location in Arcade.all if location.name == self]
+    
+    def arcade(self):
+        return [arcade for arcade in Arcade.all if arcade.name == self]
 
 class Arcade:
     all = []
 
-    def __init__(self, name, location, membership, tag=''):
+    def __init__(self, name, location, membership):
         #this will pull the name from member
         self.name = name
         #based on membership level the person has access to 1, 2, or 3 locations
@@ -62,7 +75,7 @@ class Arcade:
     
     @membership.setter
     def membership(self, new_membership):
-        if new_membership == 1 or new_membership == 2 or new_membership ==3:
+        if new_membership == 1 or new_membership == 2 or new_membership == 3:
             self._membership = new_membership
         else:
             raise ValueError("Please input a valid membership level of 1, 2, or 3")
@@ -70,7 +83,15 @@ class Arcade:
     def __repr__(self):
         return f' Member name = "{self.name}" Location = "{self.location}" Memership level = "{self.membership}" '
     
-        
+    @classmethod
+    def locations(cls):
+        return [locale.location for locale in Locale.all]
+    
+    @classmethod
+    def members(cls):
+        return [members.name for members in Member.all]
+
+    
     # @property
     # def tag(self):
     #     return self._tag

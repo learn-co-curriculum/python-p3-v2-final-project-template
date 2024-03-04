@@ -11,6 +11,8 @@ from models.__init__ import CONN, CURSOR
 l1 = Locale("Down Town")
 l2 = Locale("Harlem")
 l3 = Locale("Murray Hill")
+m1 = Member("Isaac")
+m2 = Member("Ashe")
 a1 = Arcade("Ashe", "Down Town", 3)
 a2 = Arcade("ryan", "Harlem", 2)
 

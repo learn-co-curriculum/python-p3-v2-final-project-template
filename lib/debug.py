@@ -12,7 +12,7 @@ l1 = Locale("Down Town")
 l2 = Locale("Harlem")
 l3 = Locale("Murray Hill")
 m1 = Member("Isaac")
-m2 = Member("Ashe")
+m2 = Member("Asheee")
 a1 = Arcade("Ashe", l1)
 a2 = Arcade("ryan", l2)
 

@@ -30,27 +30,27 @@ class Locale:
 class Member:
     all = []
 
-    def __init__(self, member):
-        self.member = member
+    def __init__(self, name):
+        self.name = name
         Member.all.append(self)
 
     @property
-    def member(self):
-        return self.member
+    def name(self):
+        return self._name
     
-    @member.setter
-    def member(self, new_member):
-        if not hasattr(self, "_member"):
-            self._member = new_member
+    @name.setter
+    def name(self, new_name):
+        if not hasattr(self, "_name"):
+            self._name = new_name
 
     def __repr__(self):
-        return f' Member name = "{self.member}" '
+        return f' Member name = "{self.name}" '
     
     def locale(self):
-        return [location for location in Arcade.all if location.member == self]
+        return [location for location in Arcade.all if location.name == self]
     
     def arcade(self):
-        return [arcade for arcade in Arcade.all if arcade.member == self]
+        return [arcade for arcade in Arcade.all if arcade.name == self]
 
 
 class Arcade:
@@ -87,10 +87,10 @@ class Arcade:
     
     @classmethod
     def members(cls):
-        return [members.member for members in Member.all]
+        return [members.members for members in Member.all]
     
     def __repr__(self):
-        return f' Member name = "{self.members}" Location = "{self.locations}"'
+        return f' Member name = "{self.member}" Location = "{self.location}"'
 
     
     # @property

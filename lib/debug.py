@@ -3,13 +3,15 @@
 
 import ipdb
 
-from models.many_to_many import Local, Member
+from models.many_to_many import Locale, Member, Arcade
 from models.__init__ import CONN, CURSOR
 
 
 
-l1 = Local("Down Town")
-m1 = Member("Ashe", "asheman", 3)
+l1 = Locale("Down Town")
+l2 = ("Harlem")
+l3 = ("Murray Hill")
+a1 = Arcade("Ashe", "Down Town", 3)
 
 
 ipdb.set_trace()

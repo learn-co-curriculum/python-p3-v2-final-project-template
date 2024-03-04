@@ -14,9 +14,13 @@ class Locale:
     
     #keep track of all the members that have access to a location
     # if a member has locale that matches 1 2 or 3 add to members list
+    
+    def __repr__(self):
+        return f' Location name = "{self.location}" '
              
     def members(self):
         [member for member in Arcade.all if member.location == self ]
+    
       
 
 class Member:
@@ -32,7 +36,9 @@ class Member:
         if not hasattr(self, "_name"):
             self._name = new_name
 
-    
+    def __repr__(self):
+        return f' Member name = "{self.name}" '
+
 class Arcade:
     all = []
 
@@ -43,13 +49,12 @@ class Arcade:
         self.location = location 
         #this will pull the membership 
         self.membership = membership
-        self.tag = tag
+        # self.tag = tag
         Arcade.add_access(self)
 
     @classmethod
     def add_access(cls, new_access):
         cls.all.append(new_access)
-
 
     @property
     def membership(self):
@@ -61,16 +66,20 @@ class Arcade:
             self._membership = new_membership
         else:
             raise ValueError("Please input a valid membership level of 1, 2, or 3")
-        
-    @property
-    def tag(self):
-        return self._tag
     
-    @tag.setter
-    def tag(self, new_tag):
-        #logic to make sure there are no duplicate tags
-        if 5 <= len(new_tag) <= 15:
-            self._tag = new_tag
-        else:
-            raise ValueError(f'Tag {new_tag} is not between 5 and 15 characters, please enter a different tag')
+    def __repr__(self):
+        return f' Member name = "{self.name}" Location = "{self.location}" Memership level = "{self.membership}" '
+    
+        
+    # @property
+    # def tag(self):
+    #     return self._tag
+    
+    # @tag.setter
+    # def tag(self, new_tag):
+    #     #logic to make sure there are no duplicate tags
+    #     if 5 <= len(new_tag) <= 15:
+    #         self._tag = new_tag
+    #     else:
+    #         raise ValueError(f'Tag {new_tag} is not between 5 and 15 characters, please enter a different tag')
         

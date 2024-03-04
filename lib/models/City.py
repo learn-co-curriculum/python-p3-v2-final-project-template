@@ -59,6 +59,26 @@ class City:
                 print(f": {concert}")
         else:
             print(f"No concerts found in {self.name}")
+
+    #to add bands that are playing in the city and also to see whcih bands are playing by genre in a city:
+    def add_concert(self, concert):
+        self.concerts.append(concert)
+
+    def bands_playing(self, genre = None, city = None):
+        bands = set()
+        for concert in self.concerts:
+            if (genre is None or concert.genre == genre) and (city is None or concert.city == city):
+            bands.add(concert.band_name)
+        return list(bands)
+
+    #to see if the city is the band's hometown:
+    def is_home_city_of_band(self, band):
+        from band import Band                                       #I only used the import here, to hopefully not have a circular import error
+        if isinstance(band, Band) and band.home_city == self.name:
+            print (f"This is {band.name}'s home city!")
+        else:
+            return False
+
     #creates and added the instance of a city to all cities
     @classmethod
     def add_city(cls, city_name, concerts=None):
@@ -82,6 +102,13 @@ class City:
             found_city.display_concerts()
         else:
             print("City not found.")
+
+
+   
+
+    
+
+    
 
 
 # Add cities with concerts to City.all_cities

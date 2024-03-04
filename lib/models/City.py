@@ -18,6 +18,8 @@ class City:
         self.concerts = concerts or []
 
     name = custom_property("name", name_conds)
+
+    
        
     #the getter of city names
     # @property

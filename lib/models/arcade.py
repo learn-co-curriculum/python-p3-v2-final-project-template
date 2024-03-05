@@ -3,7 +3,7 @@ class Arcade:
 
     def __init__(self, member, tag, location):
         #this will pull the name from member
-        self.member = member
+        self._member = member
         #based on membership level the person has access to 1, 2, or 3 locations
         self.location = location 
         #this will pull the membership 
@@ -19,13 +19,11 @@ class Arcade:
         if not hasattr(self, "_member"):
             if type(new_member) == str:
                 if 1<= len(new_member) <= 10:
-                 self._member = new_member
-                else:
                     raise ValueError("All new members must be betweeen 1 and 10 characters")
-            else:
-                raise TypeError("Name must be a string")
-            
-        raise AttributeError("Name is not able to be changed")
+            raise TypeError("Name must be a string")
+      
+        self.member = new_member
+    
     
     @property
     def tag(self):
@@ -47,13 +45,12 @@ class Arcade:
     @location.setter
     def location(self, new_location):
         if isinstance(new_location, int):
-            if new_location == 1 or new_location == 2 or  new_location == 3:
+            if new_location == 1 or new_location == 2 or new_location == 3:
                 self._location = new_location
             else:
                 raise ValueError("Location must be 1, 2, or 3")
         else:
             raise TypeError("Location must be an integer")
-
 
     @classmethod
     def locations(cls):
@@ -62,6 +59,7 @@ class Arcade:
     @classmethod
     def members(cls):
         return [member.members for member in Member.all]
+    
     
     @classmethod
     def add_access(cls, new_access):

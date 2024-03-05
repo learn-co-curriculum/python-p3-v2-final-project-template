@@ -1,3 +1,5 @@
+from models.arcade import Arcade 
+
 class Locale:
     all = []
 

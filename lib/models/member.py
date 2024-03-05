@@ -1,3 +1,5 @@
+from models.arcade import Arcade 
+
 class Member:
 
     def __init__(self, name):

@@ -1,4 +1,4 @@
-# Phase 3 CLI+ORM Project Template
+# Phase 3 Arcade Membership Management CLI Application
 
 ## Learning Goals
 
@@ -9,8 +9,7 @@
 
 ## Introduction
 
-You now have a basic idea of what constitutes a CLI. Fork and clone this lesson
-for a project template for your CLI.
+You now have a basic idea of what constitutes a CLI. Fork and clone this lesson for a project template for your CLI.
 
 Take a look at the directory structure:
 
@@ -22,17 +21,13 @@ Take a look at the directory structure:
 └── lib
     ├── models
     │   ├── __init__.py
-    │   └── model_1.py
+    │   ├── arcade.py
+    │   ├── locale.py
+    │   └── member.py
     ├── cli.py
     ├── debug.py
     └── helpers.py
-```
 
-Note: The directory also includes two files named `CONTRIBUTING.md` and
-`LICENSE.md` that are specific to Flatiron's curriculum. You can disregard or
-delete the files if you want.
-
----
 
 ## Generating Your Environment
 
@@ -50,18 +45,17 @@ pipenv shell
 
 ## Generating Your CLI
 
-A CLI is, simply put, an interactive script and prompts the user and performs
-operations based on user input.
+A CLI is, simply put, an interactive script that prompts the user and performs operations based on user input.
 
 The project template has a sample CLI in `lib/cli.py` that looks like this:
 
 ```py
 # lib/cli.py
 
-from helpers import (
-    exit_program,
-    helper_1
-)
+from helpers import menu, exit_program
+from models.arcade import Arcade
+from models.locale import Locale
+from models.member import Member
 
 
 def main():
@@ -71,34 +65,76 @@ def main():
         if choice == "0":
             exit_program()
         elif choice == "1":
-            helper_1()
+            create_arcade()
+        elif choice == "2":
+            delete_arcade()
+        elif choice == "3":
+            display_all_arcades()
+        elif choice == "4":
+            view_members_of_arcade()
+        elif choice == "5":
+            find_arcade_by_tag()
         else:
             print("Invalid choice")
 
 
-def menu():
-    print("Please select an option:")
-    print("0. Exit the program")
-    print("1. Some useful function")
+def create_arcade():
+    name = input("Enter member name: ")
+    tag = input("Enter membership tag: ")
+    location = int(input("Enter location number (1, 2, or 3): "))
+    arcade = Arcade(name, tag, location)
+    print("Arcade created successfully!")
+
+
+def delete_arcade():
+    # Add logic to delete an arcade
+    pass
+
+
+def display_all_arcades():
+    print("List of all Arcades:")
+    for arcade in Arcade.all:
+        print(arcade)
+    print()
+
+
+def view_members_of_arcade():
+    # Add logic to view members of an arcade
+    pass
+
+
+def find_arcade_by_tag():
+    tag = input("Enter membership tag: ")
+    found_arcade = [arcade for arcade in Arcade.all if arcade.tag == tag]
+    if found_arcade:
+        print("Arcade found:")
+        print(found_arcade)
+    else:
+        print("No arcade found with that tag.")
 
 
 if __name__ == "__main__":
     main()
-```
+The helper functions are located in lib/helpers.py:
 
-The helper functions are located in `lib/helpers.py`:
-
-```py
+py
+Copy code
 # lib/helpers.py
 
-def helper_1():
-    print("Performing useful function#1.")
+def menu():
+    print("Please select an option:")
+    print("0. Exit the program")
+    print("1. Create Arcade")
+    print("2. Delete Arcade")
+    print("3. Display All Arcades")
+    print("4. View Members of an Arcade")
+    print("5. Find Arcade by Tag")
 
 
 def exit_program():
     print("Goodbye!")
     exit()
-```
+In this updated example, we've incorporated functions to interact with the Arcade model from your code. The CLI prompts the user to perform various operations related to creating, deleting, displaying, and finding arcades. You can similarly add functions to interact with the Locale and Member models as needed.
 
 You can run the template CLI with `python lib/cli.py`, or include the shebang
 and make it executable with `chmod +x`. The template CLI will ask for input, do
@@ -165,8 +201,3 @@ to a good start with your Phase 3 Project.
 
 Happy coding!
 
----
-
-## Resources
-
-- [Markdown Cheat Sheet](https://www.markdownguide.org/cheat-sheet/)

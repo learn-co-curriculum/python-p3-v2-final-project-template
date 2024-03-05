@@ -15,14 +15,13 @@ class Arcade:
         self.tage = self.tag
     @tag.setter
     def tag(self, new_tag):
-        if not hasattr(self, "_tag"):
-            if type(new_tag) ==  str:
-                if len(new_tag) >= 3:
+        if isinstance(self, new_tag):
+            if 3 <= len(new_tag) <= 15:
                     self._tag = new_tag
-                else:
-                    raise ValueError("This tag must be at least 3 characters long")
             else:
-                raise TypeError("Name must be a string")
+                raise ValueError("This tag must be at least 3 and 15 characters long")
+        else:
+            raise TypeError("Name must be a string")
                 
 
     @property

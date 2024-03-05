@@ -1,4 +1,7 @@
+from models.__init__ import CONN, CURSOR
+
 class Arcade:
+
     all = []
 
     def __init__(self, member, tag, location):
@@ -43,13 +46,15 @@ class Arcade:
     
     @location.setter
     def location(self, new_location):
-        if isinstance(new_location, int):
-            if new_location == 1 or new_location == 2 or new_location == 3:
-                self._location = new_location
+        if isinstance(new_location, str):
+            if 7 <= len(new_tag) <= 25:
+                    self._tag = new_tag
             else:
-                raise ValueError("Location must be 1, 2, or 3")
+                raise ValueError("This tag must be at least 7 and 25 characters long")
         else:
-            raise TypeError("Location must be an integer")
+            raise TypeError("tag name must be a string")
+
+        
 
     @classmethod
     def locations(cls):
@@ -67,3 +72,18 @@ class Arcade:
 
     def __repr__(self):
         return f'{self.member} // {self.location}'
+
+    @classmethod
+    def create_table(cls): 
+        sql = """ 
+            CREATE TABLE IF NOT EXISTS arcades(
+            id INTEGER PRIMARY KEY,
+            member_id INTEGER,
+            location TEXT
+            );
+            """
+        CURSOR.execute(sql)
+        CONN.commit()
+    # database foreign keys/ refrences 
+
+    

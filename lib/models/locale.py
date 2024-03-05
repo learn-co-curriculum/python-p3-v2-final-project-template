@@ -1,4 +1,4 @@
-from models.arcade import Arcade 
+from models.__init__ import CONN, CURSOR
 
 class Locale:
     all = []

@@ -82,7 +82,7 @@ class Concert:
 
     @classmethod
     def drop_table(cls):
-        """ Drop the table that persisits Concert instances """
+        """ Drop the table that persists Concert instances """
         sql = """
             DROP TABLE IF EXISTS concerts;
         """
@@ -171,7 +171,7 @@ class Concert:
         return cls.instance_from_db(row) if row else None
 
     @classmethod 
-    def find_ny_name(cls, name):
+    def find_by_name(cls, name):
         """ Return a Concert object corresponding to the first table row matching specified name """
         sql = """
             SELECT *
@@ -182,7 +182,7 @@ class Concert:
         row = CURSOR.exevute(sql, (name,)).fetchone()
         return cls.instance_from_db(row) if row else None
 
-    def bands(self):
+    def cities(self):
         """ Return list of cities associated with current concert """
         from city import City
         sql = """

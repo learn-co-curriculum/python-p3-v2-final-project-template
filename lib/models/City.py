@@ -18,6 +18,9 @@ class City:
         self.concerts = concerts or []
 
     name = custom_property("name", name_conds)
+
+    def __repr__(self):
+        return f"<City: {self.name}, concerts: {self.concerts}>"
        
     #the getter of city names
     # @property
@@ -68,7 +71,7 @@ class City:
         bands = set()
         for concert in self.concerts:
             if (genre is None or concert.genre == genre) and (city is None or concert.city == city):
-            bands.add(concert.band_name)
+                bands.add(concert.band_name)
         return list(bands)
 
     #to see if the city is the band's hometown:

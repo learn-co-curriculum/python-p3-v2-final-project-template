@@ -194,3 +194,4 @@ class Concert:
         rows = CURSOR.fetchall()
         return [City.instance_from_db(row) for row in rows]
         
+        

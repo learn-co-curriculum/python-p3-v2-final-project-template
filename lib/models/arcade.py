@@ -24,7 +24,6 @@ class Arcade:
       
         self.member = new_member
     
-    
     @property
     def tag(self):
         self.tag = self.tag

@@ -28,4 +28,3 @@ class Locale:
     
     def __repr__(self):
         return f' Location name = "{self.location}" '
-    

@@ -29,16 +29,16 @@ class Arcade:
     
     @property
     def tag(self):
-        self.tage = self.tag
+        self.tag = self.tag
     @tag.setter
     def tag(self, new_tag):
-        if isinstance(self, new_tag):
+        if isinstance(new_tag, str):
             if 3 <= len(new_tag) <= 15:
                     self._tag = new_tag
             else:
                 raise ValueError("This tag must be at least 3 and 15 characters long")
         else:
-            raise TypeError("Name must be a string")
+            raise TypeError("tag name must be a string")
 
     @property
     def location(self):
@@ -46,11 +46,15 @@ class Arcade:
     
     @location.setter
     def location(self, new_location):
-        if isinstance(new_location, Locale):
-            self._location = new_location
+        if isinstance(new_location, int):
+            if new_location == 1 or new_location == 2 or  new_location == 3:
+                self._location = new_location
+            else:
+                raise ValueError("Location must be 1, 2, or 3")
         else:
-            raise TypeError("Location must be a Locale class instance")
-    
+            raise TypeError("Location must be an integer")
+
+
     @classmethod
     def locations(cls):
         return [locale.location for locale in Locale.all]

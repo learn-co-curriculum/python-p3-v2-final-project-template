@@ -61,11 +61,8 @@ class City:
         if city:
             city.name = row[1]
         else:
-            # city = cls(row[1])
-            # city.id = row[0]
-            # i don't like making this new city object
-            # and returning it as if it was in the db without adding it
-            raise Error("Cannot find row")
+            city = cls(row[1])
+            city.id = row[0]
         return city
 
     @classmethod
@@ -77,6 +74,17 @@ class City:
         """
 
         row = CURSOR.execute(sql, (id,)).fetchone()
+        return cls.instance_from_db(row) if row else None
+
+    @classmethod
+    def find_by_name(cls, name):
+        sql = """
+        SELECT *
+        FROM cities
+        WHERE name = ?
+        """
+
+        row = CURSOR.execute(sql, (name,)).fetchone()
         return cls.instance_from_db(row) if row else None
 
     def update(self):
@@ -111,8 +119,8 @@ class City:
         rows = CURSOR.execute(sql).fetchall()
         return [cls.instance_from_db(row) for row in rows]
 
-City.create_table()
-City.create('New York')
-c = City("Anchorage")
+# City.create_table()
+# City.create('New York')
+# c = City("Anchorage")
 
 # City.drop_table()

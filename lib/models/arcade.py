@@ -4,9 +4,9 @@ class Arcade:
 
     all = []
 
-    def __init__(self, member, tag, location):
+    def __init__(self, member, location):
         #this will pull the name from member
-        self._member = member
+        self.member = member
         #based on membership level the person has access to 1, 2, or 3 locations
         self.location = location 
         #this will pull the membership 
@@ -27,18 +27,6 @@ class Arcade:
       
         self.member = new_member
     
-    @property
-    def tag(self):
-        self.tag = self.tag
-    @tag.setter
-    def tag(self, new_tag):
-        if isinstance(new_tag, str):
-            if 3 <= len(new_tag) <= 15:
-                    self._tag = new_tag
-            else:
-                raise ValueError("This tag must be at least 3 and 15 characters long")
-        else:
-            raise TypeError("tag name must be a string")
 
     @property
     def location(self):
@@ -47,12 +35,12 @@ class Arcade:
     @location.setter
     def location(self, new_location):
         if isinstance(new_location, str):
-            if 7 <= len(new_tag) <= 25:
+            if 3 <= len(new_tag) <= 25:
                     self._tag = new_tag
             else:
-                raise ValueError("This tag must be at least 7 and 25 characters long")
+                raise ValueError("This location must be at least 7 and 25 characters long")
         else:
-            raise TypeError("tag name must be a string")
+            raise TypeError("location name must be a string")
 
     @classmethod
     def locations(cls):

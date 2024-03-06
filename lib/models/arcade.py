@@ -4,9 +4,9 @@ class Arcade:
 
     all = []
 
-    def __init__(self, name, id=None):
+    def __init__(self, member, id=None):
         #this will pull the name from member
-        self.name = name
+        self.member = member
         #based on membership level the person has access to 1, 2, or 3 locations
         # self.location = location 
         #this will pull the membership 
@@ -18,18 +18,18 @@ class Arcade:
         cls.all.append(new_instance)
 
     @property
-    def name(self):
-        return self._name
+    def name(self, new_member):
+        return new_member
     
     @name.setter
-    def name(self):
-        # if not hasattr(self, "_member"):
-        #     if type(new_member) == str:
-        #         if 1<= len(new_member) <= 10:
-        #             raise ValueError("All new members must be betweeen 1 and 10 characters")
-        #     raise TypeError("Name must be a string")
+    def name(self, new_member):
+        if not hasattr(self, "_member"):
+            if type(new_member) == str:
+                if 1<= len(new_member) <= 10:
+                    raise ValueError("All new members must be betweeen 1 and 10 characters")
+            raise TypeError("Name must be a string")
       
-        self.name = new_name
+        self.name = new_member
     
 
     

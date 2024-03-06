@@ -17,8 +17,9 @@ from helpers import (
     delete_concert,
 )
 from helpers import app
-import typer
+# import typer
 
+@app.command()
 def main():
     while True:
         menu()

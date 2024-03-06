@@ -1,10 +1,13 @@
+from band import Band
+from concert_band import ConcertBand
+
 class Concert:
     all = []
 
-    def __init__(self, name, date, band, city, ticket_cost):
+    def __init__(self, name, date, bands, city, ticket_cost):
         self.name = name
         self.date = date
-        self.band = band
+        self.bands = bands
         self.city = city
         self.ticket_cost = ticket_cost  
 
@@ -49,17 +52,23 @@ class Concert:
         #should be able ti change after the cocert is instantiated
 
     @property
-    def band(self):
-        return self._band
+    def bands(self):
+        return self._bands
 
-    @band.setter
-    def band(self, band):
-       from models.band import Band
-       if isinstance(band, Band):
-           self._band + band 
-       else :
-            raise Exception("Band must be an instrance of Band class!")
-   
+    # @band.setter
+    # def band(self, band):
+    #    from models.band import Band
+    #    if isinstance(band, Band):
+    #        self._band + band 
+    #    else :
+    #         raise Exception("Band must be an instrance of Band class!")
+    @bands.setter
+    def bands(self, bands):
+        for band in bands:
+            if not isinstance(band, str):
+                # here we should actually check for a band in the table and make one if there isnt
+                raise Error("This element isn't a string!")
+        self._bands = bands
 
     def home_city_show(self):
         return f"The band {self.band.name} is playing a show in their home city, {self.band.home_city}, at {self.city} on {self.date}."
@@ -72,11 +81,12 @@ class Concert:
             id INTEGER PRIMARY KEY,
             name TEXT,
             date TEXT,
-            band TEXT,
+            # band TEXT,
             city TEXT,
             ticket_cost FLOAT
             )
         """
+
         CURSOR.execute(sql)
         CONN.commit()
 

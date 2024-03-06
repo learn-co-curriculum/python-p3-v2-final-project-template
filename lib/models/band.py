@@ -114,5 +114,29 @@ class Band:
             band.id = band_id
         return band
 
+    @classmethod
+    def find_by_id(cls, id):
+        sql = """
+            SELECT *
+            FROM bands
+            WHERE id = ?
+        """
+
+        row = CURSOR.execute(sql, (id,)).fetchone()
+        return cls.instance_from_db(row) if row else None
+
+    @classmethod
+    def find_by_name(cls, name):
+        sql = """
+            SELECT *
+            FROM bands
+            WHERE name is ?
+        """
+
+        row = CURSOR.execute(sql, (name,)).fetchone()
+        return cls.instance_from_db(row) if row else None
+
+
+
 Band.create_table()
 Band.create('The Example', ['Member 1', 'Member 2'], 'Rock', 1) 

@@ -1,6 +1,4 @@
-
 from models.__init__ import CONN, CURSOR
-
 
 class Member:
 
@@ -24,7 +22,6 @@ class Member:
     
     def __repr__(self):
         return f' Member name = "{self.name}" '
-<<<<<<< main
     
     
     @classmethod
@@ -39,8 +36,6 @@ class Member:
         CURSOR.execute(sql)
         CONN.commit()
 
-
-
     
     # @property
     # def tag(self):
@@ -53,7 +48,3 @@ class Member:
     #         self._tag = new_tag
     #     else:
     #         raise ValueError(f'Tag {new_tag} is not between 5 and 15 characters, please enter a different tag')
-        
-=======
-    
->>>>>>> parker1

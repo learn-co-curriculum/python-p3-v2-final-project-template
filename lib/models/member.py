@@ -1,4 +1,4 @@
-from models.arcade import Arcade 
+from models.__init__ import CONN, CURSOR
 
 class Member:
 
@@ -23,6 +23,18 @@ class Member:
     def __repr__(self):
         return f' Member name = "{self.name}" '
     
+    
+    @classmethod
+    def member_table(cls): 
+        sql = """ 
+            CREATE TABLE IF NOT EXISTS members(
+            id INTEGER PRIMARY KEY,
+            member TEXT,
+            tag_name TEXT
+            );
+            """
+        CURSOR.execute(sql)
+        CONN.commit()
 
 
 

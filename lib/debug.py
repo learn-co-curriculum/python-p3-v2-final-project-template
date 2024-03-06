@@ -10,12 +10,12 @@ from models.__init__ import CONN, CURSOR
 
 
 
-l1 = Locale(1)
-l2 = Locale(2)
-l3 = Locale(3)
-a1 = Arcade("Isaac","doofus", 2)
-a2 = Arcade("Asheee", "dinding", 3)
-a3 = Arcade("chonkyboi", "yarp", 1)
+# l1 = Locale(Harlem)
+# l2 = Locale(2)
+# l3 = Locale(3)
+# a1 = Arcade("Isaac","doofus", 2)
+# a2 = Arcade("Asheee", "dinding", 3)
+# a3 = Arcade("chonkyboi", "yarp", 1)
 
 
 ipdb.set_trace()

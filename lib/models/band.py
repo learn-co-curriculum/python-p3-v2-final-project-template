@@ -1,7 +1,10 @@
 from __init__ import CURSOR, CONN
-from utils import custom_property, SQLDropTable
+from utils import custom_property, SQL_drop_table
 
 class Band:
+
+    working_insts = {}
+
     def __init__(self, name, members, genre, home_city):
         self.name = name   
         self.members = members
@@ -34,7 +37,10 @@ class Band:
         return self._genre
 
     @genre.setter
+    def genre(self, genre):
+        self._genre = genre
     
+    @property
     def home_city(self):
         return self._home_city
 
@@ -87,7 +93,7 @@ class Band:
             INSERT INTO bands (name, members, genre, home_city_id)
             VALUES (?, ?, ?, ?)
         """
-        CURSOR.execute(sql, (self.name, members_str, self.genre, self.home_city_id))
+        CURSOR.execute(sql, (self.name, members_str, self.genre, self.home_city)) #will have to replace home city with an id
         CONN.commit()
 
         self.id = CURSOR.lastrowid
@@ -138,5 +144,5 @@ class Band:
 
 
 
-Band.create_table()
-Band.create('The Example', ['Member 1', 'Member 2'], 'Rock', 1) 
+# Band.create_table()
+# Band.create('The Example', ['Member 1', 'Member 2'], 'Rock', 1) 

@@ -30,7 +30,7 @@ class ConcertBand:
                 band_id INT,
                 PRIMARY KEY
                 (
-                    concert_id
+                    concert_id,
                     band_id
                 ),
                 FOREIGN KEY (concert_id) REFERENCES concerts (concert_id)
@@ -45,34 +45,35 @@ class ConcertBand:
 
     def save(self):
         sql = """
-            INSERT INTO concerts_cities (concert_id, band_id)
+            INSERT INTO concerts_bands (concert_id, band_id)
             VALUES (?, ?)
         """
 
-        CURSOR.execute(sql, (self.concert_id, self.band_id))
+        CURSOR.execute(sql, (self.concert.id, self.band.id))
         CONN.commit()
 
-        self.id = CURSOR.lastrowid
-        type(self).working_insts[self.id] = self
+        # self.id = CURSOR.lastrowid
+        # type(self).working_insts[self.id] = self
 
     @classmethod
-    def create(cls, name):
-        concert_band = cls(name)
+    def create(cls, concert, band):
+        concert_band = cls(concert, band)
+    # def create(cls, concert_id, band_id):
+    #     concert_band = cls(concert_id, band_id)
         concert_band.save()
         return concert_band
 
     @classmethod
     def instance_from_db(cls, row):
+        from concert import Concert
+        from band import Band
         concert_band = cls.working_insts.get(row[0])
         if concert_band:
-            concert_band.concert_id = row[1]
-            concert_band.band_id = row[2]
+            concert_band.concert = Concert.find_by_id(row[1])
+            concert_band.band = Band.find_by_id(row[2])
         else:
-            # city = cls(row[1])
-            # city.id = row[0]
-            # i don't like making this new city object
-            # and returning it as if it was in the db without adding it
-            raise Error("Cannot find row")
+            concert_band = cls(Concert.find_by_id(row[1]), Band.find_by_id(row[2]))
+            # do i need to add it to a class.all here? if i did, what would the key be? (primary key is two columns)
         return concert_band
 
     @classmethod
@@ -112,8 +113,21 @@ class ConcertBand:
     def get_all(cls):
         sql = """
             SELECT *
-            FROM cities
+            FROM concerts_bands
         """
 
         rows = CURSOR.execute(sql).fetchall()
         return [cls.instance_from_db(row) for row in rows]
+
+    @staticmethod
+    def get_all_bands_by_concert_id(concert_id):
+        # need this method for Concert.instance_from_db
+        sql = """
+        SELECT band_id
+        FROM concerts_bands
+        WHERE concert_id = ?
+        """
+        band_ids = CURSOR.execute(sql, (concert_id)).fetchall()
+        
+        from band import Band
+        return [Band.find_by_id(band_id).name for band_id in band_ids]

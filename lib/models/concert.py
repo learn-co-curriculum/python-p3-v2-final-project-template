@@ -1,207 +1,183 @@
-from band import Band
+
 from concert_band import ConcertBand
+from __init__ import CURSOR, CONN
+from utils import custom_property, SQL_drop_table
 
+def nonempty_str(value): 
+    return (isinstance(value, str) and value != "")
+
+def name_conds(name):
+    if not nonempty_str(name):
+        raise Error("Name must be a nonempty string.")
+    return True
+
+def date_conds(date):
+    if not nonempty_str(date):
+        raise Error("Date must be a nonempty string.")
+    return True
+
+# def city_conds(city):
+#     if not isinstance(city, City):
+#         raise TypeError("City ")
+#     return True
+
+def ticket_cost_conds(ticket_cost):
+    if not isinstance(ticket_cost, dict):
+        raise TypeError("Ticket cost must be a dictionary")
+    for ticket_type, details in ticket_cost.items():
+        if not isinstance(ticket_type, str):
+            raise TypeError("Ticket type must be a string")
+        if not (isinstance(details, list) and len(details) == 2):
+            raise TypeError("Details must be a list with two elements: cost and attendance")
+        cost, attendance = details
+        if not (isinstance(cost, (int, float)) and cost >= 0):
+            raise ValueError("Cost must be a non-negative number")
+        if not (isinstance(attendance, int) and attendance >= 0):
+            raise ValueError("Attendance must be a non-negative integer")
+    return True
+    
 class Concert:
-    all = []
 
-    def __init__(self, name, date, bands, city, ticket_cost):
+    working_insts = {}
+
+    def __init__(self, name, date, bands, city, ticket_cost, id=None):
+        # might do a different way so the user doesn't have the option to provide an id
         self.name = name
         self.date = date
         self.bands = bands
         self.city = city
-        self.ticket_cost = ticket_cost  
+        self.ticket_cost = ticket_cost #dict stored as string. if getting str from table, use eval() to turn back to dict
+        self.id = id
 
-        Concert.all.append(self)
-
-    @property
-    def date(self):
-        return self._date
-
-    @date.setter
-    def date(self, date):
-        if isinstance(date, str) and len(date) > 0:
-            self._date = date
-        else:
-            raise ValueError("Date must be a non-empty string")
-
-    @property
-    def ticket_cost(self):
-        return self._ticket_cost
-
-    @ticket_cost.setter
-    def ticket_cost(self, ticket_cost):
-        if isinstance(ticket_cost, dict):
-            for ticket_type, details in ticket_cost.items():
-                if not isinstance(ticket_type, str):
-                    raise TypeError("Ticket type must be a string")
-                if not (isinstance(details, list) and len(details) == 2):
-                    raise TypeError("Details must be a list with two elements: cost and attendance")
-                cost, attendance = details
-                if not (isinstance(cost, (int, float)) and cost >= 0):
-                    raise ValueError("Cost must be a non-negative number")
-                if not (isinstance(attendance, int) and attendance >= 0):
-                    raise ValueError("Attendance must be a non-negative integer")
-            self._ticket_cost = ticket_cost
-        else:
-            raise TypeError("Ticket cost must be a dictionary")
-
-        
-        
-         #concert band 
-        #must be of type band
-        #should be able ti change after the cocert is instantiated
+    name = custom_property(name_conds)
+    date = custom_property(date_conds)
+    ticket_cost = custom_property(ticket_cost_conds)
 
     @property
     def bands(self):
         return self._bands
 
-    # @band.setter
-    # def band(self, band):
-    #    from models.band import Band
-    #    if isinstance(band, Band):
-    #        self._band + band 
-    #    else :
-    #         raise Exception("Band must be an instrance of Band class!")
     @bands.setter
     def bands(self, bands):
-        for band in bands:
-            if not isinstance(band, str):
-                # here we should actually check for a band in the table and make one if there isnt
-                raise Error("This element isn't a string!")
-        self._bands = bands
+        from band import Band
+        band_objs = []
+        for entry in bands:
+            if isinstance(entry, Band):
+                band_objs.append(entry)
+                # print(f"Entry {entry} is not a band object.")
+            elif isinstance(entry, str):
+                instance = Band.find_by_name(entry)
+                if not instance:
+                    #     createBandEntry = input(f"There is no band by the name {entry}. Would you like to create one? y/n")
+                    from band import Band
+                    band = Band(f'{entry}')
+                    # this seems okay to do because as of now bands only have a name field
+                    print(f"There is no band by the name {entry}, so one was created.")
+                    # raise ValueError(f"There is no band by the name {entry}. Create one before assigning it to a concert.")
+                band_objs.append(instance)
+            elif isinstance(band, int):
+                instance = Band.find_by_id(entry)
+                if not instance:
+                    raise ValueError(f"There is no band with the id {entry}.")
+                band_objs.append(instance)
+            else:
+                raise TypeError("Entry {band} is not a band object, a string, or an int.")
+            
+        self._bands = band_objs
 
-    def home_city_show(self):
-        return f"The band {self.band.name} is playing a show in their home city, {self.band.home_city}, at {self.city} on {self.date}."
-    
-    @classmethod
-    def create_table(cls):
-        """ Create a new table to persist the attributes of Concert instances """
+    @property
+    def city(self):
+        return self._city
+
+    @city.setter
+    def city(self, city):
+        from city import City
+        if isinstance(city, City):
+            self._city = city
+        elif isinstance(city, str):
+            instance = City.find_by_name(city)
+            if instance:
+                self._city = instance
+            else:
+                raise ValueError(f"There is no city with the name {city}. Create one before assigning it to a concert.")
+        elif isinstance(city, int):
+            instance = City.find_by_id(city)
+            if instance:
+                self._city = instance
+            else:
+                raise ValueError(f"There is no city with the id {city}.")
+
+    @staticmethod
+    def create_table():
         sql = """
             CREATE TABLE IF NOT EXISTS concerts (
             id INTEGER PRIMARY KEY,
             name TEXT,
             date TEXT,
-            # band TEXT,
             city TEXT,
-            ticket_cost FLOAT
+            ticket_cost TEXT
             )
         """
 
         CURSOR.execute(sql)
         CONN.commit()
 
-    @classmethod
-    def drop_table(cls):
-        """ Drop the table that persists Concert instances """
-        sql = """
-            DROP TABLE IF EXISTS concerts;
-        """
-        CURSOR.execute(sql)
-        CONN.commit()
+    drop_table = SQL_drop_table("concerts")
+
+    def saveBands(self):
+        # for band in self.bands:
+        #     ConcertBand.create(self.id, band.id)
+        [ConcertBand.create(self, band) for band in self.bands]
 
     def save(self):
-        """ Insert a new row with the name, date, band, city and ticket_cost values of the current Concert object.
-        Update object id attribute using the primary key value of new row.
-        Save the object in local dictionary using table row's PK as dictionary key"""
         sql = """
-                INSERT INTO concerts (name, date, band, city, ticket_cost)
-                VALUES (?, ?, ?, ?, ?)
+                INSERT INTO concerts (name, date,  city, ticket_cost)
+                VALUES (?, ?, ?, ?)
         """
-        CURSOR.execute(sql, (self.name, self,date, self.band, self.city, self.ticket_cost))
+        CURSOR.execute(sql, (self.name, self.date, self.city.name, str(self.ticket_cost))) #will use id instead of name for city later
         CONN.commit()
 
         self.id = CURSOR.lastrowid
-        type(self).all[self.id] = self
+        type(self).working_insts[self.id] = self
 
-    def update(self):
-        """Update the table row corresponding to the current Concert instance."""
-        sql = """
-            UPDATE concerts
-            SET name = ?, date = ?, band = ?, city = ?, ticket_cost = ?
-            WHERE id = ?
-        """
-        CURSOR.execute(sql, (self.name, self.date, self.band, self.city, self.ticket_cost))
-        CONN.commit()
+        self.saveBands() # this will make a row in concerts_bands for each pairing of self with a band
 
-    def delete(self):
-        """ Delete the table row corresponding to the current Concert instance,
-        delete the dictionary entry, and reassign id attribute"""
-
-        sql = """
-            DELETE FROM concerts
-            WHERE id = ?
-        """
-        CURSOR.execute(sql, (self.id,))
-        CONN.commit()
-
-        # delete the dictionary entry using id as the key
-        del type(self).all[self.id]
-
-        self.id = None
-
+        # link_sql = """
+        #     INSERT INTO concerts_bands (concert_id, band_id)
+        #     VALUES (?, ?)
+        # """
+        # CURSOR.execute(link_sql, (self.id, ))
+        
+    @classmethod
+    def create(cls, name, date, bands, city, ticket_cost):
+        concert = cls(name, date, bands, city, ticket_cost)
+        concert.save()
+        return concert
+    
     @classmethod
     def instance_from_db(cls, row):
-        """ Return Concert object having the attribute values from the table row."""
-
-        concert = cls.all.get(row[0])
+        concert = cls.working_insts.get(row[0])
         if concert:
             concert.name = row[1]
             concert.date = row[2]
-            concert.band = row[3]
+            concert.bands = row[3]
             concert.city = row[4]
             concert.ticket_cost = row[5]
+            # could maybe  use something concert.__dict__.values() = [*row] but dict is unordered
         else:
-            concert = cls(row[1],row[2], row[3],row[4],row[5])
+            bands = ConcertBand.get_all_bands_by_concert_id(row[0])
+            concert = cls(*row[1:3], bands, *row[4:]) #using list unpacking *
             concert.id = row[0]
-            cls.all[concert.id] = concert
-        return concert
-
-    @classmethod
-    def get_all(cls):
-        """ Return a list containing a Concert object per row in the table """
-        sql = """
-            SELECT *
-            FROM departments
-        """
-
-        rows = CURSOR.execute(sql).fetchall()
-
-        return [cls.instance_from_db(row) for row in rows]
+            cls.working_insts[concert.id] = concert
+        return city
 
     @classmethod
     def find_by_id(cls, id):
-        """ Return a Concert object corresponding to the table row matching the specified primary key """
         sql = """
-            SELECT * 
+            SELECT *
             FROM concerts
             WHERE id = ?
         """
 
         row = CURSOR.execute(sql, (id,)).fetchone()
         return cls.instance_from_db(row) if row else None
-
-    @classmethod 
-    def find_by_name(cls, name):
-        """ Return a Concert object corresponding to the first table row matching specified name """
-        sql = """
-            SELECT *
-            FROM departments
-            WHERE name is ?
-        """
-
-        row = CURSOR.execute(sql, (name,)).fetchone()
-        return cls.instance_from_db(row) if row else None
-
-    def cities(self):
-        """ Return list of cities associated with current concert """
-        from city import City
-        sql = """
-            SELECT * FROM cities
-            WHERE name = ?
-        """
-        CURSOR.execute(sql, (self.id,),)
-
-        rows = CURSOR.fetchall()
-        return [City.instance_from_db(row) for row in rows]
-        
-        

@@ -5,8 +5,9 @@ from helpers import (
     helper_1
 )
 from helpers import app
-import typer
+# import typer
 
+@app.command()
 def main():
     while True:
         menu()

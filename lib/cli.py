@@ -16,9 +16,9 @@ def main():
         if choice == "0":
             exit_program()
         elif choice == "1":
-            helper_1()
-        elif choice == "2":
             view_all_members()
+        # elif choice == "2":
+       
         else:
             print("Invalid choice")
 

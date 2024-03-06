@@ -2,8 +2,9 @@ from models.__init__ import CONN, CURSOR
 
 class Member:
 
-    def __init__(self, name):
+    def __init__(self, name, tag):
         self.name = name
+        self.tag = tag
 
     @property
     def name(self):
@@ -13,6 +14,17 @@ class Member:
     def name(self, new_name):
         if not hasattr(self, "_name"):
             self._name = new_name
+
+    @property
+    def tag(self):
+        return self._tag
+
+    @tag.setter
+    def tag(self, new_tag):
+        if not hasattr(self, "_tag"):
+            self._tag = new_tag
+        
+
     
     def arcade(self):
         return [arcade for arcade in Arcade.all if arcade.member == self]
@@ -21,7 +33,7 @@ class Member:
         return list({arcade.location for arcade in self.arcade()})
     
     def __repr__(self):
-        return f' Member name = "{self.name}" '
+        return f' Member name= "{self.name}" tag= "{self.tag}" '
     
     
     @classmethod
@@ -35,16 +47,15 @@ class Member:
             """
         CURSOR.execute(sql)
         CONN.commit()
-Member.create_table()
     
-    # @property
-    # def tag(self):
-    #     return self._tag
+    @classmethod
+    def get_all(cls):
+        sql = " SELECT * FROM members; "
+        print(CURSOR.execute(sql).fetchall())
+    @classmethod
+    def add_to_table(cls):
+        sql = "INSERT INTO members 
+             
+
     
-    # @tag.setter
-    # def tag(self, new_tag):
-    #     #logic to make sure there are no duplicate tags
-    #     if 5 <= len(new_tag) <= 15:
-    #         self._tag = new_tag
-    #     else:
-    #         raise ValueError(f'Tag {new_tag} is not between 5 and 15 characters, please enter a different tag')
+   

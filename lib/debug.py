@@ -12,12 +12,15 @@ from models.member import Member
 
 
 
-# l1 = Locale(Harlem)
-# l2 = Locale(2)
-# l3 = Locale(3)
-# a1 = Arcade("Isaac","doofus", 2)
-# a2 = Arcade("Asheee", "dinding", 3)
-# a3 = Arcade("chonkyboi", "yarp", 1)
+m1= Member("Isaac", "LVzaack")
+m2= Member("Parker", "PaawwKa")
+m3= Member("Desaih", "DDtheDOLL")
+
+l1= Locale("Harlem")
+l2= Locale("Brooklyn")
+l3= Locale("Down Town")
+
+
 
 
 ipdb.set_trace()

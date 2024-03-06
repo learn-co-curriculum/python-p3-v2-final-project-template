@@ -39,8 +39,8 @@ class Locale:
 
     def save(self):
         sql = """
-            INSERT INTO arcades ( name, tag, arcade_id, location_id)
-            VALUES (?, )
+            INSERT INTO locations (location)
+            VALUES (? )
             """
         CURSOR.execute(sql, (self.name, ))
         CONN.commit()

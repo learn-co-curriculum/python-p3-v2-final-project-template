@@ -33,12 +33,12 @@ class Member:
         if not hasattr(self, "_tag"):
             self._tag = new_tag
     @property
-    def location(self):
-        return self._location
+    def locale_id(self):
+        return self._locale_id
     
-    @location.setter
-    def location(self, new_location):
-        if isinstance(new_location, str):
+    @locale_id.setter
+    def locale_id(self, new_locale_id):
+        if isinstance(new_locale_id, str):
             if 3 <= len(new_tag) <= 25:
                     self._tag = new_tag
             else:
@@ -53,11 +53,11 @@ class Member:
     def arcade(self):
         return [arcade for arcade in Arcade.all if arcade.member == self]
 
-    def locations(self):
+    def locale_id(self):
         return list({arcade.location for arcade in self.arcade()})
     
     def __repr__(self):
-        return f'<Member id= "{self.id}" name= "{self.anme}" tag= "{self.tag}" arcade_id= "{self.arcade_id}" location_id= "{self.location_id}" >'
+        return f'<Member id= "{self.id}" name= "{self.name}" tag= "{self.tag}" arcade_id= "{self.arcade_id}" locale_id= "{self.locale_id}" >'
     
     
     @classmethod
@@ -74,7 +74,7 @@ class Member:
     
     def save(self):
         sql = """
-            INSERT INTO members ( name, tag, arcade_id, location_id)
+            INSERT INTO members ( name, tag, arcade_id, locale_id)
             VALUES (?,?,?,?)
             """
         CURSOR.execute(sql, (self.name, self.tag, self.arcade_id, self.locale_id))

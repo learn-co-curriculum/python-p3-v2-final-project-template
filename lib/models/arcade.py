@@ -63,8 +63,8 @@ class Arcade:
 
     def save(self):
         sql = """
-            INSERT INTO arcades ( name, tag, arcade_id, location_id)
-            VALUES (?, )
+            INSERT INTO arcades ( arcade )
+            VALUES (?)
             """
         CURSOR.execute(sql, (self.name, ))
         CONN.commit()

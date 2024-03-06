@@ -189,7 +189,7 @@ class Concert:
             WHERE name is ?
         """
 
-        row = CURSOR.exevute(sql, (name,)).fetchone()
+        row = CURSOR.execute(sql, (name,)).fetchone()
         return cls.instance_from_db(row) if row else None
 
     def cities(self):
@@ -203,4 +203,5 @@ class Concert:
 
         rows = CURSOR.fetchall()
         return [City.instance_from_db(row) for row in rows]
+        
         

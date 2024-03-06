@@ -25,7 +25,7 @@ class Member:
     
     
     @classmethod
-    def member_table(cls): 
+    def create_table(cls): 
         sql = """ 
             CREATE TABLE IF NOT EXISTS members(
             id INTEGER PRIMARY KEY,
@@ -35,7 +35,7 @@ class Member:
             """
         CURSOR.execute(sql)
         CONN.commit()
-
+Member.create_table()
     
     # @property
     # def tag(self):

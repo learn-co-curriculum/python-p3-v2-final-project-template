@@ -1,4 +1,3 @@
-
 from models.__init__ import CONN, CURSOR
 
 class Arcade:
@@ -83,4 +82,6 @@ class Arcade:
             """
         CURSOR.execute(sql)
         CONN.commit()
-    # database foreign keys/ refrences 
+
+Arcade.create_table()
+    # database foreign keys/ references 

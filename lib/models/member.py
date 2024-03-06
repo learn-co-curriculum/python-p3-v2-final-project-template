@@ -1,3 +1,7 @@
+
+from models.__init__ import CONN, CURSOR
+
+
 class Member:
 
     def __init__(self, name):
@@ -20,4 +24,36 @@ class Member:
     
     def __repr__(self):
         return f' Member name = "{self.name}" '
+<<<<<<< main
     
+    
+    @classmethod
+    def member_table(cls): 
+        sql = """ 
+            CREATE TABLE IF NOT EXISTS members(
+            id INTEGER PRIMARY KEY,
+            member TEXT,
+            tag_name TEXT
+            );
+            """
+        CURSOR.execute(sql)
+        CONN.commit()
+
+
+
+    
+    # @property
+    # def tag(self):
+    #     return self._tag
+    
+    # @tag.setter
+    # def tag(self, new_tag):
+    #     #logic to make sure there are no duplicate tags
+    #     if 5 <= len(new_tag) <= 15:
+    #         self._tag = new_tag
+    #     else:
+    #         raise ValueError(f'Tag {new_tag} is not between 5 and 15 characters, please enter a different tag')
+        
+=======
+    
+>>>>>>> parker1

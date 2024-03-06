@@ -1,3 +1,4 @@
+
 from models.__init__ import CONN, CURSOR
 
 class Locale:
@@ -6,6 +7,7 @@ class Locale:
     def __init__(self, location):
         self.location = location
         Locale.all.append(self)
+
 
     @property
     def location(self):

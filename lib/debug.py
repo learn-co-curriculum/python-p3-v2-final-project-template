@@ -6,7 +6,9 @@ from models.arcade import Arcade
 from models.locale import Locale
 from models.member import Member
 # from models.many_to_many import Locale, Member, Arcade
-from models.__init__ import CONN, CURSOR
+
+
+
 
 
 

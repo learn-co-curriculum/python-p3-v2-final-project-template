@@ -4,13 +4,13 @@ class Arcade:
 
     all = []
 
-    def __init__(self, member, location):
+    def __init__(self, name, id=None):
         #this will pull the name from member
-        self.member = member
+        self.name = name
         #based on membership level the person has access to 1, 2, or 3 locations
-        self.location = location 
+        # self.location = location 
         #this will pull the membership 
-        # self.tag = tag
+        self.id = id
         Arcade.add_access(self)
 
     @classmethod
@@ -18,34 +18,21 @@ class Arcade:
         cls.all.append(new_instance)
 
     @property
-    def member(self):
-        return self._member
+    def name(self):
+        return self._name
     
-    @member.setter
-    def member(self, new_member):
-        if not hasattr(self, "_member"):
-            if type(new_member) == str:
-                if 1<= len(new_member) <= 10:
-                    raise ValueError("All new members must be betweeen 1 and 10 characters")
-            raise TypeError("Name must be a string")
+    @name.setter
+    def name(self):
+        # if not hasattr(self, "_member"):
+        #     if type(new_member) == str:
+        #         if 1<= len(new_member) <= 10:
+        #             raise ValueError("All new members must be betweeen 1 and 10 characters")
+        #     raise TypeError("Name must be a string")
       
-        self.member = new_member
+        self.name = new_name
     
 
-    @property
-    def location(self):
-        return self._location
     
-    @location.setter
-    def location(self, new_location):
-        if isinstance(new_location, str):
-            if 3 <= len(new_tag) <= 25:
-                    self._tag = new_tag
-            else:
-                raise ValueError("This location must be at least 7 and 25 characters long")
-        else:
-            raise TypeError("location name must be a string")
-
     @classmethod
     def locations(cls):
         return [locale.location for locale in Locale.all]
@@ -60,7 +47,7 @@ class Arcade:
         cls.all.append(new_access)
 
     def __repr__(self):
-        return f'{self.member} // {self.location}'
+        return f'< Arcade id="{self.id}" name="{self.name}">'
 
     @classmethod
     def create_table(cls): 
@@ -73,6 +60,16 @@ class Arcade:
             """
         CURSOR.execute(sql)
         CONN.commit()
+
+    def save(self):
+        sql = """
+            INSERT INTO arcades ( name, tag, arcade_id, location_id)
+            VALUES (?, )
+            """
+        CURSOR.execute(sql, (self.name, ))
+        CONN.commit()
+
+        self.id = CURSOR.lastrowid
 
 Arcade.create_table()
     # database foreign keys/ references 

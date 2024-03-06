@@ -20,7 +20,6 @@ l1= Locale("Harlem")
 l2= Locale("Brooklyn")
 l3= Locale("Down Town")
 
-
-
+a1 = ("")
 
 ipdb.set_trace()

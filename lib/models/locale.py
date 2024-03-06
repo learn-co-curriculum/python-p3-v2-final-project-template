@@ -6,9 +6,12 @@ class Locale:
 
     def __init__(self, location):
         self.location = location
-        Locale.all.append(self)
+        Locale.add_new_location(self)
 
-
+    @classmethod
+    def add_new_location(cls, new_instance):
+        cls.all.append(new_instance)
+        
     @property
     def location(self):
         return self._location

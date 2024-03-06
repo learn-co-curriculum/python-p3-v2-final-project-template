@@ -12,7 +12,11 @@ class Arcade:
         #this will pull the membership 
         # self.tag = tag
         Arcade.add_access(self)
-    
+
+    @classmethod
+    def add_new_location(cls, new_instance):
+        cls.all.append(new_instance)
+
     @property
     def member(self):
         return self._member
@@ -55,7 +59,6 @@ class Arcade:
     def add_access(cls, new_access):
         cls.all.append(new_access)
 
-
     def __repr__(self):
         return f'{self.member} // {self.location}'
 
@@ -73,3 +76,4 @@ class Arcade:
 
 Arcade.create_table()
     # database foreign keys/ references 
+

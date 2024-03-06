@@ -1,11 +1,17 @@
 from models.__init__ import CONN, CURSOR
 
 class Member:
+    all = []
 
     def __init__(self, name, tag):
         self.name = name
         self.tag = tag
+        Member.add_new_member(self)
 
+    @classmethod
+    def add_new_member(cls, new_instance):
+        cls.all.append(new_instance)
+        
     @property
     def name(self):
         return self._name
@@ -23,6 +29,8 @@ class Member:
     def tag(self, new_tag):
         if not hasattr(self, "_tag"):
             self._tag = new_tag
+    
+
         
 
     
@@ -48,13 +56,13 @@ class Member:
         CURSOR.execute(sql)
         CONN.commit()
     
-    @classmethod
-    def get_all(cls):
-        sql = " SELECT * FROM members; "
-        print(CURSOR.execute(sql).fetchall())
-    @classmethod
-    def add_to_table(cls):
-        sql = "INSERT INTO members 
+    # @classmethod
+    # def get_all(cls):
+    #     sql = " SELECT * FROM members; "
+    #     print(CURSOR.execute(sql).fetchall())
+    # @classmethod
+    # def add_to_table(cls):
+    #     sql = "INSERT INTO members "
              
 
     

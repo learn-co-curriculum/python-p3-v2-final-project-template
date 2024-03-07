@@ -35,14 +35,27 @@ class Locale:
             return list({arcade.member for arcade in self.arcade()})
     
     def __repr__(self):
-        return f' <Location id = "{self.id}" name={self.name} '
+        return f' <Location id = "{self.id}" name={self.location} '
 
     def save(self):
         sql = """
             INSERT INTO locations (location)
             VALUES (? )
             """
-        CURSOR.execute(sql, (self.name, ))
+        CURSOR.execute(sql, (self.location, ))
         CONN.commit()
 
         self.id = CURSOR.lastrowid
+
+    @classmethod
+    def create_table(cls):
+        """create table if location if doesn't exist"""
+
+        sql="""
+            CREATE TABLE IF NOT EXISTS locations(
+            id INTEGER PRIMARY KEY,
+            location TEXT
+            );
+            """
+        CURSOR.execute(sql)
+        CONN.commit()

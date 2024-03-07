@@ -70,6 +70,13 @@ class Member:
             """
         CURSOR.execute(sql)
         CONN.commit()
+
+    @classmethod
+    def drop_table(cls):
+        sql="DROP TABLE IF EXISTS members;"
+        CURSOR.execute(sql)
+        CONN.commit()
+        
     
     def save(self):
         sql = """

@@ -7,17 +7,26 @@ from models.locale import Locale
 from models.member import Member
 # from models.many_to_many import Locale, Member, Arcade
 
+Arcade.drop_table()
+Arcade.create_table()
+a1 = Arcade("Dave and Busters")
+a1.save()
+Locale.create_table()
+l1=Locale("Queens")
+l1.save()
+Member.drop_table()
+Member.create_table()
 
 
 
 
+m1= Member("Isaac", "LVzaack", a1.id, l1.id)
+m2= Member("Parker", "PaawwKa", a1.id, l1.id)
+m3= Member("Desiah", "DDtheDOLL", a1.id, l1.id) 
+m1.save()
+m2.save()
+m3.save()
 
-m1= Member("Isaac", "LVzaack", "Harlem", "a1", "1")
-m2= Member("Parker", "PaawwKa" "Brooklyn", "a1", "2")
-m3= Member("Desaih", "DDtheDOLL" "Queens", "a1", "3") 
 
-
-
-a1 = Arcade("Cool People Only Arcade", "1")
 
 ipdb.set_trace()

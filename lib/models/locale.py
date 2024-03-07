@@ -1,5 +1,5 @@
-
 from models.__init__ import CONN, CURSOR
+import ipdb
 
 class Locale:
     all = []
@@ -46,6 +46,15 @@ class Locale:
         CONN.commit()
 
         self.id = CURSOR.lastrowid
+
+    @classmethod
+    def find_by_location(cls , location):
+        sql = """
+              SELECT * FROM locations
+              WHERE location = ?
+        """
+        check1 = CURSOR.execute(sql, (location,)).fetchone()
+        return Locale(check1[1], check1[0])
 
     @classmethod
     def create_table(cls):

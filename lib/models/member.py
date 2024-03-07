@@ -1,5 +1,6 @@
 from models.__init__ import CONN, CURSOR
 from models.arcade import Arcade
+import ipdb
 
 class Member:
     all = []
@@ -77,7 +78,6 @@ class Member:
         CURSOR.execute(sql)
         CONN.commit()
         
-    
     def save(self):
         sql = """
             INSERT INTO members ( name, tag, arcade_id, locale_id)
@@ -87,6 +87,15 @@ class Member:
         CONN.commit()
 
         self.id = CURSOR.lastrowid
+        
+    @classmethod
+    def find_by_id(cls , id):
+        sql = """
+              SELECT * FROM members
+              WHERE id = ?
+        """
+        CURSOR.execute(sql, (id,))
+        ipdb.set_trace()
 
     @classmethod
     def get_all(cls):

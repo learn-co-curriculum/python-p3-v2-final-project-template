@@ -1,6 +1,8 @@
 # lib/cli.py
 import sqlite3
+import ipdb
 from models.member import Member
+from models.locale import Locale
 
 conn = sqlite3.connect('arcade.db')
 cursor = conn.cursor()
@@ -19,9 +21,10 @@ def main():
         elif choice == "1":
             print("Inside view_all_members() func")
             Member.get_all()
+        elif choice == "3":
+            create_member()
         else:
             print("Invalid choice")
-
 
 def menu():
     print("Please select an option")
@@ -47,6 +50,15 @@ def view_all_members():
     print("All Arcade members")
     for row in results:
         print(row[0])
+
+def create_member():
+    name_input = input("Enter name: ")
+    tag_input = input("Enter tag: ")
+    location_input = input("Enter location: ")
+    var1 = Locale.find_by_location(location_input)
+
+    ipdb.set_trace()
+    
 
 if __name__ == "__main__":
     main()

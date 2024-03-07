@@ -16,6 +16,7 @@ l1=Locale("Queens")
 l1.save()
 Member.drop_table()
 Member.create_table()
+Locale.find_by_location("Queens")
 
 
 

@@ -4,9 +4,9 @@ class Arcade:
 
     all = []
 
-    def __init__(self, member, id=None):
-        #this will pull the name from member
-        self.member = member
+    def __init__(self, name, id=None):
+        #this will pull the name from name
+        self.name = name
         #based on membership level the person has access to 1, 2, or 3 locations
         # self.location = location 
         #this will pull the membership 
@@ -18,18 +18,19 @@ class Arcade:
         cls.all.append(new_instance)
 
     @property
-    def name(self, new_member):
-        return new_member
+    def name(self):
+        return self._name
     
     @name.setter
-    def name(self, new_member):
-        if not hasattr(self, "_member"):
-            if type(new_member) == str:
-                if 1<= len(new_member) <= 10:
-                    raise ValueError("All new members must be betweeen 1 and 10 characters")
-            raise TypeError("Name must be a string")
-      
-        self.name = new_member
+    def name(self, new_name):
+        if not hasattr(self, "_name"):
+            if type(new_name) == str:
+                if 1<= len(new_name) <= 25:
+                    self._name = new_name
+                else: 
+                    raise ValueError("All new names must be betweeen 1 and 25 characters")
+            else:
+                raise TypeError("Name must be a string")
     
 
     
@@ -54,8 +55,7 @@ class Arcade:
         sql = """ 
             CREATE TABLE IF NOT EXISTS arcades(
             id INTEGER PRIMARY KEY,
-            member_id INTEGER,
-            location TEXT
+            name TEXT
             );
             """
         CURSOR.execute(sql)
@@ -63,14 +63,20 @@ class Arcade:
 
     def save(self):
         sql = """
-            INSERT INTO arcades ( arcade )
-            VALUES (?)
+            INSERT INTO arcades ( name )
+            VALUES (?);
             """
         CURSOR.execute(sql, (self.name, ))
         CONN.commit()
 
         self.id = CURSOR.lastrowid
+    
+    @classmethod
+    def drop_table(cls):
+        sql= "DROP TABLE IF EXISTS arcades;"
+        CURSOR.execute(sql)
+        CONN.commit()
 
-Arcade.create_table()
+# Arcade.create_table()
     # database foreign keys/ references 
 

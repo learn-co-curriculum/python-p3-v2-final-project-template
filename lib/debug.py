@@ -18,6 +18,6 @@ m3= Member("Desaih", "DDtheDOLL" "Queens", "a1", "3")
 
 
 
-# a1 = Arcade("Cool People Only Arcade", "1")
+a1 = Arcade("Cool People Only Arcade", "1")
 
 ipdb.set_trace()

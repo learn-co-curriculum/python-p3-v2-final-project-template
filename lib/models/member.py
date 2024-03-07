@@ -1,4 +1,5 @@
 from models.__init__ import CONN, CURSOR
+from models.arcade import Arcade
 
 class Member:
     all = []
@@ -39,17 +40,13 @@ class Member:
     @locale_id.setter
     def locale_id(self, new_locale_id):
         if isinstance(new_locale_id, str):
-            if 3 <= len(new_tag) <= 25:
-                    self._tag = new_tag
+            if 3 <= len(new_locale_id) <= 25:
+                    self._locale_id = new_locale_id
             else:
                 raise ValueError("This location must be at least 7 and 25 characters long")
         else:
             raise TypeError("location name must be a string")
 
-
-        
-
-    
     def arcade(self):
         return [arcade for arcade in Arcade.all if arcade.member == self]
 
@@ -65,8 +62,10 @@ class Member:
         sql = """ 
             CREATE TABLE IF NOT EXISTS members(
             id INTEGER PRIMARY KEY,
-            member TEXT,
-            tag_name TEXT
+            name TEXT,
+            tag TEXT,
+            arcade_id INTEGER,
+            locale_id INTEGER
             );
             """
         CURSOR.execute(sql)

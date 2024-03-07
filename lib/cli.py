@@ -1,5 +1,6 @@
 # lib/cli.py
 import sqlite3
+from models.member import Member
 
 conn = sqlite3.connect('arcade.db')
 cursor = conn.cursor()
@@ -16,9 +17,8 @@ def main():
         if choice == "0":
             exit_program()
         elif choice == "1":
+            print("Inside view_all_members() func")
             view_all_members()
-        # elif choice == "2":
-       
         else:
             print("Invalid choice")
 
@@ -26,8 +26,8 @@ def main():
 def menu():
     print("Please select an option")
     print("0. Exit the program")
-    print("1.nada")
-    print("2. View all members")
+    print("1. View all members")
+
 
 def exit_all():
     conn.close()
@@ -35,19 +35,15 @@ def exit_all():
     exit()
 
 def view_all_members():
-    cursor.execute("SELECT * FROM members")
+    # print("Inside view_all_members() function")
+    cursor.execute("SELECT name FROM members")
     results = cursor.fetchall()
+    # print("Printing results")
+    print(results) 
 
     print("All Arcade members")
     for row in results:
-        print(row[1])
-
-def helper_1():
-    cursor.execute("SELECT * FROM arcades")
-    results = cursor.fetchall()
-
-    for row in results:
-        print(row)
+        print(row[0])
 
 if __name__ == "__main__":
     main()

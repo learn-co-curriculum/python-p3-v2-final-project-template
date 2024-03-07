@@ -1,12 +1,21 @@
-
 from models.__init__ import CONN, CURSOR
-
+from models.arcade import Arcade
 
 class Member:
+    all = []
 
-    def __init__(self, name):
+    def __init__(self, name, tag, arcade_id, locale_id, id=None):
         self.name = name
+        self.tag = tag
+        self.arcade_id = arcade_id
+        self.locale_id = locale_id
+        self.id = id
+        Member.add_new_member(self)
 
+    @classmethod
+    def add_new_member(cls, new_instance):
+        cls.all.append(new_instance)
+        
     @property
     def name(self):
         return self._name
@@ -15,45 +24,72 @@ class Member:
     def name(self, new_name):
         if not hasattr(self, "_name"):
             self._name = new_name
+
+    @property
+    def tag(self):
+        return self._tag
+
+    @tag.setter
+    def tag(self, new_tag):
+        if not hasattr(self, "_tag"):
+            self._tag = new_tag
+    @property
+    def locale_id(self):
+        return self._locale_id
     
+    @locale_id.setter
+    def locale_id(self, new_locale_id):
+        if isinstance(new_locale_id, str):
+            if 3 <= len(new_locale_id) <= 25:
+                    self._locale_id = new_locale_id
+            else:
+                raise ValueError("This location must be at least 7 and 25 characters long")
+        else:
+            raise TypeError("location name must be a string")
+
     def arcade(self):
         return [arcade for arcade in Arcade.all if arcade.member == self]
 
-    def locations(self):
+    def locale_id(self):
         return list({arcade.location for arcade in self.arcade()})
     
     def __repr__(self):
-        return f' Member name = "{self.name}" '
-<<<<<<< main
+        return f'<Member id= "{self.id}" name= "{self.name}" tag= "{self.tag}" arcade_id= "{self.arcade_id}" locale_id= "{self.locale_id}" >'
     
     
     @classmethod
-    def member_table(cls): 
+    def create_table(cls): 
         sql = """ 
             CREATE TABLE IF NOT EXISTS members(
             id INTEGER PRIMARY KEY,
-            member TEXT,
-            tag_name TEXT
+            name TEXT,
+            tag TEXT,
+            arcade_id INTEGER,
+            locale_id INTEGER
             );
             """
         CURSOR.execute(sql)
         CONN.commit()
-
-
-
     
-    # @property
-    # def tag(self):
-    #     return self._tag
-    
-    # @tag.setter
-    # def tag(self, new_tag):
-    #     #logic to make sure there are no duplicate tags
-    #     if 5 <= len(new_tag) <= 15:
-    #         self._tag = new_tag
-    #     else:
-    #         raise ValueError(f'Tag {new_tag} is not between 5 and 15 characters, please enter a different tag')
+    def save(self):
+        sql = """
+            INSERT INTO members ( name, tag, arcade_id, locale_id)
+            VALUES (?,?,?,?)
+            """
+        CURSOR.execute(sql, (self.name, self.tag, self.arcade_id, self.locale_id))
+        CONN.commit()
+
+        self.id = CURSOR.lastrowid
+
+    @classmethod
+    def get_all(cls):
+        sql = " SELECT * FROM members; "
+        print(CURSOR.execute(sql).fetchall())
         
-=======
+    @classmethod
+    def add_to_table(cls):
+        sql = "INSERT INTO members "
+             
+
     
->>>>>>> parker1
+   

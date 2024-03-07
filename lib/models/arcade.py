@@ -1,62 +1,38 @@
-
 from models.__init__ import CONN, CURSOR
 
 class Arcade:
 
     all = []
 
-    def __init__(self, member, tag, location):
+    def __init__(self, member, id=None):
         #this will pull the name from member
-        self._member = member
+        self.member = member
         #based on membership level the person has access to 1, 2, or 3 locations
-        self.location = location 
+        # self.location = location 
         #this will pull the membership 
-        # self.tag = tag
+        self.id = id
         Arcade.add_access(self)
-    
+
+    @classmethod
+    def add_new_location(cls, new_instance):
+        cls.all.append(new_instance)
+
     @property
-    def member(self):
-        return self._member
+    def name(self, new_member):
+        return new_member
     
-    @member.setter
-    def member(self, new_member):
+    @name.setter
+    def name(self, new_member):
         if not hasattr(self, "_member"):
             if type(new_member) == str:
                 if 1<= len(new_member) <= 10:
                     raise ValueError("All new members must be betweeen 1 and 10 characters")
             raise TypeError("Name must be a string")
       
-        self.member = new_member
+        self.name = new_member
     
-    @property
-    def tag(self):
-        self.tag = self.tag
-    @tag.setter
-    def tag(self, new_tag):
-        if isinstance(new_tag, str):
-            if 3 <= len(new_tag) <= 15:
-                    self._tag = new_tag
-            else:
-                raise ValueError("This tag must be at least 3 and 15 characters long")
-        else:
-            raise TypeError("tag name must be a string")
 
-    @property
-    def location(self):
-        return self._location
     
-    @location.setter
-    def location(self, new_location):
-        if isinstance(new_location, str):
-            if 7 <= len(new_tag) <= 25:
-                    self._tag = new_tag
-            else:
-                raise ValueError("This tag must be at least 7 and 25 characters long")
-        else:
-            raise TypeError("tag name must be a string")
-
-        
-
     @classmethod
     def locations(cls):
         return [locale.location for locale in Locale.all]
@@ -70,9 +46,8 @@ class Arcade:
     def add_access(cls, new_access):
         cls.all.append(new_access)
 
-
     def __repr__(self):
-        return f'{self.member} // {self.location}'
+        return f'< Arcade id="{self.id}" name="{self.name}">'
 
     @classmethod
     def create_table(cls): 
@@ -85,41 +60,17 @@ class Arcade:
             """
         CURSOR.execute(sql)
         CONN.commit()
-    # database foreign keys/ refrences 
 
-    
-=======
+    def save(self):
+        sql = """
+            INSERT INTO arcades ( arcade )
+            VALUES (?)
+            """
+        CURSOR.execute(sql, (self.name, ))
+        CONN.commit()
 
-class Arcade:
-    all = []
+        self.id = CURSOR.lastrowid
 
-    def __init__(self, name, location,  tag=''):
-        self.name = name
-        self.location = location 
-        self.tag = tag
-        Arcade.add_access(self)
-
-    @classmethod
-    def add_access(cls, new_access):
-        cls.all.append(new_access)
-
-    @property
-    def tag(self):
-        return self._tag
-    
-    @tag.setter
-    def tag(self, new_tag):
-        self._tag = new_tag
-        
-    @property
-    def tag(self):
-        return self._tag
-    
-    @tag.setter
-    def tag(self, new_tag):
-        #add logic to make sure there are no duplicate tags
-        if 5 <= len(new_tag) <= 15:
-            self._tag = new_tag
-        else:
-            raise ValueError(f'Tag {new_tag} is not between 5 and 15 characters, please enter a different tag')
+Arcade.create_table()
+    # database foreign keys/ references 
 

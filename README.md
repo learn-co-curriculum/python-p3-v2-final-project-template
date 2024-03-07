@@ -1,12 +1,10 @@
 # Phase 3 Concerts-CLI Group Project
-# Phase 3 Concerts-CLI Group Project
 
 ## Introduction
 
 Eve, Ikram and Kenny are building a one to many relationship with one concert having many bands and one city.  This project will help the user find information about a concert or band to see where and when events will take place.  We are also giving the ability to the user to create, delete, update any concert or band at any time.  They can also find the concerts and bands by id, or name.  We are using Python and SQL for our coding.
-Eve, Ikram and Kenny are building a one to many relationship with one concert having many bands and one city.  This project will help the user find information about a concert or band to see where and when events will take place.  We are also giving the ability to the user to create, delete, update any concert or band at any time.  They can also find the concerts and bands by id, or name.  We are using Python and SQL for our coding.
 
-```VS Code model:
+
 ```VS Code model:
 .
 ├── Pipfile
@@ -15,13 +13,6 @@ Eve, Ikram and Kenny are building a one to many relationship with one concert ha
 └── lib
     ├── models
     │   ├── __init__.py
-    │   └── band.py 
-    |   └── city.py 
-    |   └── concert_band.py
-    |   └── concert.py
-    |   └── seed.py
-    |   └── utlis.py
-    |   
     │   └── band.py 
     |   └── city.py 
     |   └── concert_band.py
@@ -53,5 +44,5 @@ Our stretch goals we will try to add:
     Coordinates to show the concerts on a map with additional data: number of attendance (by the size of a dot).
     Show the band's concerts based on current date.
 
-We will impliment SQL and use Python methods to insert logic to the inputs from the user.
+We will implement SQL and use Python methods to insert logic to the inputs from the user.
 There are imports from class to class to pull needed information.

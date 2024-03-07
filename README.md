@@ -1,20 +1,10 @@
-# Phase 3 CLI+ORM Project Template
-
-## Learning Goals
-
-- Discuss the basic directory structure of a CLI.
-- Outline the first steps in building a CLI.
-
----
+# Phase 3 Concerts-CLI Group Project
 
 ## Introduction
 
-You now have a basic idea of what constitutes a CLI. Fork and clone this lesson
-for a project template for your CLI.
+Eve, Ikram and Kenny are building a one to many relationship with one concert having many bands and one city.  This project will help the user find information about a concert or band to see where and when events will take place.  We are also giving the ability to the user to create, delete, update any concert or band at any time.  They can also find the concerts and bands by id, or name.  We are using Python and SQL for our coding.
 
-Take a look at the directory structure:
-
-```console
+```VS Code model:
 .
 ├── Pipfile
 ├── Pipfile.lock
@@ -22,151 +12,38 @@ Take a look at the directory structure:
 └── lib
     ├── models
     │   ├── __init__.py
-    │   └── model_1.py
+    │   └── band.py 
+    |   └── city.py 
+    |   └── concert_band.py
+    |   └── concert.py
+    |   └── seed.py
+    |   └── utlis.py
+    |   
     ├── cli.py
     ├── debug.py
-    └── helpers.py
+    ├── helpers.py
+    └── main.py
 ```
 
-Note: The directory also includes two files named `CONTRIBUTING.md` and
-`LICENSE.md` that are specific to Flatiron's curriculum. You can disregard or
-delete the files if you want.
+Our project will let the user:
+    Perform CRUD operations on bands and concerts.
+    See all of the concerts in a city.
+    See all bands and concerts.
+    See all members of band (just strings).
+    See genres of bands at a concert.
+    See the pricing per ticket at a concert.
+    See if the band is playing in their home city.
+    Reset (reseed) the table at the user's discretion. 
+    See a well laid out format in the terminal to help the user navigate the menu.
 
----
+Our stretch goals we will try to add:
+    Graphs:
+    Attendance with ticket type/price at the concert.
+    Attendance per genre over all concerts.
+    Coordinates to show the concerts on a map with additional data: number of attendance (by the size of a dot).
+    Show the band's concerts based on current date.
 
-## Generating Your Environment
-
-You might have noticed in the file structure- there's already a Pipfile!
-
-Install any additional dependencies you know you'll need for your project by
-adding them to the `Pipfile`. Then run the commands:
-
-```console
-pipenv install
-pipenv shell
-```
-
----
-
-## Generating Your CLI
-
-A CLI is, simply put, an interactive script and prompts the user and performs
-operations based on user input.
-
-The project template has a sample CLI in `lib/cli.py` that looks like this:
-
-```py
-# lib/cli.py
-
-from helpers import (
-    exit_program,
-    helper_1
-)
+We will impliment SQL and use Python methods to insert logic to the inputs from the user.
+There are imports from class to class to pull needed information.
 
 
-def main():
-    while True:
-        menu()
-        choice = input("> ")
-        if choice == "0":
-            exit_program()
-        elif choice == "1":
-            helper_1()
-        else:
-            print("Invalid choice")
-
-
-def menu():
-    print("Please select an option:")
-    print("0. Exit the program")
-    print("1. Some useful function")
-
-
-if __name__ == "__main__":
-    main()
-```
-
-The helper functions are located in `lib/helpers.py`:
-
-```py
-# lib/helpers.py
-
-def helper_1():
-    print("Performing useful function#1.")
-
-
-def exit_program():
-    print("Goodbye!")
-    exit()
-```
-
-You can run the template CLI with `python lib/cli.py`, or include the shebang
-and make it executable with `chmod +x`. The template CLI will ask for input, do
-some work, and accomplish some sort of task.
-
-Past that, CLIs can be whatever you'd like, as long as you follow the project
-requirements.
-
-Of course, you will update `lib/cli.py` with prompts that are appropriate for
-your application, and you will update `lib/helpers.py` to replace `helper_1()`
-with a useful function based on the specific problem domain you decide to
-implement, along with adding other helper functions to the module.
-
-In the `lib/models` folder, you should rename `model_1.py` with the name of a
-data model class from your specific problem domain, and add other classes to the
-folder as needed. The file `lib/models/__init__.py` has been initialized to
-create the necessary database constants. You need to add import statements to
-the various data model classes in order to use the database constants.
-
-You are also welcome to implement a different module and directory structure.
-However, your project should be well organized, modular, and follow the design
-principal of separation of concerns, which means you should separate code
-related to:
-
-- User interface
-- Data persistence
-- Problem domain rules and logic
-
----
-
-## Updating README.md
-
-`README.md` is a Markdown file that should describe your project. You will
-replace the contents of this `README.md` file with a description of **your**
-actual project.
-
-Markdown is not a language that we cover in Flatiron's Software Engineering
-curriculum, but it's not a particularly difficult language to learn (if you've
-ever left a comment on Reddit, you might already know the basics). Refer to the
-cheat sheet in this assignments's resources for a basic guide to Markdown.
-
-### What Goes into a README?
-
-This README serves as a template. Replace the contents of this file to describe
-the important files in your project and describe what they do. Each Python file
-that you edit should get at least a paragraph, and each function should be
-described with a sentence or two.
-
-Describe your actual CLI script first, and with a good level of detail. The rest
-should be ordered by importance to the user. (Probably functions next, then
-models.)
-
-Screenshots and links to resources that you used throughout are also useful to
-users and collaborators, but a little more syntactically complicated. Only add
-these in if you're feeling comfortable with Markdown.
-
----
-
-## Conclusion
-
-A lot of work goes into a good CLI, but it all relies on concepts that you've
-practiced quite a bit by now. Hopefully this template and guide will get you off
-to a good start with your Phase 3 Project.
-
-Happy coding!
-
----
-
-## Resources
-
-- [Markdown Cheat Sheet](https://www.markdownguide.org/cheat-sheet/)

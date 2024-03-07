@@ -18,7 +18,7 @@ def main():
             exit_program()
         elif choice == "1":
             print("Inside view_all_members() func")
-            view_all_members()
+            Member.get_all()
         else:
             print("Invalid choice")
 
@@ -27,7 +27,9 @@ def menu():
     print("Please select an option")
     print("0. Exit the program")
     print("1. View all members")
-
+    print("2. View all locations")
+    print("3. ")
+    #build a create and a delete, update if possible
 
 def exit_all():
     conn.close()

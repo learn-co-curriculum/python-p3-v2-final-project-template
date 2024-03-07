@@ -81,13 +81,14 @@ class Member:
 
         self.id = CURSOR.lastrowid
 
-    # @classmethod
-    # def get_all(cls):
-    #     sql = " SELECT * FROM members; "
-    #     print(CURSOR.execute(sql).fetchall())
-    # @classmethod
-    # def add_to_table(cls):
-    #     sql = "INSERT INTO members "
+    @classmethod
+    def get_all(cls):
+        sql = " SELECT * FROM members; "
+        print(CURSOR.execute(sql).fetchall())
+        
+    @classmethod
+    def add_to_table(cls):
+        sql = "INSERT INTO members "
              
 
     

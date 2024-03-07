@@ -1,62 +1,19 @@
-# Phase 3 Arcade Membership Management CLI Application
+# Arcade Membership Management Backend
 
-## Learning Goals
+## CLI Script (cli.py)
 
-- Discuss the basic directory structure of a CLI.
-- Outline the first steps in building a CLI.
+The `cli.py` script serves as the command-line interface for managing arcade membership. It allows users to interact with the backend system and perform various tasks such as creating new members, viewing members by location, and pulling up detailed member information.
 
----
+```python
+import sqlite3
 
-## Introduction
+conn = sqlite3.connect('arcade.db')
+cursor = conn.cursor()
 
-You now have a basic idea of what constitutes a CLI. Fork and clone this lesson for a project template for your CLI.
-
-Take a look at the directory structure:
-
-```console
-.
-├── Pipfile
-├── Pipfile.lock
-├── README.md
-└── lib
-    ├── models
-    │   ├── __init__.py
-    │   ├── arcade.py
-    │   ├── locale.py
-    │   └── member.py
-    ├── cli.py
-    ├── debug.py
-    └── helpers.py
-
-
-## Generating Your Environment
-
-You might have noticed in the file structure- there's already a Pipfile!
-
-Install any additional dependencies you know you'll need for your project by
-adding them to the `Pipfile`. Then run the commands:
-
-```console
-pipenv install
-pipenv shell
-```
-
----
-
-## Generating Your CLI
-
-A CLI is, simply put, an interactive script that prompts the user and performs operations based on user input.
-
-The project template has a sample CLI in `lib/cli.py` that looks like this:
-
-```py
-# lib/cli.py
-
-from helpers import menu, exit_program
-from models.arcade import Arcade
-from models.locale import Locale
-from models.member import Member
-
+from helpers import (
+    exit_program,
+    helper_1
+)
 
 def main():
     while True:
@@ -65,139 +22,130 @@ def main():
         if choice == "0":
             exit_program()
         elif choice == "1":
-            create_arcade()
-        elif choice == "2":
-            delete_arcade()
-        elif choice == "3":
-            display_all_arcades()
-        elif choice == "4":
-            view_members_of_arcade()
-        elif choice == "5":
-            find_arcade_by_tag()
+            view_all_members()
+        # elif choice == "2":
+       
         else:
             print("Invalid choice")
 
 
-def create_arcade():
-    name = input("Enter member name: ")
-    tag = input("Enter membership tag: ")
-    location = int(input("Enter location number (1, 2, or 3): "))
-    arcade = Arcade(name, tag, location)
-    print("Arcade created successfully!")
+def menu():
+    print("Please select an option")
+    print("0. Exit the program")
+    print("1. View all members")
+    print("2. View all arcade locations")
 
+def exit_all():
+    conn.close()
+    print("Exiting the application")
+    exit()
 
-def delete_arcade():
-    # Add logic to delete an arcade
-    pass
+def view_all_members():
+    cursor.execute("SELECT * FROM members")
+    results = cursor.fetchall()
 
+    print("All Arcade members")
+    for row in results:
+        print(row[1])
 
-def display_all_arcades():
-    print("List of all Arcades:")
-    for arcade in Arcade.all:
-        print(arcade)
-    print()
+def helper_1():
+    cursor.execute("SELECT * FROM arcades")
+    results = cursor.fetchall()
 
-
-def view_members_of_arcade():
-    # Add logic to view members of an arcade
-    pass
-
-
-def find_arcade_by_tag():
-    tag = input("Enter membership tag: ")
-    found_arcade = [arcade for arcade in Arcade.all if arcade.tag == tag]
-    if found_arcade:
-        print("Arcade found:")
-        print(found_arcade)
-    else:
-        print("No arcade found with that tag.")
-
+    for row in results:
+        print(row)
 
 if __name__ == "__main__":
     main()
-The helper functions are located in lib/helpers.py:
+```
+## Installation
 
-py
-Copy code
-# lib/helpers.py
+To set up the project locally, follow these steps:
 
-def menu():
-    print("Please select an option:")
-    print("0. Exit the program")
-    print("1. Create Arcade")
-    print("2. Delete Arcade")
-    print("3. Display All Arcades")
-    print("4. View Members of an Arcade")
-    print("5. Find Arcade by Tag")
+1. Clone the repository to your machine.
+2. Install dependencies using Pipenv: `pipenv install`.
+3. Activate the virtual environment: `pipenv shell`.
+4. Run the CLI script: `python cli.py`.
 
+### Functions
 
-def exit_program():
-    print("Goodbye!")
-    exit()
-In this updated example, we've incorporated functions to interact with the Arcade model from your code. The CLI prompts the user to perform various operations related to creating, deleting, displaying, and finding arcades. You can similarly add functions to interact with the Locale and Member models as needed.
+#### main
+The `main` function is the entry point of the CLI application. It contains the main loop that displays the menu options and prompts the user for input. Based on the user's choice, it calls the corresponding functions to execute the desired actions.
 
-You can run the template CLI with `python lib/cli.py`, or include the shebang
-and make it executable with `chmod +x`. The template CLI will ask for input, do
-some work, and accomplish some sort of task.
+#### menu
+The `menu` function displays the menu options for the user to choose from. It includes options to exit the program or perform various tasks such as viewing all members or arcade locations.
 
-Past that, CLIs can be whatever you'd like, as long as you follow the project
-requirements.
+#### exit_program
+The `exit_program` function gracefully exits the CLI application by closing the database connection and printing a message indicating the application's termination.
 
-Of course, you will update `lib/cli.py` with prompts that are appropriate for
-your application, and you will update `lib/helpers.py` to replace `helper_1()`
-with a useful function based on the specific problem domain you decide to
-implement, along with adding other helper functions to the module.
+#### view_all_members
+The `view_all_members` function retrieves and displays all arcade members from the database. It executes an SQL query to fetch all member records and prints their details.
 
-In the `lib/models` folder, you should rename `model_1.py` with the name of a
-data model class from your specific problem domain, and add other classes to the
-folder as needed. The file `lib/models/__init__.py` has been initialized to
-create the necessary database constants. You need to add import statements to
-the various data model classes in order to use the database constants.
+#### helper_1
+The `helper_1` function is an example helper function included in the CLI script. It executes an SQL query to retrieve data from the `arcades` table and prints the results. This function demonstrates how additional functionality can be added to the CLI script.
 
-You are also welcome to implement a different module and directory structure.
-However, your project should be well organized, modular, and follow the design
-principal of separation of concerns, which means you should separate code
-related to:
+### Functions
 
-- User interface
-- Data persistence
-- Problem domain rules and logic
+#### create_member
+This function creates a new member in the arcade system. It takes parameters such as name, tag, arcade ID, and locale ID to create a new member instance and adds it to the database. Additionally, it ensures that the member's details are valid before adding them to the system.
 
----
+#### get_members_by_location
+This function retrieves a list of members associated with a specific arcade location. It queries the database for members belonging to the specified location and returns the results. It helps arcade staff to manage membership at different locations effectively.
 
-## Updating README.md
+#### get_member_details
+This function pulls up detailed information about a specific member based on their email address. It searches the database for the member with the provided email address and returns their details. It enables arcade staff to quickly access and view specific member information as needed.
 
-`README.md` is a Markdown file that should describe your project. You will
-replace the contents of this `README.md` file with a description of **your**
-actual project.
+## Arcade Functions (arcade.py)
 
-Markdown is not a language that we cover in Flatiron's Software Engineering
-curriculum, but it's not a particularly difficult language to learn (if you've
-ever left a comment on Reddit, you might already know the basics). Refer to the
-cheat sheet in this assignments's resources for a basic guide to Markdown.
+The `arcade.py` file contains functions related to managing arcade locations.
 
-### What Goes into a README?
+### Functions
 
-This README serves as a template. Replace the contents of this file to describe
-the important files in your project and describe what they do. Each Python file
-that you edit should get at least a paragraph, and each function should be
-described with a sentence or two.
+#### Arcade Class
+The `Arcade` class represents an arcade location. It provides methods for adding new locations, retrieving all locations, and saving arcade details to the database. This class helps in maintaining a record of arcade locations and managing their details effectively.
 
-Describe your actual CLI script first, and with a good level of detail. The rest
-should be ordered by importance to the user. (Probably functions next, then
-models.)
+## Member Functions (member.py)
 
-Screenshots and links to resources that you used throughout are also useful to
-users and collaborators, but a little more syntactically complicated. Only add
-these in if you're feeling comfortable with Markdown.
+The `member.py` file contains functions related to managing arcade members.
 
----
+### Functions
+
+#### Member Class
+The `Member` class represents an arcade member. It includes methods for adding new members, retrieving arcade and location details for a member, and saving member details to the database. This class facilitates the management of member information within the arcade system.
+
+- **Init Method**: The `__init__` method initializes a new instance of the `Member` class with the specified name, tag, arcade ID, locale ID, and optional ID. It also adds the new member instance to the list of all members.
+
+- **add_new_member Class Method**: This class method adds a new member instance to the list of all members.
+
+- **name Property**: The `name` property allows access to the name attribute of a `Member` instance.
+
+- **tag Property**: The `tag` property allows access to the tag attribute of a `Member` instance.
+
+- **locale_id Property**: The `locale_id` property allows access to the locale ID attribute of a `Member` instance.
+
+- **arcade Method**: This method returns a list of all arcade instances associated with the current member instance.
+
+- **locale_id Method**: The `locale_id` method returns a list of locale IDs associated with the current member instance.
+
+- **save Method**: This method saves the member details to the database by inserting a new record into the members table.
+
+## Locale Functions (locale.py)
+
+The `locale.py` file contains functions related to managing specific locations within an arcade.
+
+### Functions
+
+#### Locale Class
+The `Locale` class represents a specific location within an arcade. It offers methods for adding new locations, retrieving members associated with a location, and saving location details to the database. This class assists in organizing and managing arcade locations efficiently.
 
 ## Conclusion
 
-A lot of work goes into a good CLI, but it all relies on concepts that you've
-practiced quite a bit by now. Hopefully this template and guide will get you off
-to a good start with your Phase 3 Project.
+In conclusion, our Arcade Python project encapsulates the essence of efficient arcade management through a well-structured backend system. The CLI script, represented by `cli.py`, serves as the gateway for administrators to interact with our system, leveraging a range of functions to streamline tasks.
 
-Happy coding!
+Throughout our project, we've meticulously crafted class instances and class properties within our models, ensuring a cohesive representation of arcade entities such as members and locations. Attributes have been thoughtfully assigned to encapsulate essential information, facilitating smooth data retrieval and manipulation.
 
+As we wrap up, it's evident that our focus on function clarity and model integrity has laid a strong foundation for future enhancements. Each function, whether within the CLI or models, plays a vital role in empowering arcade administrators to efficiently manage memberships, locations, and member data.
+
+Looking ahead, we're excited to continue refining and expanding our project, leveraging the power of Python to create an even more seamless experience for arcade administrators. With a keen eye on functionality and usability, we're committed to delivering a top-notch solution for arcade management needs.
+
+For further exploration into our project's functionality, feel free to dive into the codebase and explore the intricacies of our CLI, models, and their respective functions. Your feedback and contributions are always welcome as we strive to make arcade management as enjoyable as the games themselves.

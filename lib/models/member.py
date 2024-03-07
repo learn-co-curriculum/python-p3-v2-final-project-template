@@ -92,10 +92,10 @@ class Member:
     def get_all(cls):
         sql = " SELECT * FROM members; "
         print(CURSOR.execute(sql).fetchall())
-        
-    @classmethod
-    def add_to_table(cls):
-        sql = "INSERT INTO members "
+
+    # @classmethod
+    # def add_to_table(cls):
+    #     sql = "INSERT INTO members "
              
 
     

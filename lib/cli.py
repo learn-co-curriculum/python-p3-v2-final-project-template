@@ -28,7 +28,8 @@ def menu():
     print("0. Exit the program")
     print("1. View all members")
     print("2. View all locations")
-    print("3. ")
+    print("3. Create new member")
+    print("4. Delete a member")
     #build a create and a delete, update if possible
 
 def exit_all():

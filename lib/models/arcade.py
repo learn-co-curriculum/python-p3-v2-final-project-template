@@ -32,8 +32,6 @@ class Arcade:
             else:
                 raise TypeError("Name must be a string")
     
-
-    
     @classmethod
     def locations(cls):
         return [locale.location for locale in Locale.all]

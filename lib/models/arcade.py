@@ -31,8 +31,6 @@ class Arcade:
       
         self.name = new_member
     
-
-    
     @classmethod
     def locations(cls):
         return [locale.location for locale in Locale.all]

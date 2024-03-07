@@ -2,7 +2,6 @@
 
 from helpers import (
     exit_program,
-    #helper_1,
     list_bands,
     find_band_by_name,
     find_band_by_id,
@@ -15,16 +14,20 @@ from helpers import (
     create_concert,
     update_concert,
     delete_concert,
+    seed,
 )
-from helpers import app
+# from helpers import app
 # import typer
 
-@app.command()
+# @app.command()
 def main():
+    menu()
     while True:
-        menu()
+        print("Enter \"h\" to see the options again.")
         choice = input("> ")
-        if choice == "0":
+        if choice == "h":
+            menu()
+        elif choice == "0":
             exit_program()
         elif choice == "1":
             list_bands()
@@ -44,12 +47,14 @@ def main():
             find_concert_by_name()
         elif choice == "9":
             find_concert_by_id()
-        elif choice = "10":
+        elif choice == "10":
             create_concert()
-        elif choice = "11":
+        elif choice == "11":
             update_concert()
-        elif choice = "12":
+        elif choice == "12":
             delete_concert()
+        elif choice == "13":
+            seed()
         else:
             print("Invalid choice")
 
@@ -69,10 +74,11 @@ def menu():
     print("10. Create a concert")
     print("11. Update a concert")
     print("12. Delete a concert")
+    print("13. Reseed tables")
 
 
 
 
 if __name__ == "__main__":
-    # typer.run(main)
-    app()
+    # app()
+    main()

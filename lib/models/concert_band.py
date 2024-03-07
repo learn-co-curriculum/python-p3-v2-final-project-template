@@ -1,14 +1,19 @@
-from  __init__ import CURSOR, CONN
-from utils import custom_property, SQL_drop_table
+from models.__init__ import CURSOR, CONN
+from models.utils import custom_property, SQL_drop_table
+
+#this class has a lot of methods that aren't written correctly and shouldn't be used
+#it maybe shouldn't have a class itself and just be a table
+#right now it is only used to make a table and for Concert.save()
+#in a finished product all the concert and band methods could use this class to update the link table
 
 def concert_conds(concert):
-    from concert import Concert
+    from models.concert import Concert
     if isinstance(concert, Concert):
         return True
     raise TypeError("concert must be of type concert")
 
 def band_conds(band):
-    from band import Band
+    from models.band import Band
     if isinstance(band, Band):
         return True
     raise TypeError("band must be of type band")
@@ -19,13 +24,14 @@ class ConcertBand:
         self.concert = concert
         self.band = band
 
+    table_name = "concert_bands"
     concert = custom_property(concert_conds)
     band = custom_property(band_conds)
 
     @staticmethod
     def create_table():
         sql = """
-            CREATE TABLE IF NOT EXISTS concerts_bands (
+            CREATE TABLE IF NOT EXISTS concert_bands (
                 concert_id INT,
                 band_id INT,
                 PRIMARY KEY
@@ -41,11 +47,11 @@ class ConcertBand:
         CURSOR.execute(sql)
         CONN.commit()
 
-    drop_table = SQL_drop_table("concerts_bands")
+    drop_table = SQL_drop_table(table_name)
 
     def save(self):
         sql = """
-            INSERT INTO concerts_bands (concert_id, band_id)
+            INSERT INTO concert_bands (concert_id, band_id)
             VALUES (?, ?)
         """
 
@@ -65,8 +71,8 @@ class ConcertBand:
 
     @classmethod
     def instance_from_db(cls, row):
-        from concert import Concert
-        from band import Band
+        from models.concert import Concert
+        from models.band import Band
         concert_band = cls.working_insts.get(row[0])
         if concert_band:
             concert_band.concert = Concert.find_by_id(row[1])
@@ -80,7 +86,7 @@ class ConcertBand:
     def find_by_id(cls, id):
         sql = """
         SELECT *
-        FROM concerts_bands
+        FROM concert_bands
         WHERE id = ?
         """
 
@@ -89,8 +95,8 @@ class ConcertBand:
 
     def update(self):
         sql = """
-            UPDATE concerts_bands
-            SET name = ?
+            UPDATE concert_bands
+            SET 
             WHERE id = ?
         """
 
@@ -113,7 +119,7 @@ class ConcertBand:
     def get_all(cls):
         sql = """
             SELECT *
-            FROM concerts_bands
+            FROM concert_bands
         """
 
         rows = CURSOR.execute(sql).fetchall()
@@ -124,10 +130,10 @@ class ConcertBand:
         # need this method for Concert.instance_from_db
         sql = """
         SELECT band_id
-        FROM concerts_bands
+        FROM concert_bands
         WHERE concert_id = ?
         """
-        band_ids = CURSOR.execute(sql, (concert_id)).fetchall()
+        band_ids = CURSOR.execute(sql, (concert_id,)).fetchall()
         
-        from band import Band
+        from models.band import Band
         return [Band.find_by_id(band_id).name for band_id in band_ids]

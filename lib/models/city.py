@@ -1,25 +1,29 @@
-from __init__ import CURSOR, CONN
-from utils import custom_property, SQL_drop_table
+from models.__init__ import CURSOR, CONN
+from models.utils import custom_property, SQL_drop_table, SQL_get_all, SQL_show_all, SQL_find_by_attribute, SQL_delete
 
 def name_conds(name):
     if not isinstance(name, str):
         raise TypeError("City name must be a string")
     if not name.strip():
         raise ValueError("City name cannot be blank")
-    if not 2 <= len(name) <= 25:
-        raise ValueError("City name length must be between 2 and 25 characters")
+    if not 2 <= len(name) <= 60:
+        raise ValueError("City name length must be between 2 and 60 characters")
     return True
 
 class City:
 
     working_insts = {}
+    table_name = "cities"
 
     def __init__(self, name, id=None):
-        self.id = id
         self.name = name
+        self.id = id
 
     def __repr__(self):
         return f'<City {self.id}: {self.name}>'
+
+    def __str__(self): 
+        return f'    {self.name} (id: {self.id})'
 
     name = custom_property(name_conds)
 
@@ -33,9 +37,7 @@ class City:
         CURSOR.execute(sql)
         CONN.commit()
 
-    # create_table = SQL_create_table("cities")
-
-    drop_table = SQL_drop_table("cities")
+    drop_table = SQL_drop_table(table_name)
 
     def save(self):
         sql = """
@@ -109,18 +111,25 @@ class City:
         del type(self).working_insts[self.id]
         self.id = None
 
-    @classmethod
-    def get_all(cls):
+    def delete(self):
+        #delete key from concerts
         sql = """
-            SELECT *
-            FROM cities
+            UPDATE concerts
+            SET city_id = NULL
+            WHERE city_id = ?
         """
+        CURSOR.execute(sql, (self.id,))
+        #delete key from bands
+        sql = """
+            UPDATE bands
+            SET home_city_id = NULL
+            WHERE home_city_id = ?
+        """
+        CURSOR.execute(sql, (self.id,))
+        #delete entry from cities and cleanup id
+        SQL_delete(type(self).table_name)(self)
 
-        rows = CURSOR.execute(sql).fetchall()
-        return [cls.instance_from_db(row) for row in rows]
-
-# City.create_table()
-# City.create('New York')
-# c = City("Anchorage")
-
-# City.drop_table()
+    get_all = SQL_get_all()
+    show_all = SQL_show_all()
+    find_by_id = SQL_find_by_attribute("id")
+    find_by_name = SQL_find_by_attribute("name")

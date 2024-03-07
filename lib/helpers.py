@@ -19,9 +19,14 @@ def exit_program():
 def list_bands():
     Band.show_all()
 
-def list_bands_by_genre():
+def find_bands_with_genre():
     genre = input("Enter the genre: ")
-    Band.find
+    try:
+        if bands := Band.find_by_genre(genre):
+            for band in bands:
+                print(band)
+    except Exception as exc:
+        print("Error finding bands: ", exc)
 
 def find_band_by_name():
     name = input("Enter the band's name: ")
@@ -136,6 +141,9 @@ def delete_concert():
         print(f'Concert {id_} deleted')
     else:
         print(f'Concert {id_} not found')
+
+def list_cities():
+    City.show_all()
 
 def seed():
     reseed()

@@ -5,6 +5,7 @@ from helpers import (
     list_bands,
     find_band_by_name,
     find_band_by_id,
+    find_bands_with_genre,
     create_band,
     update_band,
     delete_band,
@@ -14,6 +15,7 @@ from helpers import (
     create_concert,
     update_concert,
     delete_concert,
+    list_cities,
     seed,
 )
 # from helpers import app
@@ -36,24 +38,28 @@ def main():
         elif choice == "3":
             find_band_by_id()
         elif choice == "4":
-            create_band()
+            find_bands_with_genre()
         elif choice == "5":
-            update_band()
+            create_band()
         elif choice == "6":
-            delete_band()
+            update_band()
         elif choice == "7":
-            list_concerts()
+            delete_band()
         elif choice == "8":
-            find_concert_by_name()
+            list_concerts()
         elif choice == "9":
-            find_concert_by_id()
+            find_concert_by_name()
         elif choice == "10":
-            create_concert()
+            find_concert_by_id()
         elif choice == "11":
-            update_concert()
+            create_concert()
         elif choice == "12":
-            delete_concert()
+            update_concert()
         elif choice == "13":
+            delete_concert()
+        elif choice == "14":
+            list_cities()
+        elif choice == "15":
             seed()
         else:
             print("Invalid choice")
@@ -65,16 +71,18 @@ def menu():
     print("1. List all bands")
     print("2. Find a band by name")
     print("3. Find a band by id")
-    print("4. Create a band")
-    print("5. Update a band")
-    print("6. Delete a band")
-    print("7. List all concerts")    
-    print("8. Find a concert by name")
-    print("9. Find a concert by id")
-    print("10. Create a concert")
-    print("11. Update a concert")
-    print("12. Delete a concert")
-    print("13. Reseed tables")
+    print("4. Find bands with genre")
+    print("5. Create a band")
+    print("6. Update a band")
+    print("7. Delete a band")
+    print("8. List all concerts")    
+    print("9. Find a concert by name")
+    print("10. Find a concert by id")
+    print("11. Create a concert")
+    print("12. Update a concert")
+    print("13. Delete a concert")
+    print("14. List all cities")
+    print("15. Reseed tables")
 
 
 

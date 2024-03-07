@@ -69,28 +69,6 @@ class City:
             city.id = row[0]
         return city
 
-    @classmethod
-    def find_by_id(cls, id):
-        sql = """
-        SELECT *
-        FROM cities
-        WHERE id = ?
-        """
-
-        row = CURSOR.execute(sql, (id,)).fetchone()
-        return cls.instance_from_db(row) if row else None
-
-    @classmethod
-    def find_by_name(cls, name):
-        sql = """
-        SELECT *
-        FROM cities
-        WHERE name = ?
-        """
-
-        row = CURSOR.execute(sql, (name,)).fetchone()
-        return cls.instance_from_db(row) if row else None
-
     def update(self):
         sql = """
             UPDATE cities

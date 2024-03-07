@@ -131,15 +131,12 @@ def SQL_find_by_attribute(attribute_name, fetch_one=True):
             WHERE {attribute_name} = ?
         """
 
-        row = CURSOR.execute(sql, (attribute_value,)).fetchone() if fetch_one else CURSOR.execute(sql, (attribute_value,)).fetchall()
-        # from concert import Concert
-        # if cls == Concert and row:
-        #     # this is kind of sloppy but i like it more than having this whole method in Concert for each attr
-        #     from city import City
-        #     print(row)
-        #     new_row = (*row[:3], City.find_by_id(row[3]), row[4])
-        #     return cls.instance_from_db(new_row)
-        return cls.instance_from_db(row) if row else None
+        if fetch_one:
+            row = CURSOR.execute(sql, (attribute_value,)).fetchone()
+            return cls.instance_from_db(row) if row else None
+        else:
+            rows = CURSOR.execute(sql, (attribute_value,)).fetchall()
+            return [cls.instance_from_db(row) for row in rows] if rows else None
 
     # finder.__name__ = f'find_by_{attribute}'
     return AutoClassMethod(finder)

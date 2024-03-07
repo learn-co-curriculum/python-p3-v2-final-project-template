@@ -19,10 +19,14 @@ def exit_program():
 def list_bands():
     Band.show_all()
 
+def list_bands_by_genre():
+    genre = input("Enter the genre: ")
+    Band.find
+
 def find_band_by_name():
     name = input("Enter the band's name: ")
     band = Band.find_by_name(name)
-    print(band) if band else print( f'band {name} is not found')
+    print(band) if band else print( f'Band {name} is not found')
 
 def find_band_by_id():
     id_ = int(input("Enter the band's id: "))
@@ -50,19 +54,20 @@ def update_band():
             band.members = members
             genre = input("Enter the band's new genre: ")
             band.genre = genre
-            band.home_city = input("Enter the band's new home city: ")
+            home_city = input("Enter the band's new home city: ")
             band.home_city = home_city
 
             band.update()
             print(f'Success in updating: \n{band}')
         except Exception as exc:
             print("Error updating band: ", exc)
-        else:
-            print(f'Band {id_} not found')
+    else:
+        print(f'Band {id_} not found')
 
 def delete_band():
     id_ = int(input("Enter the band's id: "))
     if band := Band.find_by_id(id_):
+        print(f'Attempting to delete {band.name}...')
         band.delete()
         print(f'Band {id_} deleted')
     else:
@@ -90,11 +95,11 @@ def create_concert():
     name = input("Enter the concert's name: ")
     date = input("Enter the concert's date: ")
     bands = input("Enter the concert's bands separated by commas (and spaces): ").split(", ")
-    city = input("Enter the concert's city: ")
+    home_city = input("Enter the concert's city: ")
     # ticket_cost =("Enter the concert's ticket_cost: ")
     ticket_cost = {"Four-day pass": [400, 1000], "Friday pass": [110, 900]}
     try:
-        concert = Concert.create(name, date, bands, city, ticket_cost)
+        concert = Concert.create(name, date, bands, home_city, ticket_cost)
         print(f'Success! The concert has been created! \n{concert}')
     except Exception as exc:
         print("Error creating concert: ", exc)
@@ -106,26 +111,27 @@ def update_concert():
         try:
             name = input("Enter the concert's new name: ")
             concert.name = name
-            concert = input("Enter the concert's new date: ")
+            date = input("Enter the concert's new date: ")
             concert.date = date
-            bands = input("Enter the concert's new bands separated by commas (and spaces): ")
+            bands = input("Enter the concert's new bands separated by commas (and spaces): ").split(", ")
             concert.bands = bands
             city = input("Enter the concert's new city: ")
             concert.city = city
             # concert.ticket_cost = input("Enter the concert's new ticket cost: ")
             # concert.ticket_cost = ticket_cost
-            concert.ticket_cost = {"Four-day pass": [400, 1000], "Friday pass": [110, 900]}
+            # concert.ticket_cost = {"Four-day pass": [400, 1000], "Friday pass": [110, 900]}
 
             concert.update()
             print(f'Success: {concert}')
         except Exception as exc:
             print("Error updating concert: ", exc)
-        else:
-            print(f'Concert {id_} not found')
+    else:
+        print(f'Concert {id_} not found')
 
 def delete_concert():
     id_ = int(input("Enter the concert's id: "))
     if concert := Concert.find_by_id(id_):
+        print(f'Attempting to delete {concert.name}...')
         concert.delete()
         print(f'Concert {id_} deleted')
     else:
@@ -133,3 +139,4 @@ def delete_concert():
 
 def seed():
     reseed()
+    print("Tables reseeded!")

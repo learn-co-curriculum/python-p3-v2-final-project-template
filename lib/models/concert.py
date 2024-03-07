@@ -1,6 +1,6 @@
 from models.__init__ import CURSOR, CONN
 from models.concert_band import ConcertBand
-from models.utils import punctuate_str, check_nonempty_str, custom_property, SQL_drop_table, SQL_get_all, SQL_show_all, SQL_find_by_attribute
+from models.utils import punctuate_str, check_nonempty_str, custom_property, SQL_drop_table, SQL_get_all, SQL_show_all, SQL_delete, SQL_find_by_attribute
 
 def name_conds(name):
     check_nonempty_str(name, "Concert name")
@@ -39,6 +39,8 @@ class Concert:
         self.ticket_cost = ticket_cost #dict stored as string. if getting str from table, use eval() to turn back to dict
         self.id = id
 
+        self.working_insts[self.id] = self
+
     def __str__(self):
         from datetime import datetime
         today = datetime.today()
@@ -46,7 +48,7 @@ class Concert:
         upcoming = today.date() < concert_date.date()
         from models.band import Band
         return f"""    {self.name} (id: {self.id}) {'will happen' if upcoming else "happened"} on {self.date} in {self.city.name}!
-    {punctuate_str(self.bands, True)} {"will be there." if upcoming else "were there."}
+    {punctuate_str(self.bands, True)} {"will be there." if upcoming else ("were there." if len(self.bands) > 1 else "was there.")}
 """ #this looks wonky here but it looks nice when printed
 
     name = custom_property(name_conds)
@@ -138,7 +140,6 @@ class Concert:
         [ConcertBand.create(self, band) for band in self.bands]
 
     def save(self):
-        print(self.city)
         sql = """
                 INSERT INTO concerts (name, date,  city_id, ticket_cost)
                 VALUES (?, ?, ?, ?)
@@ -149,7 +150,11 @@ class Concert:
         self.id = CURSOR.lastrowid
         type(self).working_insts[self.id] = self
 
-        self.saveBands() # this will make a row in concert_bands for each pairing of self with a band
+        try:
+            self.saveBands() # this will make a row in concert_bands for each pairing of self with a band
+        except:
+            #im sure this isn't the only way for saveBands to fail but it's the only way i can get it to fail atm
+            raise ValueError("Couldn't make the band entries. Did you enter the same band twice?")
         
     @classmethod
     def create(cls, name, date, bands, city, ticket_cost):
@@ -163,9 +168,28 @@ class Concert:
             SET name = ?, date = ?, city_id = ?, ticket_cost = ?
             WHERE id = ?
         """
-        CURSOR.execute(sql, (self.name, self.date, self.city.id, str(self.ticket_cost)))
+        CURSOR.execute(sql, (self.name, self.date, self.city.id, str(self.ticket_cost), self.id))
         CONN.commit()
-        # !!!!! update concert_bands?? 
+        # update concert_bands by deleting this concert's entries and remaking them
+        # couldn't find a better way on short notice
+        sql = """
+            DELETE FROM concert_bands
+            WHERE concert_id = ?
+        """
+        CURSOR.execute(sql, (self.id,))
+        self.saveBands()
+
+    def delete(self):
+        #so this deleter method will let the concerts and bands with that city id have null in their table cell
+        #this means objects we make from those rows will have a None field
+        #delete entries from concert_bands
+        sql = """
+            DELETE FROM concert_bands
+            WHERE concert_id = ?
+        """
+        CURSOR.execute(sql, (self.id,))
+        #delete entry from bands and cleanup id
+        SQL_delete(type(self).table_name)(self)
 
     def get_bands(self):
         sql = """
@@ -194,18 +218,11 @@ class Concert:
         rows = CURSOR.execute(sql, (id,)).fetchall()
         from models.band import Band
         return [Band.instance_from_db(row) for row in rows]
-
-    def show_bands(self):
-        print(f'{self.name} will be attended by:')
-        for band in self.get_bands():
-            print(f'    {band.name}')
-
     
     @classmethod
     def instance_from_db(cls, row):
         concert = cls.working_insts.get(row[0])
         concert_id, name, date, city_id, ticket_cost = row
-        print(concert_id)
         from models.city import City
         if concert:
             concert.name = name

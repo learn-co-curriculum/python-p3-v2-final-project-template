@@ -30,6 +30,8 @@ class Band:
         self.home_city = home_city
         self.id = id
 
+        self.working_insts[self.id] = self
+
     def __str__(self): 
         return f"""    {self.name} (id: {self.id if self.id else "None"}) is from {self.home_city.name} and plays {self.genre}
     {self.name}'s {"sole member is" if len(self.members) == 1 else "members are"} {punctuate_str(self.members)}
@@ -153,4 +155,4 @@ class Band:
 
     find_by_id = SQL_find_by_attribute("id")
     find_by_name = SQL_find_by_attribute("name")
-    find_by_genre = SQL_find_by_attribute("genre")
+    find_by_genre = SQL_find_by_attribute("genre", False) #false so fetchall is used instead of fetchone

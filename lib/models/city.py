@@ -19,6 +19,8 @@ class City:
         self.name = name
         self.id = id
 
+        self.working_insts[self.id] = self
+
     def __repr__(self):
         return f'<City {self.id}: {self.name}>'
 

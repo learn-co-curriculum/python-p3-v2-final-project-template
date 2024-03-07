@@ -3,7 +3,7 @@ from models.utils import custom_property, SQL_drop_table
 
 #this class has a lot of methods that aren't written correctly and shouldn't be used
 #it maybe shouldn't have a class itself and just be a table
-#right now it is only used to make a table and for Concert.save()
+#right now it is only used to make a table and to insert table entries when called in Concert
 #in a finished product all the concert and band methods could use this class to update the link table
 
 def concert_conds(concert):
@@ -20,9 +20,14 @@ def band_conds(band):
 
 class ConcertBand:
 
+    working_insts = {}
+
     def __init__(self, concert, band):
         self.concert = concert
         self.band = band
+
+        # self.working_insts[self.id] = self
+        # would have to use combined key cuz there is no id
 
     table_name = "concert_bands"
     concert = custom_property(concert_conds)

@@ -5,10 +5,9 @@ import ipdb
 class Member:
     all = []
 
-    def __init__(self, name, tag, arcade_id, locale_id, id=None):
+    def __init__(self, name, tag,locale_id, id=None):
         self.name = name
         self.tag = tag
-        self.arcade_id = arcade_id
         self.locale_id = locale_id
         self.id = id
         Member.add_new_member(self)
@@ -57,7 +56,6 @@ class Member:
     def __repr__(self):
         return f'<Member id= "{self.id}" name= "{self.name}" tag= "{self.tag}" arcade_id= "{self.arcade_id}" locale_id= "{self.locale_id}" >'
     
-    
     @classmethod
     def create_table(cls): 
         sql = """ 
@@ -65,8 +63,7 @@ class Member:
             id INTEGER PRIMARY KEY,
             name TEXT,
             tag TEXT,
-            arcade_id INTEGER,
-            locale_id INTEGER
+            locale_id TEXT
             );
             """
         CURSOR.execute(sql)
@@ -80,13 +77,19 @@ class Member:
         
     def save(self):
         sql = """
-            INSERT INTO members ( name, tag, arcade_id, locale_id)
-            VALUES (?,?,?,?)
+            INSERT INTO members ( name, tag, locale_id)
+            VALUES (?,?,?)
             """
-        CURSOR.execute(sql, (self.name, self.tag, self.arcade_id, self.locale_id))
+        CURSOR.execute(sql, (self.name, self.tag, self.locale_id))
         CONN.commit()
 
         self.id = CURSOR.lastrowid
+        
+    @classmethod
+    def delete_by_name(cls, name):
+        sql = "DELETE FROM members WHERE name = ?;"
+        CURSOR.execute(sql, (name,))
+        CONN.commit()
         
     @classmethod
     def find_by_id(cls , id):
@@ -95,7 +98,6 @@ class Member:
               WHERE id = ?
         """
         CURSOR.execute(sql, (id,))
-        ipdb.set_trace()
 
     @classmethod
     def get_all(cls):

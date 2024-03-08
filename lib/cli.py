@@ -18,11 +18,15 @@ def main():
         choice = input("> ")
         if choice == "0":
             exit_program()
+        elif choice == "2":
+            Locale.get_all()
         elif choice == "1":
             print("Inside view_all_members() func")
             Member.get_all()
         elif choice == "3":
             create_member()
+        elif choice == "4":
+            delete_member()
         else:
             print("Invalid choice")
 
@@ -57,8 +61,15 @@ def create_member():
     location_input = input("Enter location: ")
     var1 = Locale.find_by_location(location_input)
 
-    ipdb.set_trace()
-    
+    member = Member(name_input, tag_input, location_input)
+    member.save()
+
+    print("New member has been aded!")
+
+def delete_member():
+    name = input("Enter member name to be deleted: ")
+    Member.delete_by_name(name)
+    print("Member deleted successfully.")
 
 if __name__ == "__main__":
     main()

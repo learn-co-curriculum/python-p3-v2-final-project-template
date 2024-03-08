@@ -1,6 +1,6 @@
 from models.__init__ import CONN, CURSOR
 from models.arcade import Arcade
-import ipdb
+from models.locale import Locale
 
 class Member:
     all = []
@@ -95,12 +95,35 @@ class Member:
               WHERE id = ?
         """
         CURSOR.execute(sql, (id,))
-        ipdb.set_trace()
+        
 
     @classmethod
     def get_all(cls):
         sql = " SELECT * FROM members; "
         print(CURSOR.execute(sql).fetchall())
+
+    @classmethod
+    def delete_member(cls):
+        member_name = input("Delete this user:")
+        member = cls.find_by_name(member_name)
+        if member:
+            sql = "DELETE FROM members WHERE name = ?"
+            CURSOR.execute(sql, (member.name,))
+            CONN.commit()
+            print(f"Member {member_name} deleted")
+        else: 
+            print(f"Member {member_name} not found")
+
+    @classmethod
+    def find_by_name(cls, member_name):
+        sql = "SELECT * FROM members WHERE name = ?"
+        CURSOR.execute(sql, (member_name,))
+        member_data = CURSOR.fetchone()
+        if member_data:
+            member = Member(*member_data)
+            return member
+        return None
+
 
     # @classmethod
     # def add_to_table(cls):

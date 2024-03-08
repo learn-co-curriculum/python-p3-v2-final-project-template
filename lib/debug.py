@@ -11,13 +11,18 @@ Arcade.drop_table()
 Arcade.create_table()
 a1 = Arcade("Dave and Busters")
 a1.save()
+
 Locale.create_table()
 l1=Locale("Queens")
 l1.save()
+
 Member.drop_table()
 Member.create_table()
-Locale.find_by_location("Queens")
 
+l1 = Locale.find_by_location("Queens")
+
+name = input("Enter member name: ")
+tag = input("Enter member tag: ")
 
 
 

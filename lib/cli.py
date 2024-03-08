@@ -49,10 +49,10 @@ def create_member():
     name_input = input("Enter name: ")
     tag_input = input("Enter tag: ")
     location_input = input("Enter location: ")
-    locale_id = Locale.get_id_by_location(location_input) 
+
+    member = Member(name_input, tag_input, location_input)
     member.save()
-    # this will fetch the location input
-    # member = Member(name_input, tag_input, location_input) parker
+
 
 if __name__ == "__main__":
     main()

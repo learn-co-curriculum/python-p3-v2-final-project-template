@@ -5,7 +5,7 @@ from models.locale import Locale
 class Member:
     all = []
 
-    def __init__(self, name, tag, arcade_id, locale_id, id=None):
+    def __init__(self, name, tag, arcade_id, locale_id=None, id=None):
         self.name = name
         self.tag = tag
         self.arcade_id = arcade_id
@@ -103,10 +103,10 @@ class Member:
         print(CURSOR.execute(sql).fetchall())
 
     @classmethod
-    def delete_member(cls):
-        member_name = input("Delete this user:")
+    def delete_member(cls, member_name):
         member = cls.find_by_name(member_name)
         if member:
+            cls.all.remove(member)
             sql = "DELETE FROM members WHERE name = ?"
             CURSOR.execute(sql, (member.name,))
             CONN.commit()
@@ -123,6 +123,18 @@ class Member:
             member = Member(*member_data)
             return member
         return None
+    
+    @classmethod
+    def create_member(cls):
+        name_input = input("Enter name: ")
+        tag_input = input("Enter tag: ")
+        location_input = input("Enter location: ")
+
+        member = cls(name_input, tag_input, None, None)
+        member.name = name_input
+        member.tag = tag_input
+        member.locale_id = location_input
+        member.save()
 
 
     # @classmethod

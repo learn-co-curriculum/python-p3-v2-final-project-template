@@ -48,6 +48,16 @@ class Locale:
         self.id = CURSOR.lastrowid
 
     @classmethod
+    def get_all(cls):
+        sql = "SELECT * FROM locations;"
+        CURSOR.execute(sql)
+        results = CURSOR.fetchall()
+
+        print("All Locations:")
+        for row in results:
+            print(row[1])
+
+    @classmethod
     def find_by_location(cls , location):
         sql = """
               SELECT * FROM locations

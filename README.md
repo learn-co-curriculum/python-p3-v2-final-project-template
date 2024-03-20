@@ -1,4 +1,15 @@
-# Phase 3 CLI+ORM Project Template
+# Tokyo Omakase 東京のお任せ
+
+Tokyo Omakase is your guide to Tokyo's best restaurants
+
+## Installation
+
+
+
+
+
+
+# Project Reqs
 
 ## Learning Goals
 

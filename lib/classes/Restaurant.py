@@ -1,20 +1,20 @@
 
 class Restaurant:
 
-    all = []
     
-    def __init__(self, name, location, price, cuisine, phone, award, description, website_url, facilities, id = None):
+    def __init__(self, name, address, ward, cuisine, price, website_url, award, misc, description, id = None):
 
         self.name = name
-        self.location = location
-        self.price = price
+        self.address = address
+        self.ward = ward
         self.cuisine = cuisine
-        self.phone = phone
-        self.award = award
-        self.description = description
+        self.price = price
         self.website_url = website_url
-        self.facilities = facilities
-        type(self).all.append(self)
+        self.award = award
+        self.misc = misc
+        self.description = description
+
+
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 # # # # # # # # # # # # # # =>    PROPERTIES    <=  # # # # # # # # # # # # # #
@@ -34,5 +34,27 @@ class Restaurant:
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 # # # # # # # # # # # # # # => INSTANCE METHODS <=  # # # # # # # # # # # # # #
 
+
+            
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 # # # # # # # # # # # # # # =>  CLASS METHODS   <=  # # # # # # # # # # # # # # 
+    
+
+
+    # = = = = = = = = = = = = = => Table Methods   <= = = = = = = = = = = = = #
+    
+    @classmethod
+    def create_table(cls):
+        try:
+            CURSOR.execute()
+            CONN.commit()
+        except:
+            raise ValueError('')
+        
+    @classmethod
+    def drop_table(cls):
+        try:
+            CURSOR.execute()
+            CONN.commit()
+        except:
+            raise ValueError('')

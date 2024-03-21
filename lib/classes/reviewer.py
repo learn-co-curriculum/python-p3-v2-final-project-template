@@ -1,4 +1,5 @@
 from __init__ import CURSOR, CONN
+from faker import Faker
 
 class Reviewer:
     def __init__(self, name, id=None):
@@ -25,7 +26,7 @@ class Reviewer:
     @classmethod
     def create_table(cls):
         sql = """
-            CREATE TABLE IS NOT EXISTS reviewers (
+            CREATE TABLE IF NOT EXISTS reviewers (
             id INTEGER PRIMARY KEY,
             name TEXT,
             task_list TEXT

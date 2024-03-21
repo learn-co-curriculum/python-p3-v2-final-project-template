@@ -34,6 +34,47 @@ class Reviewer:
         """
         CURSOR.execute(sql)
         CONN.commit()
+
+    @classmethod
+    def drop_table(cls):
+        sql = """
+            DROP TABLE IF EXISTS reviewers;
+        """
+        CURSOR.execute(sql)
+        CONN.commit()
+    
+    def save(self):
+        sql = """
+            INSERT INTO reviewers (name, task_list)
+            VALUES (?, ?)
+        """
+        CURSOR.execute(sql, (self.name, self.task_list))
+        CONN.commit()
+        self.id = CURSOR.lastrowid
+
+    @classmethod
+    def create(cls, name, task_list):
+        reviewer = cls(name, task_list)
+        reviewer.save()
+        return reviewer
+    
+    def update(self):
+        sql = """
+            UPDATE reviewer
+            SET name = ?, task_list = ?
+            WHERE id = ?
+        """
+        CURSOR.execute(sql, (self.name, self.task_list, self.id))
+        CONN.commit()
+
+    def delete(self):
+        sql = """
+            DELETE FROM departments
+            WHERE id = ?
+        """
+
+        CURSOR.execute(sql, (self.id,))
+        CONN.commit()
     
     def posts_to_review(self):
         # return [post for post in self.posts if not post.reviewed]

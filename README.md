@@ -3,6 +3,23 @@
 Tokyo Omakase is your guide to Tokyo's best restaurants
 
 ## Installation
+pip install click
+pip install rich
+pipenv install
+pipenv shell
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

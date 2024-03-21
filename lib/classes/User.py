@@ -87,4 +87,4 @@ class User:
         except Exception as e:
             print('An Error Occured:', e)
             raise Exception
-        
+

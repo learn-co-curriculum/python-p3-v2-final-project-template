@@ -5,9 +5,9 @@ class User:
     
     def __init__(self, name, id = None):
         self.name = name
-
+        self.id = id
     def __repr__(self):
-        return f"User ID:  || User Name: {self.name}"
+        return f"User ID: {self.id}  || User Name: {self.name}"
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 # # # # # # # # # # # # # # =>    PROPERTIES    <=  # # # # # # # # # # # # # #
@@ -26,6 +26,18 @@ class User:
             raise ValueError('Name must be between 1 and 20 characters')
         else:
             self._name = name
+        # Add validation so that no users have the same name
+
+    @property
+    def id(self):
+        return self._id
+    
+    @id.setter
+    def id(self, id):
+        if hasattr(self, 'id'):
+            raise AttributeError('You are not allowed to change the id')
+        else:
+            self._id = id
 
 
 
@@ -37,13 +49,45 @@ class User:
     # = = = = = = = = = = = = = => CRUD Methods   <= = = = = = = = = = = = = #
 
     def save(self):
-        pass
+        sql = """ 
+            INSERT INTO users (name, id)
+            VALUES(?, ?)
+        """
+        try:
+            CURSOR.execute(sql, (self.name, self.id))
+            CONN.commit()
+            self._id = CURSOR.lastrowid
+        except Exception as e:
+            print('An Error Occured:', e)
+            raise Exception
+        
+        return self
     
     def update(self):
-        pass
+        sql = """
+            UPDATE users
+            SET name = ?
+            WHERE id = ?
+        """
+        try:
+            CURSOR.execute(sql, (self.name, self.id))
+            CONN.commit()
+        except Exception as e:
+            print('An Error Occured:', e)
+            raise Exception
 
     def delete(self):
-        pass
+        sql = """ 
+            DELETE FROM users
+            WHERE id = ?
+        """
+        try:
+            CURSOR.execute(sql, (self.id,))
+            CONN.commit()
+        except Exception as e:
+            print('An Error Occured:', e)
+            raise Exception
+        
     
 
     # = = = = = = = = = = = = = =>  Aggregate Methods   <= = = = = = = = = = = #
@@ -55,8 +99,21 @@ class User:
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 # # # # # # # # # # # # # # =>  CLASS METHODS   <=  # # # # # # # # # # # # # # 
     
+    # = = = = = = = = = = = = = => CRUD Methods   <= = = = = = = = = = = = = #
 
+    @classmethod
+    def create(cls, name, id = None):
+        new_user = cls(name, id)
+        new_user.save()
+        return new_user
 
+    @classmethod
+    def instance_from_db(cls, row):
+        return cls(
+            row[0], #id
+            row[1]  #name
+        )
+    
     # = = = = = = = = = = = = = => Table Methods   <= = = = = = = = = = = = = #
     
     @classmethod

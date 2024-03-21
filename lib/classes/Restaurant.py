@@ -30,6 +30,16 @@ class Restaurant:
         else:
             self._name = name
 
+    @property
+    def address(self):
+        return self._address
+    
+    @address.setter
+    def address(self, address):
+        if not isinstance(address, str):
+            raise ValueError('Restaurant Address must be a word')
+        else:
+            self._address = address
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 # # # # # # # # # # # # # # => INSTANCE METHODS <=  # # # # # # # # # # # # # #
@@ -45,6 +55,22 @@ class Restaurant:
     
     @classmethod
     def create_table(cls):
+        """ Create restaurant table """
+        sql = """
+            CREATE TABLE IF NOT EXISTS restaurants (
+            id INTEGER PRIMARY KEY,
+            name TEXT,
+            address TEXT,
+            ward TEXT,
+            cuisine TEXT,
+            price, INT,
+            website_url TEXT,
+            award TEXT,
+            misc, TEXT,
+            description TEXT
+            )
+            """
+
         try:
             CURSOR.execute()
             CONN.commit()

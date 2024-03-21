@@ -1,5 +1,4 @@
-from __init__ import CONN, CURSOR
-from Visit import Visit
+from . import CURSOR, CONN
 
 
 class User:
@@ -8,7 +7,7 @@ class User:
         self.name = name
 
     def __repr__(self):
-        return f"User ID: {self.id} || User Name: {self.name}"
+        return f"User ID:  || User Name: {self.name}"
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 # # # # # # # # # # # # # # =>    PROPERTIES    <=  # # # # # # # # # # # # # #
@@ -23,8 +22,8 @@ class User:
     def name(self, name):
         if not isinstance(name, str):
             raise ValueError('Name must be a string')
-        elif not (len(name) >= 1 and len(name) <= 16):
-            raise ValueError('Name must be between 1 and 16 characters')
+        elif not (len(name) >= 1 and len(name) <= 20):
+            raise ValueError('Name must be between 1 and 20 characters')
         else:
             self._name = name
 
@@ -63,16 +62,29 @@ class User:
     @classmethod
     def create_table(cls):
         try:
-            CURSOR.execute()
+            sql = """ 
+                CREATE TABLE IF NOT EXISTS users (
+                    id INTEGER PRIMARY KEY,
+                    name TEXT
+                );
+
+            """
+            CURSOR.execute(sql)
             CONN.commit()
-        except:
-            raise ValueError('')
+        
+        except Exception as e:
+            print('An Error Occured:', e)
+            raise Exception
         
     @classmethod
     def drop_table(cls):
         try:
-            CURSOR.execute()
+            sql = """ 
+                DROP TABLE IF EXISTS users;
+            """
+            CURSOR.execute(sql)
             CONN.commit()
-        except:
-            raise ValueError('')
+        except Exception as e:
+            print('An Error Occured:', e)
+            raise Exception
         

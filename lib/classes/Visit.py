@@ -68,14 +68,58 @@ class Visit:
             except Exception as e:
                 print(e)
                 raise Exception
+    
+    def update(self):
+        sql = """
+            UPDATE visits
+            SET rating = ?, description = ?, date = ?, user = ?, restaurant = ?
+            WHERE id = ?
+        """
+        try:
+            CURSOR.execute(sql, (self.rating, self.description, self.date, self.user, self.restaurant, self.id))
+            CONN.commit()
+        except Exception as e:
+            print('An Error Occurred:', e)
+            raise Exception
+    
+    def delete(self):
+        sql = """ 
+            DELETE FROM visits
+            WHERE id = ?
+        """
+        try:
+            CURSOR.execute(sql, (self._id,))
+            CONN.commit()
+        except Exception as e:
+            print('An Error Occurred:', e)
+            raise Exception
 
-
+    # = = = = = = = = = = = = = =>  Aggregate Methods   <= = = = = = = = = = = #
+        
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 # # # # # # # # # # # # # # =>  CLASS METHODS   <=  # # # # # # # # # # # # # # 
     
+    # = = = = = = = = = = = = = => CRUD Methods   <= = = = = = = = = = = = = #
 
+    @classmethod
+    def create(cls, rating, description, date, user, restaurant, id = None):
+        new_visit = cls(rating, description, date, user, restaurant, id)
+        new_visit.save()
+        return new_visit
+    
+    @classmethod
+    def instance_from_db(cls, row):
 
+        return cls(
+            rating=row[1],
+            description=row[2],
+            date=row[3],
+            user=row[4],
+            restaurant=row[5],
+            id=row[0]
+        )
+            
     # = = = = = = = = = = = = = => Table Methods   <= = = = = = = = = = = = = #
     
     @classmethod
@@ -107,8 +151,4 @@ class Visit:
         except:
             raise ValueError('Failed to drop table')
         
-    @classmethod
-    def create(cls, rating, description, date, user, restaurant, id = None):
-        new_visit = cls(rating, description, date, user, restaurant, id)
-        new_visit.save()
-        return new_visit
+    

@@ -58,7 +58,7 @@ class User:
             CONN.commit()
             self._id = CURSOR.lastrowid
         except Exception as e:
-            print('An Error Occured:', e)
+            print('An Error Occurred:', e)
             raise Exception
         
         return self
@@ -73,7 +73,7 @@ class User:
             CURSOR.execute(sql, (self.name, self.id))
             CONN.commit()
         except Exception as e:
-            print('An Error Occured:', e)
+            print('An Error Occurred:', e)
             raise Exception
 
     def delete(self):
@@ -85,7 +85,7 @@ class User:
             CURSOR.execute(sql, (self.id,))
             CONN.commit()
         except Exception as e:
-            print('An Error Occured:', e)
+            print('An Error Occurred:', e)
             raise Exception
         
     
@@ -130,7 +130,7 @@ class User:
             CONN.commit()
         
         except Exception as e:
-            print('An Error Occured:', e)
+            print('An Error Occurred:', e)
             raise Exception
         
     @classmethod
@@ -142,6 +142,6 @@ class User:
             CURSOR.execute(sql)
             CONN.commit()
         except Exception as e:
-            print('An Error Occured:', e)
+            print('An Error Occurred:', e)
             raise Exception
 

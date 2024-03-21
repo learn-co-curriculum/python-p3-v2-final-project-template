@@ -1,19 +1,8 @@
 #!/usr/bin/env python3
 # lib/debug.py
 
-from classes.User import User
 
-User.drop_table()
-User.create_table()
+Visit.drop_table()
+Visit.create_table()
 
-User.create('Christian')
-
-
-
-
-
-
-
-
-
-
+print(Visit.create(2, "description", "date", "user", "restaurant"))

@@ -1,8 +1,14 @@
 #!/usr/bin/env python3
 # lib/debug.py
 
+from classes.Restaurant import Restaurant
+from classes.User import User
 
-Visit.drop_table()
-Visit.create_table()
 
-print(Visit.create(2, "description", "date", "user", "restaurant"))
+Restaurant.drop_table()
+Restaurant.create_table()
+
+
+# test = Restaurant('Restaurant', 'ADDRESS', 'WARD', 'CUISINE', 'PCE', 'WEBSITE', 'MISC', 'AWARD', 'DESCRIPTION')
+
+print(Restaurant.create('Resta55urant', 'ADD55RESS', 'WA555RD', 'CUI5555NE', 'PCE', 'WEBSITE', 'MISC', 'AWARD', 'DESCRIPTION'))

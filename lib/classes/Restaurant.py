@@ -1,4 +1,4 @@
-from __init__ import CURSOR, CONN
+from . import CURSOR, CONN
 
 class Restaurant:
 
@@ -14,6 +14,7 @@ class Restaurant:
         self.award = award
         self.misc = misc
         self.description = description
+        self.id = id
 
 
 
@@ -128,12 +129,45 @@ class Restaurant:
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 # # # # # # # # # # # # # # => INSTANCE METHODS <=  # # # # # # # # # # # # # #
 
-
-            
+    # = = = = = = = = = = = = = => CRUD Methods   <= = = = = = = = = = = = = #
+    def save(self):
+        sql = """ 
+            INSERT INTO restaurants (name, address, ward, cuisine, price, website, award, misc, description, id)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ? )
+        """
+        try:
+            CURSOR.execute(sql, (self.name, self.address, self.ward, self.cuisine, self.price, self.website, self.award, self.misc, self.description, self.id))
+            CONN.commit()
+            self._id = CURSOR.lastrowid
+        except Exception as e:
+            print('An Error Occurred:', e)
+            raise Exception
+        
+        return self
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 # # # # # # # # # # # # # # =>  CLASS METHODS   <=  # # # # # # # # # # # # # # 
     
-
+    # = = = = = = = = = = = = = => CRUD Methods   <= = = = = = = = = = = = = #
+    @classmethod
+    def create(cls, name, address, ward, cuisine, price, website, award, misc, description, id = None):
+        new_restaurant = cls(name, address, ward, cuisine, price, website, award, misc, description, id)
+        new_restaurant.save()
+        return new_restaurant
+        
+    @classmethod
+    def instance_from_db(cls, row):
+        return cls(
+            row[0], #id
+            row[1], #name
+            row[2], #address
+            row[3], #ward
+            row[4], #cuisine
+            row[5], #price
+            row[6], #website
+            row[7], #award
+            row[8], #misc
+            row[9], #description
+        )   
 
     # = = = = = = = = = = = = = => Table Methods   <= = = = = = = = = = = = = #
     
@@ -147,12 +181,12 @@ class Restaurant:
             address TEXT,
             ward TEXT,
             cuisine TEXT,
-            price, ,
+            price TEXT,
             website TEXT,
             award TEXT,
-            misc, TEXT,
+            misc TEXT,
             description TEXT
-            )
+            );
             """
 
         try:
@@ -164,7 +198,7 @@ class Restaurant:
     @classmethod
     def drop_table(cls):
         """ Drop Restaurant Table"""
-        sql = """"
+        sql = """
             DROP TABLE IF EXISTS restaurants;
             """
         try:

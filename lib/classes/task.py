@@ -1,8 +1,10 @@
+
 #lib/classes/task.py
 from classes.__init__ import CURSOR, CONN
 from classess.post import Post
 from classess.reviewer import Reviewer
 import datetime 
+
 
 class Task:
     def __init__(self, id, status, created_at, updated_at, post_id, reviewer_id):
@@ -152,18 +154,18 @@ class Task:
 
     @classmethod
     def drop_table(cls):
-    try:
-        with CONN:
-        CURSOR.execute("""
-        DROP TABLE IF EXISTS tasks
-        """) 
-    except Exception as e:
-        return 
+      try:
+          with CONN:
+          CURSOR.execute("""
+          DROP TABLE IF EXISTS tasks
+          """) 
+      except Exception as e:
+          return e
 
     @classmethod
     def find_by_id(cls, id):
         sql = """
-        SELECT * FROM tasks WHERE id = ?
+            SELECT * FROM tasks WHERE id = ?
         """
         return CURSOR.execute(sql, (id,)).fetchone() or None
 

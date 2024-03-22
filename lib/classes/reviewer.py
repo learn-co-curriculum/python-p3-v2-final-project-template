@@ -1,4 +1,4 @@
-from __init__ import CURSOR, CONN
+from classes.__init__ import CURSOR, CONN
 
 class Reviewer:
     def __init__(self, name, id=None):
@@ -28,13 +28,13 @@ class Reviewer:
             sql = """
                 CREATE TABLE IF NOT EXISTS reviewers (
                 id INTEGER PRIMARY KEY,
-                name TEXT,
-                task_list TEXT
+                name TEXT
                 )
             """
             CURSOR.execute(sql)
             CONN.commit()
         except Exception as e:
+            CONN.rollback()
             return e
         
     @classmethod
@@ -51,32 +51,34 @@ class Reviewer:
     def save(self):
         try:
             sql = """
-                INSERT INTO reviewers (name, task_list)
-                VALUES (?, ?)
+                INSERT INTO reviewers (name)
+                VALUES (?)
             """
-            CURSOR.execute(sql, (self.name, self.task_list))
+            CURSOR.execute(sql, (self.name,))
             CONN.commit()
             self.id = CURSOR.lastrowid
+            return self
         except Exception as e:
+            CONN.rollback()
             return e
 
     @classmethod
-    def create(cls, name, task_list):
+    def create(cls, name):
         try:
-            reviewer = cls(name, task_list)
-            reviewer.save()
-            return reviewer
+            reviewer = cls(name)
+            rev = reviewer.save()
+            return rev
         except Exception as e:
             return e
-    
+
     def update(self):
         try:
             sql = """
-                UPDATE reviewer
-                SET name = ?, task_list = ?
+                UPDATE reviewers
+                SET name = ?
                 WHERE id = ?
             """
-            CURSOR.execute(sql, (self.name, self.task_list, self.id))
+            CURSOR.execute(sql, (self.name, self.id))
             CONN.commit()
         except Exception as e:
             return e
@@ -84,14 +86,16 @@ class Reviewer:
     def delete(self):
         try:
             sql = """
-                DELETE FROM departments
+                DELETE FROM reviewers
                 WHERE id = ?
             """
             CURSOR.execute(sql, (self.id,))
             CONN.commit()
         except Exception as e:
             return e
+        
     
+
     def posts_to_review(self):
         # return [post for post in self.posts if not post.reviewed]
         pass

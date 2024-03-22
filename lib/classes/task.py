@@ -1,6 +1,9 @@
+#lib/post.py
+from __init__ import CURSOR, CONN
 from post import Post
 from reviewer import Reviewer
 import datetime
+
 
 class Task:
     def __init__(self, id, status, created_at, updated_at, post_id, reviewer_id):
@@ -12,20 +15,22 @@ class Task:
         self.Reviewer_id = reviewer_id
 
     def __repr__(self):
-        return  f"<Task {self._id}," +
-                f"Status {self.status}," +
-                f"Created {self._created_at}," +
-                f"Last Updated {self._updated_at}," +
-                f"Post: {self._post_id}," +
-                f"Assigned Reviewer: {self._reviewer_id}>"
-    
+        return (
+            f"<Task {self._id},"
+            + f"Status {self.status},"
+            + f"Created {self._created_at},"
+            + f"Last Updated {self._updated_at},"
+            + f"Post: {self._post_id},"
+            + f"Assigned Reviewer: {self._reviewer_id}>"
+        )
+
     @property
     def status(self):
         return self._status
 
     @status.setter
     def status(self, status):
-        if status in range(3)
+        if status in range(3):
             self._status = status
         else:
             raise ValueError("Status must be 0, 1, or 2.")
@@ -52,32 +57,41 @@ class Task:
 
     @property
     def post_id(self):
-        return self._post_id    
+        return self._post_id
 
     @post_id.setter
     def post_id(self, post_id):
-        if not isinstance((find_by_post_id(post_id)[0]), Post);
+        if not isinstance((find_by_post_id(post_id)[0]), Post):
             raise ValueError("post_id must is not valid")
-        else: 
-            self._post_id = post_id 
-        
+        else:
+            self._post_id = post_id
+
     @property
     def reviewer_id(self):
-        return self._reviewer_id    
+        return self._reviewer_id
 
     @reviewer_id.setter
     def reviewer_id(self, reviewer_id):
-        if not isinstance((find_by_reviewer_id(reviewer_id)[0]), Reviewer);
+        if not isinstance((find_by_reviewer_id(reviewer_id)[0]), Reviewer):
             raise ValueError("reviewer_id must is not valid")
         else:
-        self._reviewer_id = reviewer_id
+            self._reviewer_id = reviewer_id
 
     def save(self):
         sql = """
         INSERT INTO tasks (status, created_at, updated_at, Post_id, Reviewer_id)
         VALUES (?, ?, ?, ?, ?)
         """
-        CURSOR.execute(sql, (self.status, self.created_at, self.updated_at, self.post_id, self.reviewer_id))
+        CURSOR.execute(
+            sql,
+            (
+                self.status,
+                self.created_at,
+                self.updated_at,
+                self.post_id,
+                self.reviewer_id,
+            ),
+        )
         CONN.commit()
 
     def update(self):
@@ -85,7 +99,9 @@ class Task:
         UPDATE tasks SET status = ?, updated_at = ?, Post_id = ?, Reviewer_id = ?
         WHERE id = ?
         """
-        CURSOR.execute(sql, (self.status, self.updated_at, self.post_id, self.reviewer_id, self.id))
+        CURSOR.execute(
+            sql, (self.status, self.updated_at, self.post_id, self.reviewer_id, self.id)
+        )
         CONN.commit()
 
     def delete(self):
@@ -96,7 +112,7 @@ class Task:
         CONN.commit()
 
     @classmethod
-    def create_table(cls)
+    def create_table(cls):
         sql = """
         CREATE TABLE IF NOT EXISTS tasks (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -143,14 +159,14 @@ class Task:
         sql = """
         SELECT * FROM tasks WHERE reviewer_id =?
         """
-        return CURSOR.execute(sql, (reviewer_id,)) or None  
+        return CURSOR.execute(sql, (reviewer_id,)) or None
 
     @classmethod
     def find_by_status(cls, status):
         sql = """
         SELECT * FROM tasks WHERE status = ?
         """
-        return CURSOR.execute(sql, (status,)) or None   
+        return CURSOR.execute(sql, (status,)) or None
 
     @classmethod
     def find_by_created_at(cls, created_at):

@@ -121,19 +121,21 @@ class Post:
         except Exception as e:
             print(f'Error getting posts:', e)
 
-    @classmethod
-    def find_by_id(cls, id):
-        try:
-            CURSOR.execute(
-                """
-                SELECT * FROM posts
-                WHERE id is ?;
-                """
-                (id,),
-            )
-            row = CURSOR.fetchone()
-            return cls(row[1], row[2], row[3], row[0]) if row else None
-        except Exception as e:
-            print(f'Error finding or creating post:', e)
+    # @classmethod
+    # def find_by_id(cls, id):
+    #     try:
+    #         CURSOR.execute(
+    #             """
+    #             SELECT * FROM posts
+    #             WHERE id is ?;
+    #             """
+    #             (id,),
+    #         )
+    #         row = CURSOR.fetchone()
+    #         return cls(row[1], row[2], row[3], row[0]) if row else None
+    #     except Exception as e:
+    #         print(f'Error finding or creating post:', e)
 
     #method to check for virality
+    
+    # update print exceptions to return stmts

@@ -1,5 +1,5 @@
 #lib/post.py
-from __init__ import CURSOR, CONN
+from classes.__init__ import CURSOR, CONN
 from datetime import datetime
 
 CONTENT_TYPES = [
@@ -11,10 +11,10 @@ CONTENT_TYPES = [
 class Post:
     all = {} # dict of all posts in db
     
-    def __init__(self, total_interactions, content_type, datetime, id=None):
+    def __init__(self, total_interactions, content_type, created_at, id=None):
         self.total_interactions = total_interactions
         self.content_type = content_type
-        self.created = datetime
+        self.created_at =  created_at
         self.id = id
         # self.title = post title, is this needed? or fake link?
         # self.author = author
@@ -22,7 +22,7 @@ class Post:
 
     def __repr__(self):
         return (
-            f'<Post {self.id}: {self.created}, {self.total_interactions}, {self.content_type}>'
+            f'<Post {self.id}: {self.created_at}, {self.total_interactions}, {self.content_type}>'
         )
 
     @property
@@ -48,16 +48,16 @@ class Post:
             self._content_type = content_type
 
     @property
-    def created(self):
-        return self._created
+    def created_at(self):
+        return self._created_at
     
-    @created.setter
-    def created(self, created): #! this needs fixing!
+    @created_at.setter
+    def created_at(self, created_at): #! this needs fixing!
         # timestamp = datetime.datetime.now()
-        if not isinstance(created, str):
+        if not isinstance(created_at, str):
             raise TypeError(f'Date Created must be a string.')
         else:
-            self._created = created
+            self._created_at = created_at
 
     #! ORM Class Methods
     @classmethod
@@ -70,18 +70,18 @@ class Post:
                         id INTEGER PRIMARY KEY,
                         total_interactions INTEGER,
                         content_type TEXT,
-                        created TEXT
+                        created_at TEXT
                     );
                     """
                 )
         except Exception as e:
-            print(f'Error creating table:', e)
+            print(f'Error creating table:', e) #make these a return
 
     @classmethod
     def drop_table(cls):
         try:
             with CONN:
-                CURSOR.execut(
+                CURSOR.execute(
                     """
                     DROP TABLE IF EXISTS posts;
                     """
@@ -89,11 +89,25 @@ class Post:
         except Exception as e:
             print(f'Error dropping table:', e)
 
-    @classmethod
-    def create(cls, total_interactions, content_type, created):
+    def save(self):
         try:
-            with CONN:
-                new_post = cls(total_interactions, content_type, created)
+            sql = """
+                INSERT INTO posts (total_interactions, content_type, created_at)
+                VALUES (?, ?, ?)
+            """
+            CURSOR.execute(sql,(self.total_interactions, self.content_type, self.created_at))
+            CONN.commit()
+            self.id = CURSOR.lastrowid
+            return self
+        except Exception as e:
+            CONN.rollback()
+            return e
+
+    @classmethod
+    def create(cls, total_interactions, content_type, created_at):
+        try:
+            with CONN: #use this!
+                new_post = cls(total_interactions, content_type, created_at)
                 new_post.save()
                 return new_post
         except Exception as e:
@@ -120,6 +134,9 @@ class Post:
             return [cls(row[1], row[2], row[3], row[0]) for row in rows]
         except Exception as e:
             print(f'Error getting posts:', e)
+            
+    # needs create method
+    
 
     # @classmethod
     # def find_by_id(cls, id):
@@ -138,4 +155,4 @@ class Post:
 
     #method to check for virality
     
-    # update print exceptions to return stmts
+    # update 

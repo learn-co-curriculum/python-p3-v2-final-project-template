@@ -1,7 +1,7 @@
 #lib/post.py
-from __init__ import CURSOR, CONN
-from post import Post
-from reviewer import Reviewer
+from classes.__init__ import CURSOR, CONN
+from classes.post import Post
+from classes.reviewer import Reviewer
 import datetime
 
 
@@ -113,30 +113,35 @@ class Task:
 
     @classmethod
     def create_table(cls):
-        sql = """
-        CREATE TABLE IF NOT EXISTS tasks (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            status INTEGER,
-            created_at DATETIME
-            updated_at DATETIME,
-            Post_id INTEGER,
-            Reviewer_id INTEGER"""
-
-        CURSOR.execute(sql)
-        CONN.comm0it()
+        try:
+            sql = """
+                CREATE TABLE IF NOT EXISTS tasks (
+                    id INTEGER PRIMARY KEY,
+                    status INTEGER,
+                    created_at DATETIME,
+                    updated_at DATETIME,
+                    post_id INTEGER,
+                    reviewer_id INTEGER
+                )
+                """
+            CURSOR.execute(sql)
+            CONN.commit()
+        except Exception as e:
+            CONN.rollback()
+            return e
 
     @classmethod
     def drop_table(cls):
         sql = """
-        DROP TABLE IF EXISTS tasks
-        """
+            DROP TABLE IF EXISTS tasks
+            """
         CURSOR.execute(sql)
         CONN.commit()
 
     @classmethod
     def find_by_id(cls, id):
         sql = """
-        SELECT * FROM tasks WHERE id = ?
+            SELECT * FROM tasks WHERE id = ?
         """
         return CURSOR.execute(sql, (id,)).fetchone() or None
 

@@ -171,6 +171,16 @@ class Restaurant:
             None
          )   
 
+    @classmethod
+    def get_all(cls):
+        try:
+            CURSOR.execute('SELECT * FROM restaurants')
+            rows = CURSOR.fetchall()
+            return [cls( row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[0]) for row in rows]
+        except Exception as e:
+            CONN.rollback()
+            print('An Error Occurred: ', e)
+            raise Exception
     # = = = = = = = = = = = = = => Table Methods   <= = = = = = = = = = = = = #
     
     @classmethod

@@ -1,6 +1,8 @@
 # cli_restaurants.py
 import click
 
+from classes.Restaurant import Restaurant
+
 @click.group()
 def restaurants():
     """Restaurants commands."""

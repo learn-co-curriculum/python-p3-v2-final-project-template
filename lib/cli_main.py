@@ -1,8 +1,8 @@
 # lib/cli.py
 import click
-from cli_visits import visits_menu
-from cli_user import user_account_menu
-from cli_restaurants import restaurants_menu
+from cli.cli_visits import visits_menu
+from cli.cli_user import user_account_menu
+from cli.cli_restaurants import restaurants_menu
 
 
 

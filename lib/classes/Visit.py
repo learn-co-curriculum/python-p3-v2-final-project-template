@@ -1,11 +1,12 @@
 from. import CURSOR, CONN
+import ipdb
 class Visit:
     
     all = []
     
     def __init__(self, rating, description, date, user, restaurant, id = None):
         
-        self.id = id
+        self._id = id
         self.rating = rating
         self.description = description
         self.date = date
@@ -15,7 +16,7 @@ class Visit:
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 # # # # # # # # # # # # # # =>    PROPERTIES    <=  # # # # # # # # # # # # # #
-        
+
     @property
     def rating(self):
         return self._rating
@@ -61,7 +62,7 @@ class Visit:
                 VALUES (?, ?, ?, ?, ?, ?)
             ''')
             try:
-                CURSOR.execute(sql, (self.rating, self.description, self.date, self.user, self.restaurant, self.id))
+                CURSOR.execute(sql, (self.rating, self.description, self.date, self.user, self.restaurant, self._id))
                 CONN.commit()
                 self._id = CURSOR.lastrowid  
                 
@@ -76,7 +77,7 @@ class Visit:
             WHERE id = ?
         """
         try:
-            CURSOR.execute(sql, (self.rating, self.description, self.date, self.user, self.restaurant, self.id))
+            CURSOR.execute(sql, (self.rating, self.description, self.date, self.user, self.restaurant, self._id))
             CONN.commit()
         except Exception as e:
             print('An Error Occurred:', e)
@@ -90,8 +91,10 @@ class Visit:
         try:
             CURSOR.execute(sql, (self._id,))
             CONN.commit()
+            # ipdb.set_trace()
         except Exception as e:
             print('An Error Occurred:', e)
+            CONN.rollback()
             raise Exception
 
     # = = = = = = = = = = = = = =>  Aggregate Methods   <= = = = = = = = = = = #

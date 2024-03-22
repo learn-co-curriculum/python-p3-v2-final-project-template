@@ -110,8 +110,8 @@ class User:
     @classmethod
     def instance_from_db(cls, row):
         return cls(
-            row[0], #id
-            row[1]  #name
+            row[1], #name
+            row[0]  #id
         )
     
     # = = = = = = = = = = = = = => Table Methods   <= = = = = = = = = = = = = #

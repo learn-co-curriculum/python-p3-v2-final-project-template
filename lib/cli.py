@@ -19,7 +19,7 @@ def main():
 
 
 def menu():
-    print("Please select an option:")
+    print("Welcome to Tokyo Omakase お任せ")
     print("0. Exit the program")
     print("1. Some useful function")
 

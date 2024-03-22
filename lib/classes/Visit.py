@@ -1,17 +1,17 @@
 from. import CURSOR, CONN
-import ipdb
+
 class Visit:
     
     all = []
     
-    def __init__(self, rating, description, date, user, restaurant, id = None):
+    def __init__(self, rating, description, date, user_id, restaurant_id, id = None):
         
         self._id = id
         self.rating = rating
         self.description = description
         self.date = date
-        self.user = user
-        self.restaurant = restaurant
+        self.user_id = user_id
+        self.restaurant_id = restaurant_id
         type(self).all.append(self)
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
@@ -58,11 +58,11 @@ class Visit:
 # # # # # # # # # # # # # # => INSTANCE METHODS <=  # # # # # # # # # # # # # #
     def save(self):
             sql = ('''
-                INSERT INTO visits (rating, description, date, user, restaurant, id)
+                INSERT INTO visits (rating, description, date, user_id, restaurant_id, id)
                 VALUES (?, ?, ?, ?, ?, ?)
             ''')
             try:
-                CURSOR.execute(sql, (self.rating, self.description, self.date, self.user, self.restaurant, self._id))
+                CURSOR.execute(sql, (self.rating, self.description, self.date, self.user_id, self.restaurant_id, self._id))
                 CONN.commit()
                 self._id = CURSOR.lastrowid  
                 
@@ -73,11 +73,11 @@ class Visit:
     def update(self):
         sql = """
             UPDATE visits
-            SET rating = ?, description = ?, date = ?, user = ?, restaurant = ?
+            SET rating = ?, description = ?, date = ?, user_id = ?, restaurant_id = ?
             WHERE id = ?
         """
         try:
-            CURSOR.execute(sql, (self.rating, self.description, self.date, self.user, self.restaurant, self._id))
+            CURSOR.execute(sql, (self.rating, self.description, self.date, self.user_id, self.restaurant_id, self._id))
             CONN.commit()
         except Exception as e:
             print('An Error Occurred:', e)
@@ -106,8 +106,8 @@ class Visit:
     # = = = = = = = = = = = = = => CRUD Methods   <= = = = = = = = = = = = = #
 
     @classmethod
-    def create(cls, rating, description, date, user, restaurant, id = None):
-        new_visit = cls(rating, description, date, user, restaurant, id)
+    def create(cls, rating, description, date, user_id, restaurant_id, id = None):
+        new_visit = cls(rating, description, date, user_id, restaurant_id, id)
         new_visit.save()
         return new_visit
     
@@ -118,8 +118,8 @@ class Visit:
             rating=row[1],
             description=row[2],
             date=row[3],
-            user=row[4],
-            restaurant=row[5],
+            user_id=row[4],
+            restaurant_id=row[5],
             id=row[0]
         )
             
@@ -133,8 +133,10 @@ class Visit:
             rating INTEGER,
             description TEXT,
             date TEXT,
-            user INTEGER,
-            restaurant INTEGER)
+            user_id INTEGER,
+            restaurant_id INTEGER,
+            FOREIGN KEY (user_id) REFERENCES users(id),
+            FOREIGN KEY (restaurant_id) REFERENCES restaurants(id) )
         ''')
         try:
             CURSOR.execute(sql)

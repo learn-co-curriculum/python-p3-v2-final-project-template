@@ -1,5 +1,4 @@
 from __init__ import CURSOR, CONN
-from faker import Faker
 
 class Reviewer:
     def __init__(self, name, id=None):

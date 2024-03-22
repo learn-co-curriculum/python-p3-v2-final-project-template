@@ -1,8 +1,8 @@
 #lib/classes/task.py
-from __init__ import CURSOR, CONN
+from classes.__init__ import CURSOR, CONN
 from post import Post
 from reviewer import Reviewer
-from datetime import datetime
+from datetime import Datetime
 
 class Task:
     def __init__(self, id, status, created_at, updated_at, post_id, reviewer_id):
@@ -52,7 +52,8 @@ class Task:
             raise ValueError("updated_at must be a DateTime object")
         elif updated_at.date() <= created_at.date():
             raise ValueError("cannot update Task before it was created")
-        self._updated_at = updated_at
+        else:
+            self._updated_at = updated_at
 
     @property
     def post_id(self):
@@ -61,7 +62,7 @@ class Task:
     @post_id.setter
     def post_id(self, post_id):
         if not isinstance((find_by_post_id(post_id)[0]), Post):
-            raise ValueError("post_id must is not valid")
+            raise ValueError("post_id is not found")
         else:
             self._post_id = post_id
 
@@ -72,65 +73,94 @@ class Task:
     @reviewer_id.setter
     def reviewer_id(self, reviewer_id):
         if not isinstance((find_by_reviewer_id(reviewer_id)[0]), Reviewer):
-            raise ValueError("reviewer_id must is not valid")
+            raise ValueError("reviewer_id not found")
         else:
             self._reviewer_id = reviewer_id
 
     def save(self):
-        sql = """
-        INSERT INTO tasks (status, created_at, updated_at, Post_id, Reviewer_id)
-        VALUES (?, ?, ?, ?, ?)
-        """
-        CURSOR.execute(
-            sql,
-            (
-                self.status,
-                self.created_at,
-                self.updated_at,
-                self.post_id,
-                self.reviewer_id,
-            ),
-        )
-        CONN.commit()
+        try:
+            with CONN:
+                CURSOR.execute("""
+                INSERT INTO tasks (status, created_at, updated_at, Post_id, Reviewer_id)
+                VALUES (?, ?, ?, ?, ?)""",
+                    (
+                    self.status,
+                    self.created_at,
+                    self.updated_at,
+                    self.post_id,
+                    self.reviewer_id,
+                    )
+                )
+            return self
+        except Exception as e:
+            return (e)
+
+    def create(self, status, created_at, updated_at, post_id, reviewer_id)
+        try:
+            with CONN:
+                CURSOR.execute("""
+                INSERT INTO tasks (status, created_at, updated_at, Post_id, Reviewer_id)
+                VALUES (?, ?, ?, ?, ?)""",
+                    (
+                    self.status = 0,
+                    self.created_at = datetime..now.isoform(),
+                    self.updated_at,
+                    self.post_id,
+                    self.reviewer_id,
+                    )
+                )
+            return self
+            self.id = CURSOR.lastrowid()
+        except Exception as e:
+            return (e)
 
     def update(self):
-        sql = """
-        UPDATE tasks SET status = ?, updated_at = ?, Post_id = ?, Reviewer_id = ?
-        WHERE id = ?
-        """
-        CURSOR.execute(
-            sql, (self.status, self.updated_at, self.post_id, self.reviewer_id, self.id)
-        )
-        CONN.commit()
+        try:    
+            with CONN:
+                CURSOR.execute("""
+                UPDATE tasks SET status = ?, updated_at = ?, Post_id = ?, Reviewer_id = ?
+                WHERE id = ?
+                """, (self.status, self.updated_at, self.post_id, self.reviewer_id, self.id)
+                )
+            return self
+        except Exception as e:
+            return (e)
+
 
     def delete(self):
-        sql = """
-        DELETE FROM tasks WHERE id = ?
-        """
-        CURSOR.execute(sql, (self.id,))
-        CONN.commit()
+        try:
+            with CONN:
+                CURSOR.execute("""
+                DELETE FROM tasks WHERE id = ?
+                """)
+        except Exception as e:
+            return (e)
 
     @classmethod
     def create_table(cls):
-        sql = """
-        CREATE TABLE IF NOT EXISTS tasks (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            status INTEGER,
-            created_at DATETIME
-            updated_at DATETIME,
-            Post_id INTEGER,
-            Reviewer_id INTEGER)"""
-
-        CURSOR.execute(sql)
-        CONN.commit()
+        try:
+            with CONN:
+                CURSOR.execute("""
+                CREATE TABLE IF NOT EXISTS tasks (
+                id INTEGER PRIMARY KEY,
+                status INTEGER,
+                created_at DATETIME
+                updated_at DATETIME,
+                Post_id INTEGER,
+                Reviewer_id INTEGER)""")
+            return cls
+        except Exception as e:
+            return (e)
 
     @classmethod
     def drop_table(cls):
-        sql = """
+    try:
+        with CONN:
+        CURSOR.execute("""
         DROP TABLE IF EXISTS tasks
-        """
-        CURSOR.execute(sql)
-        CONN.commit()
+        """) 
+    except Exception as e:
+        return (e)
 
     @classmethod
     def find_by_id(cls, id):

@@ -1,7 +1,7 @@
 #lib/classes/task.py
 from classes.__init__ import CURSOR, CONN
-from post import Post
-from reviewer import Reviewer
+from classess.post import Post
+from classess.reviewer import Reviewer
 import datetime 
 
 class Task:
@@ -91,7 +91,6 @@ class Task:
                     self.reviewer_id,
                     )
                 )
-            return self
         except Exception as e:
             return 
 
@@ -110,10 +109,9 @@ class Task:
                     self.reviewer_id,
                     )
                 )
-        self.id = CURSOR.lastword
-            return self
+            self.id = CURSOR.lastword
         except Exception as e:
-            return 
+            return e 
 
     def update(self):
         try:    
@@ -123,10 +121,9 @@ class Task:
                 WHERE id = ?
                 """, (self.status, self.updated_at, self.post_id, self.reviewer_id, self.id)
                 )
-            self.updated_at = updated_at.datetime()isoform()
-            return self
+            self.updated_at = updated_at.datetime().now.isoform()
         except Exception as e:
-            return 
+            return e
 
 
     def delete(self):
@@ -136,7 +133,7 @@ class Task:
                 DELETE FROM tasks WHERE id = ?
                 """)
         except Exception as e:
-            return 
+            return e
 
     @classmethod
     def create_table(cls):
@@ -149,10 +146,9 @@ class Task:
                 created_at DATETIME
                 updated_at DATETIME,
                 post_id INTEGER,
-                reviewer_id INTEGER)""")
-            return cls
+                reviewer_id INTEGER)"""
         except Exception as e:
-            return 
+            return e
 
     @classmethod
     def drop_table(cls):
@@ -246,5 +242,5 @@ class Task:
         sql = """
         UPDATE tasks SET status = ? WHERE id = ?
         """
-        CURSOR.execute(sql, (status, id))
+        return CURSOR.execute(sql, (status, id))
         CONN.commit()

@@ -1,8 +1,8 @@
 # lib/cli.py
 import click
-from cli_visits import visits
+from cli_visits import visits_menu
 from cli_user import user_account_menu
-from cli_restaurants import restaurants
+from cli_restaurants import restaurants_menu
 
 
 
@@ -11,14 +11,14 @@ def show_main_menu():
     click.echo("1: View User Account")
     click.echo("2: View Restaurants")
     click.echo("3: View Visits")
-    click.echo("4: Exit")
+    click.echo("4: Exit Program")
 
 
 def main_menu():
     menu_options = {
         '1': user_account_menu,  
-        '2': restaurants,   
-        '3': visits,        
+        '2': restaurants_menu,   
+        '3': visits_menu,        
     }
 
     while True:

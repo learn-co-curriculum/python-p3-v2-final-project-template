@@ -1,11 +1,9 @@
 import click
 
-@click.group(invoke_without_command=True)
-@click.pass_context
+@click.group()
 def user_account(ctx):
-    """User account commands. This is a placeholder for the group."""
-    if ctx.invoked_subcommand is None:
-        user_account_menu()
+    """User account commands."""
+    pass
 
 @user_account.command('view-profile')
 def view_profile():
@@ -22,7 +20,7 @@ def user_account_menu():
     click.echo("\nUser Account Menu:")
     click.echo("1: View Profile")
     click.echo("2: Edit Profile")
-    click.echo("3: Back to Main Menu")
+    click.echo("x: Back to Main Menu")
 
     user_account_options = {
         '1': view_profile,
@@ -34,9 +32,9 @@ def user_account_menu():
 
         if choice in user_account_options:
             click.clear()
-            user_account_options[choice].main
-        elif choice == '3':
+            user_account_options[choice]()  # Invoke the chosen function
+        elif choice == 'x':
             click.clear()
-            break  # Exit the user_account_menu
+            break  #exit the user_account_menu
         else:
             click.echo("Invalid choice. Please try again.")

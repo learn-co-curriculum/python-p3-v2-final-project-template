@@ -14,6 +14,6 @@ def seed_database():
     Task.create_table()
 
     # Create seed data
-    
-
+    # task_list = Task.create("Task List",)
+    Reviewer.create
 seed_database()

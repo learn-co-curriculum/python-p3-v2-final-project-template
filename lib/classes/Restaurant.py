@@ -94,8 +94,8 @@ class Restaurant:
     def website(self, website):
         if not isinstance(website, str):
             raise ValueError('Website must be a string')
-        elif len(website) < 1 or len(website) > 100:
-            raise ValueError('Website must be between 1 and 100 characters')
+        elif len(website) > 100:
+            raise ValueError('Website must be between 0 and 100 characters')
         else:
             self._website = website
 
@@ -120,8 +120,8 @@ class Restaurant:
     def misc(self, misc):
         if not isinstance(misc, str):
             raise ValueError('Misc must be a string')
-        elif len(misc) < 1 or len(misc) > 100:
-            raise ValueError('Misc must be between 1 and 100 characters')
+        elif len(misc) > 200:
+            raise ValueError('Misc must be between 0 and 100 characters')
         else:
             self._misc = misc
     
@@ -140,6 +140,7 @@ class Restaurant:
             CONN.commit()
             self._id = CURSOR.lastrowid
         except Exception as e:
+            CONN.rollback()
             print('An Error Occurred:', e)
             raise Exception
         
@@ -156,18 +157,19 @@ class Restaurant:
         
     @classmethod
     def instance_from_db(cls, row):
+
         return cls(
-            row[0], #id
-            row[1], #name
-            row[2], #address
-            row[3], #ward
-            row[4], #cuisine
-            row[5], #price
-            row[6], #website
-            row[7], #award
-            row[8], #misc
-            row[9], #description
-        )   
+            row["Name"], #name
+            row["Address"], #address
+            row["Wards"], #ward
+            row["Cuisine"], #cuisine
+            row["Price"], #price
+            row["WebsiteUrl"], #website
+            row["Award"], #award
+            row["FacilitiesAndServices"], #misc
+            row["Description"], #description
+            None
+         )   
 
     # = = = = = = = = = = = = = => Table Methods   <= = = = = = = = = = = = = #
     
@@ -193,6 +195,7 @@ class Restaurant:
             CURSOR.execute(sql)
             CONN.commit()
         except:
+            CONN.rollback()
             raise ValueError('')
         
     @classmethod
@@ -205,4 +208,5 @@ class Restaurant:
             CURSOR.execute(sql)
             CONN.commit()
         except:
+            CONN.rollback()
             raise ValueError('')

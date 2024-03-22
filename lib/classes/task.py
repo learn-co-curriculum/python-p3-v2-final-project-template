@@ -5,7 +5,7 @@ import datetime
 class Task:
     def __init__(self, id, status, created_at, updated_at, post_id, reviewer_id):
         self.id = id
-        self.status =[0 = 'created', 1 = 'assigned', 2= 'completed']
+        self.status = status
         self.created_at = created_at
         self.updated_at = updated_at
         self.Post_id = post_id
@@ -25,10 +25,10 @@ class Task:
 
     @status.setter
     def status(self, status):
-        if isinstance(status, Enum)
-            self._status = status   
+        if status in range(3)
+            self._status = status
         else:
-            raise ValueError("Status type does not exist.")
+            raise ValueError("Status must be 0, 1, or 2.")
 
     @property
     def created_at(self):
@@ -44,7 +44,7 @@ class Task:
 
     @updated_at.setter
     def updated_at(self, updated_at):
-        if not isinstance(updated_at, DateTime):
+        if not isinstance(updated_at, datetime):
             raise ValueError("updated_at must be a DateTime object")
         elif updated_at.date() == created_at.date():
             raise ValueError("cannot update Task before it was created")
@@ -56,9 +56,9 @@ class Task:
 
     @post_id.setter
     def post_id(self, post_id):
-        if not isinstance(post_id, Post);
-            raise ValueError("Post_id must be a Post object"
-        else: = "id" and Post.id exists and Post.post_id == post
+        if not isinstance((find_by_post_id(post_id)[0]), Post);
+            raise ValueError("post_id must is not valid")
+        else: 
             self._post_id = post_id 
         
     @property
@@ -67,28 +67,10 @@ class Task:
 
     @reviewer_id.setter
     def reviewer_id(self, reviewer_id):
+        if not isinstance((find_by_reviewer_id(reviewer_id)[0]), Reviewer);
+            raise ValueError("reviewer_id must is not valid")
+        else:
         self._reviewer_id = reviewer_id
-
-    def create_table(cls)
-        sql = """
-        CREATE TABLE IF NOT EXISTS tasks (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            status INTEGER,
-            created_at DATETIME
-            updated_at DATETIME,
-            Post_id INTEGER,
-            Reviewer_id INTEGER"""
-
-        CURSOR.execute(sql)
-        CONN.commit()
-
-    @classmethod
-    def drop_table(cls):
-        sql = """
-        DROP TABLE IF EXISTS tasks
-        """
-        CURSOR.execute(sql)
-        CONN.commit()
 
     def save(self):
         sql = """
@@ -111,6 +93,28 @@ class Task:
         DELETE FROM tasks WHERE id = ?
         """
         CURSOR.execute(sql, (self.id,))
+        CONN.commit()
+
+    @classmethod
+    def create_table(cls)
+        sql = """
+        CREATE TABLE IF NOT EXISTS tasks (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            status INTEGER,
+            created_at DATETIME
+            updated_at DATETIME,
+            Post_id INTEGER,
+            Reviewer_id INTEGER"""
+
+        CURSOR.execute(sql)
+        CONN.comm0it()
+
+    @classmethod
+    def drop_table(cls):
+        sql = """
+        DROP TABLE IF EXISTS tasks
+        """
+        CURSOR.execute(sql)
         CONN.commit()
 
     @classmethod
@@ -197,5 +201,3 @@ class Task:
         """
         CURSOR.execute(sql, (status, id))
         CONN.commit()
-
-    

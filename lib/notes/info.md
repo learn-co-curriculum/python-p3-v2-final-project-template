@@ -28,6 +28,7 @@
 - [ ] Third badge? Proceed with caution
 - [ ] Each reviewer can assign priority to tasks on their task list 
 - [ ] Priority levels: low, medium, high, blocker(all hands on deck)
+- [ ] See if we can centralize db creation etc
 
 
 ## Rough Schedule

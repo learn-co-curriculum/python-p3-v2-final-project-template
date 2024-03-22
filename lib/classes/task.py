@@ -1,8 +1,9 @@
-#lib/post.py
+
+#lib/classes/task.py
 from classes.__init__ import CURSOR, CONN
-from classes.post import Post
-from classes.reviewer import Reviewer
-import datetime
+from classess.post import Post
+from classess.reviewer import Reviewer
+import datetime 
 
 
 class Task:
@@ -11,8 +12,8 @@ class Task:
         self.status = status
         self.created_at = created_at
         self.updated_at = updated_at
-        self.Post_id = post_id
-        self.Reviewer_id = reviewer_id
+        self.post_id = post_id
+        self.reviewer_id = reviewer_id
 
     def __repr__(self):
         return (
@@ -40,7 +41,7 @@ class Task:
         return self._created_at
 
     @created_at.setter
-    def created_at(self, created_at):
+    def created_at(self):
         self._created_at = created_at
 
     @property
@@ -51,9 +52,10 @@ class Task:
     def updated_at(self, updated_at):
         if not isinstance(updated_at, datetime):
             raise ValueError("updated_at must be a DateTime object")
-        elif updated_at.date() == created_at.date():
+        elif self._updated_at <= self._created_at:
             raise ValueError("cannot update Task before it was created")
-        self._updated_at = updated_at
+        else:
+            self._updated_at = updated_at
 
     @property
     def post_id(self):
@@ -62,7 +64,7 @@ class Task:
     @post_id.setter
     def post_id(self, post_id):
         if not isinstance((find_by_post_id(post_id)[0]), Post):
-            raise ValueError("post_id must is not valid")
+            raise ValueError("post_id is not found")
         else:
             self._post_id = post_id
 
@@ -73,70 +75,92 @@ class Task:
     @reviewer_id.setter
     def reviewer_id(self, reviewer_id):
         if not isinstance((find_by_reviewer_id(reviewer_id)[0]), Reviewer):
-            raise ValueError("reviewer_id must is not valid")
+            raise ValueError("reviewer_id not found")
         else:
             self._reviewer_id = reviewer_id
 
     def save(self):
-        sql = """
-        INSERT INTO tasks (status, created_at, updated_at, Post_id, Reviewer_id)
-        VALUES (?, ?, ?, ?, ?)
-        """
-        CURSOR.execute(
-            sql,
-            (
-                self.status,
-                self.created_at,
-                self.updated_at,
-                self.post_id,
-                self.reviewer_id,
-            ),
-        )
-        CONN.commit()
+        try:
+            with CONN:
+                CURSOR.execute("""
+                INSERT INTO tasks (status, created_at, updated_at, Post_id, Reviewer_id)
+                VALUES (?, ?, ?, ?, ?)""",
+                    (
+                    self.status,
+                    self.created_at,
+                    self.updated_at,
+                    self.post_id,
+                    self.reviewer_id,
+                    )
+                )
+        except Exception as e:
+            return 
+
+    @classmethod
+    def create(self, status, created_at, updated_at, post_id, reviewer_id)
+        try:
+            with CONN:
+                CURSOR.execute("""
+                INSERT INTO tasks (status, created_at, updated_at, Post_id, Reviewer_id)
+                VALUES (?, ?, ?, ?, ?)""",
+                    (
+                    self.status = 0,
+                    self.created_at = datetime..now.isoform(),
+                    self.updated_at,
+                    self.post_id,
+                    self.reviewer_id,
+                    )
+                )
+            self.id = CURSOR.lastword
+        except Exception as e:
+            return e 
 
     def update(self):
-        sql = """
-        UPDATE tasks SET status = ?, updated_at = ?, Post_id = ?, Reviewer_id = ?
-        WHERE id = ?
-        """
-        CURSOR.execute(
-            sql, (self.status, self.updated_at, self.post_id, self.reviewer_id, self.id)
-        )
-        CONN.commit()
+        try:    
+            with CONN:
+                CURSOR.execute("""
+                UPDATE tasks SET status = ?, updated_at = ?, Post_id = ?, Reviewer_id = ?
+                WHERE id = ?
+                """, (self.status, self.updated_at, self.post_id, self.reviewer_id, self.id)
+                )
+            self.updated_at = updated_at.datetime().now.isoform()
+        except Exception as e:
+            return e
+
 
     def delete(self):
-        sql = """
-        DELETE FROM tasks WHERE id = ?
-        """
-        CURSOR.execute(sql, (self.id,))
-        CONN.commit()
+        try:
+            with CONN:
+                CURSOR.execute("""
+                DELETE FROM tasks WHERE id = ?
+                """)
+        except Exception as e:
+            return e
 
     @classmethod
     def create_table(cls):
         try:
-            sql = """
+            with CONN:
+                CURSOR.execute("""
                 CREATE TABLE IF NOT EXISTS tasks (
-                    id INTEGER PRIMARY KEY,
-                    status INTEGER,
-                    created_at DATETIME,
-                    updated_at DATETIME,
-                    post_id INTEGER,
-                    reviewer_id INTEGER
-                )
-                """
-            CURSOR.execute(sql)
-            CONN.commit()
+                id INTEGER PRIMARY KEY,
+                status INTEGER,
+                created_at DATETIME
+                updated_at DATETIME,
+                post_id INTEGER,
+                reviewer_id INTEGER)"""
         except Exception as e:
-            CONN.rollback()
             return e
 
     @classmethod
     def drop_table(cls):
-        sql = """
-            DROP TABLE IF EXISTS tasks
-            """
-        CURSOR.execute(sql)
-        CONN.commit()
+      try:
+          with CONN:
+          CURSOR.execute("""
+          DROP TABLE IF EXISTS tasks
+          """) 
+      except Exception as e:
+          return e
 
     @classmethod
     def find_by_id(cls, id):
@@ -162,7 +186,7 @@ class Task:
     @classmethod
     def find_by_reviewer_id(cls, reviewer_id):
         sql = """
-        SELECT * FROM tasks WHERE reviewer_id =?
+        SELECT * FROM tasks WHERE reviewer_id = ?
         """
         return CURSOR.execute(sql, (reviewer_id,)) or None
 
@@ -220,5 +244,5 @@ class Task:
         sql = """
         UPDATE tasks SET status = ? WHERE id = ?
         """
-        CURSOR.execute(sql, (status, id))
+        return CURSOR.execute(sql, (status, id))
         CONN.commit()

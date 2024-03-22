@@ -122,7 +122,17 @@ class Visit:
             restaurant_id=row[5],
             id=row[0]
         )
-            
+    
+    @classmethod
+    def get_all(cls):
+        try:
+            CURSOR.execute('SELECT * FROM visits')
+            rows = CURSOR.fetchall()
+            return [cls.instance_from_db(row) for row in rows]
+        except Exception as e:
+            CONN.rollback()
+            print('An Error Occurred: ', e)
+            raise Exception
     # = = = = = = = = = = = = = => Table Methods   <= = = = = = = = = = = = = #
     
     @classmethod

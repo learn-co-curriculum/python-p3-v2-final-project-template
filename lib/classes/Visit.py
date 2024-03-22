@@ -91,7 +91,7 @@ class Visit:
         try:
             CURSOR.execute(sql, (self._id,))
             CONN.commit()
-            ipdb.set_trace()
+            # ipdb.set_trace()
         except Exception as e:
             print('An Error Occurred:', e)
             CONN.rollback()

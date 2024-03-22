@@ -1,6 +1,6 @@
 #lib/post.py
 from classes.__init__ import CURSOR, CONN
-from datetime import datetime
+# from datetime import datetime
 
 CONTENT_TYPES = [
     'Picture',
@@ -25,6 +25,7 @@ class Post:
             f'<Post {self.id}: {self.created_at}, {self.total_interactions}, {self.content_type}>'
         )
 
+    #! Attributes and Props
     @property
     def total_interactions(self):
         return self._total_interactions
@@ -53,11 +54,13 @@ class Post:
     
     @created_at.setter
     def created_at(self, created_at): #! this needs fixing!
-        # timestamp = datetime.datetime.now()
         if not isinstance(created_at, str):
             raise TypeError(f'Date Created must be a string.')
         else:
             self._created_at = created_at
+
+    #! Association Methods go here
+    #method to check for virality
 
     #! ORM Class Methods
     @classmethod
@@ -75,7 +78,7 @@ class Post:
                     """
                 )
         except Exception as e:
-            print(f'Error creating table:', e) #make these a return
+            return e
 
     @classmethod
     def drop_table(cls):
@@ -87,20 +90,6 @@ class Post:
                     """
                 )
         except Exception as e:
-            print(f'Error dropping table:', e)
-
-    def save(self):
-        try:
-            sql = """
-                INSERT INTO posts (total_interactions, content_type, created_at)
-                VALUES (?, ?, ?)
-            """
-            CURSOR.execute(sql,(self.total_interactions, self.content_type, self.created_at))
-            CONN.commit()
-            self.id = CURSOR.lastrowid
-            return self
-        except Exception as e:
-            CONN.rollback()
             return e
 
     @classmethod
@@ -111,16 +100,23 @@ class Post:
                 new_post.save()
                 return new_post
         except Exception as e:
-            print(f'Error creating doctor:', e)
+            return e
 
     @classmethod
-    def new_from_db(cls, row):
+    def new_from_db(cls):
         try:
-            post = cls(row[1], row[2], row[3], row[0])
-            cls.all[post.id] = post
-            return post
+            with CONN:
+                CURSOR.execute(
+                    """
+                    SELECT * FROM posts
+                    ORDER BY id DESC
+                    LIMIT 1;
+                    """
+                )
+                row = CURSOR.fetchone()
+            row = cls(row[1], row[2], row[3], row[0]) if row else None
         except Exception as e:
-            print(f'Error creating post from database:', e)
+            return e
 
     @classmethod
     def get_all(cls):
@@ -133,26 +129,73 @@ class Post:
             rows = CURSOR.fetchall()
             return [cls(row[1], row[2], row[3], row[0]) for row in rows]
         except Exception as e:
-            print(f'Error getting posts:', e)
-            
-    # needs create method
-    
+            return e
 
-    # @classmethod
-    # def find_by_id(cls, id):
-    #     try:
-    #         CURSOR.execute(
-    #             """
-    #             SELECT * FROM posts
-    #             WHERE id is ?;
-    #             """
-    #             (id,),
-    #         )
-    #         row = CURSOR.fetchone()
-    #         return cls(row[1], row[2], row[3], row[0]) if row else None
-    #     except Exception as e:
-    #         print(f'Error finding or creating post:', e)
+    @classmethod
+    def find_by_id(cls, id):
+        try:
+            with CONN:
+                CURSOR.execute(
+                    """
+                    SELECT * FROM posts
+                    WHERE id is ?;
+                    """
+                    (id,),
+                )
+                row = CURSOR.fetchone()
+                return cls(row[1], row[2], row[3], row[0]) if row else None
+        except Exception as e:
+            return e
 
-    #method to check for virality
-    
-    # update 
+    #! ORM Instance Methods
+    def save(self):
+        try:
+            with CONN:
+                CURSOR.execute(
+                    """
+                    INSERT INTO posts (total_interactions, content_type, created_at)
+                    VALUES (?, ?, ?);
+                    """,
+                    (self.total_interactions, self.content_type, self.created_at)
+                )
+                self.id = CURSOR.lastrowid
+                type(self).all[self.id] = self
+                return self
+        except Exception as e:
+            return e
+
+    def update(self):
+        try:
+            with CONN:
+                CURSOR.execute(
+                    """
+                    UPDATE posts 
+                    SET total_interactions = ?, content_type = ?
+                    WHERE id = ?
+                    """,
+                    (self.total_interactions, self.content_type, self.created_at, self.id)
+                )
+                CONN.commit()
+                type(self).all[self.id] = self
+                return self
+        except Exception as e:
+            return e
+
+    def delete(self):
+        try:
+            with CONN:
+                CURSOR.execute(
+                    """
+                    DELETE FROM posts
+                    WHERE id = ?
+                    """,
+                    (self.id,),
+                )
+                CONN.commit()
+                del type(self).all[self.id]
+                self.id = CURSOR.lastrowid
+                type(self).all[self.id] = self
+                self.id = None
+                return self
+        except Exception as e:
+            return e

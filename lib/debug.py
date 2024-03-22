@@ -18,5 +18,13 @@ Task.create_table()
 r = Reviewer.create('Jasmine Patel')
 arr = Reviewer('Bob Ross')
 arr.save()
+post1 = Post.create(5200000, 'Text', 'created_at')
+post2 = Post.create(23400000, 'Video', 'created_at')
+post3 = Post.create(6000, 'Picture', 'created_at')
+
 print('herro!')
+print(post1)
+print(post2)
+print(post3)
+
 ipdb.set_trace()

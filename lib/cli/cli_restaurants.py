@@ -1,7 +1,7 @@
 # cli_restaurants.py
 import click
-
 from classes.Restaurant import Restaurant
+
 
 @click.group()
 def restaurants():
@@ -9,9 +9,45 @@ def restaurants():
     pass
 
 @restaurants.command()
-def view_all():
+def view_all_restaurants():
     """View all restaurants."""
-    pass
+    def next_page():
+        click.echo('Next Page')
+
+    def prev_page():
+        click.echo('Previous Page')
+
+    all = Restaurant.get_all()
+
+    #limit search by 20
+    restaurants = all[0:20]
+
+    #print the name and cuisine 
+    for restaurant in restaurants:
+        click.echo(f"{restaurant.id}. {restaurant.name} || {restaurant.cuisine}")
+        
+    click.echo("\nRestaurants Menu:")
+    click.echo("1: Next Page")
+    click.echo("2: Previous Page")
+    click.echo("x: Back to Main Menu")
+
+    view_all_options = {
+        '1': next_page,
+        '2': prev_page
+    }
+
+    while True:
+        choice = click.prompt("Please enter your choice", type=str)
+
+        if choice in view_all_options:
+            click.clear()
+            view_all_options[choice]()  # Invoke the chosen function
+        elif choice == 'x':
+            click.clear()
+            break #exit the restaurants_menu
+        else:
+            click.echo("Invalid choice. Please try again.")
+
 
 @restaurants.command()
 def filter_by_cuisine():
@@ -32,7 +68,7 @@ def restaurants_menu():
     click.echo("x: Back to Main Menu")
 
     restaurants_options = {
-        '1': view_all,
+        '1': view_all_restaurants,
         '2': filter_by_cuisine,
         '3': filter_by_location,
     }

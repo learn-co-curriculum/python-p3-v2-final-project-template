@@ -1,6 +1,13 @@
 from classes.__init__ import CURSOR, CONN
-
+from faker import Faker
 class Reviewer:
+
+    fake = Faker()
+    print("\nExample 1:")
+    for _ in range(2):
+        print("Random Word:", fake.word())
+        print("Sentence:", fake.sentence())
+
     def __init__(self, name, id=None):
         self.id = id
         self.name = name
@@ -46,6 +53,7 @@ class Reviewer:
             CURSOR.execute(sql)
             CONN.commit()
         except Exception as e:
+            CONN.rollback()
             return e
     
     def save(self):
@@ -81,6 +89,7 @@ class Reviewer:
             CURSOR.execute(sql, (self.name, self.id))
             CONN.commit()
         except Exception as e:
+            CONN.rollback()
             return e
 
     def delete(self):
@@ -92,9 +101,14 @@ class Reviewer:
             CURSOR.execute(sql, (self.id,))
             CONN.commit()
         except Exception as e:
+            CONN.rollback()
             return e
         
-    
+    def find_by_id(self):
+        pass
+
+    def get_all(self):
+        pass
 
     def posts_to_review(self):
         # return [post for post in self.posts if not post.reviewed]

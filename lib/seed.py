@@ -6,9 +6,10 @@ from classes.reviewer import Reviewer
 from classes.task import Task
 
 def seed_database():
-    Post.drop_table()
-    Reviewer.drop_table()
     Task.drop_table()
+    Reviewer.drop_table()
+    Post.drop_table()
+    
     Post.create_table()
     Reviewer.create_table()
     Task.create_table()

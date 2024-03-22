@@ -1,9 +1,8 @@
-#lib/post.py
+#lib/classes/task.py
 from __init__ import CURSOR, CONN
 from post import Post
 from reviewer import Reviewer
-import datetime
-
+from datetime import datetime
 
 class Task:
     def __init__(self, id, status, created_at, updated_at, post_id, reviewer_id):
@@ -11,8 +10,8 @@ class Task:
         self.status = status
         self.created_at = created_at
         self.updated_at = updated_at
-        self.Post_id = post_id
-        self.Reviewer_id = reviewer_id
+        self.post_id = post_id
+        self.reviewer_id = reviewer_id
 
     def __repr__(self):
         return (
@@ -40,7 +39,7 @@ class Task:
         return self._created_at
 
     @created_at.setter
-    def created_at(self, created_at):
+    def created_at(self):
         self._created_at = created_at
 
     @property
@@ -51,7 +50,7 @@ class Task:
     def updated_at(self, updated_at):
         if not isinstance(updated_at, datetime):
             raise ValueError("updated_at must be a DateTime object")
-        elif updated_at.date() == created_at.date():
+        elif updated_at.date() <= created_at.date():
             raise ValueError("cannot update Task before it was created")
         self._updated_at = updated_at
 
@@ -120,10 +119,10 @@ class Task:
             created_at DATETIME
             updated_at DATETIME,
             Post_id INTEGER,
-            Reviewer_id INTEGER"""
+            Reviewer_id INTEGER)"""
 
         CURSOR.execute(sql)
-        CONN.comm0it()
+        CONN.commit()
 
     @classmethod
     def drop_table(cls):
@@ -157,7 +156,7 @@ class Task:
     @classmethod
     def find_by_reviewer_id(cls, reviewer_id):
         sql = """
-        SELECT * FROM tasks WHERE reviewer_id =?
+        SELECT * FROM tasks WHERE reviewer_id = ?
         """
         return CURSOR.execute(sql, (reviewer_id,)) or None
 

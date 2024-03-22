@@ -22,6 +22,7 @@ def main_menu():
     }
 
     while True:
+        click.clear()
         show_main_menu()
         choice = click.prompt("Please enter your choice", type=str)
 

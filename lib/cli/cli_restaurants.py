@@ -1,14 +1,15 @@
 # cli_restaurants.py
 import click
-from classes.Restaurant import Restaurant
 
+@restaurants.command()
+def filter_by_cuisine():
+    """Filter restaurants by cuisine."""
+    
 
-@click.group()
-def restaurants():
-    """Restaurants commands."""
-    pass
-
-
+@restaurants.command()
+def filter_by_location():
+    """Filter restaurants by location."""
+    click.echo("Restaurants filtered by location.")
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 # # # # # # # # # # # # # => Restaurants Menu <=  # # # # # # # # # # # # # # #

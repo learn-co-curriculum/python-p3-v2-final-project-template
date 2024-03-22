@@ -2,7 +2,7 @@
 from classes.__init__ import CURSOR, CONN
 from post import Post
 from reviewer import Reviewer
-from datetime import Datetime
+import datetime 
 
 class Task:
     def __init__(self, id, status, created_at, updated_at, post_id, reviewer_id):
@@ -50,7 +50,7 @@ class Task:
     def updated_at(self, updated_at):
         if not isinstance(updated_at, datetime):
             raise ValueError("updated_at must be a DateTime object")
-        elif updated_at.date() <= created_at.date():
+        elif self._updated_at <= self._created_at:
             raise ValueError("cannot update Task before it was created")
         else:
             self._updated_at = updated_at
@@ -93,8 +93,9 @@ class Task:
                 )
             return self
         except Exception as e:
-            return (e)
+            return 
 
+    @classmethod
     def create(self, status, created_at, updated_at, post_id, reviewer_id)
         try:
             with CONN:
@@ -109,10 +110,10 @@ class Task:
                     self.reviewer_id,
                     )
                 )
+        self.id = CURSOR.lastword
             return self
-            self.id = CURSOR.lastrowid()
         except Exception as e:
-            return (e)
+            return 
 
     def update(self):
         try:    
@@ -122,9 +123,10 @@ class Task:
                 WHERE id = ?
                 """, (self.status, self.updated_at, self.post_id, self.reviewer_id, self.id)
                 )
+            self.updated_at = updated_at.datetime()isoform()
             return self
         except Exception as e:
-            return (e)
+            return 
 
 
     def delete(self):
@@ -134,7 +136,7 @@ class Task:
                 DELETE FROM tasks WHERE id = ?
                 """)
         except Exception as e:
-            return (e)
+            return 
 
     @classmethod
     def create_table(cls):
@@ -146,11 +148,11 @@ class Task:
                 status INTEGER,
                 created_at DATETIME
                 updated_at DATETIME,
-                Post_id INTEGER,
-                Reviewer_id INTEGER)""")
+                post_id INTEGER,
+                reviewer_id INTEGER)""")
             return cls
         except Exception as e:
-            return (e)
+            return 
 
     @classmethod
     def drop_table(cls):
@@ -160,7 +162,7 @@ class Task:
         DROP TABLE IF EXISTS tasks
         """) 
     except Exception as e:
-        return (e)
+        return 
 
     @classmethod
     def find_by_id(cls, id):

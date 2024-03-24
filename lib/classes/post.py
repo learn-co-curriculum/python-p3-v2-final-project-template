@@ -1,5 +1,6 @@
+#!/usr/bin/env python3
 from classes.__init__ import CURSOR, CONN
-# from datetime import datetime
+from datetime import datetime
 
 CONTENT_TYPES = [
     'Picture',
@@ -10,10 +11,10 @@ CONTENT_TYPES = [
 class Post:
     all = {} # dict of all posts in db
     
-    def __init__(self, total_interactions, content_type, created_at, id=None):
+    def __init__(self, total_interactions, content_type, id=None):
         self.total_interactions = total_interactions
         self.content_type = content_type
-        self.created_at =  created_at
+        self.created_at = datetime.now()
         self.id = id
         # self.title = post title, is this needed? or fake link?
         # self.author = author
@@ -32,7 +33,7 @@ class Post:
     @total_interactions.setter
     def total_interactions(self, total_interactions):
         if not isinstance(total_interactions, int):
-            raise ValueError(f'Total Interactions must be an integer.')
+            raise ValueError(f"'total_interactions' must be an integer.")
         else:
             self._total_interactions = total_interactions
 
@@ -52,11 +53,11 @@ class Post:
         return self._created_at
     
     @created_at.setter
-    def created_at(self, created_at): #! this needs fixing!
-        if not isinstance(created_at, str):
-            raise TypeError(f'Date Created must be a string.')
+    def created_at(self, value):
+        if not isinstance(value, datetime):
+            raise TypeError(f"'created_at' must be a valid datetime object.")
         else:
-            self._created_at = created_at
+            self._created_at = value
 
     #! Association Methods go here
     #method to check for virality
@@ -92,12 +93,12 @@ class Post:
             return e
 
     @classmethod
-    def create(cls, total_interactions, content_type, created_at):
+    def create(cls, total_interactions, content_type):
         try:
-            with CONN: #use this!
-                new_post = cls(total_interactions, content_type, created_at)
+            with CONN:
+                new_post = cls(total_interactions, content_type)
                 new_post.save()
-                return new_post
+            return new_post
         except Exception as e:
             return e
 
@@ -113,14 +114,14 @@ class Post:
                     """
                 )
                 row = CURSOR.fetchone()
-            row = cls(row[1], row[2], row[3], row[0]) if row else None
+            return cls._create_post_from_row(row) if row else None
         except Exception as e:
             return e
 
     @classmethod
     def get_all(cls):
         try:
-            CURSOR.exceute(
+            CURSOR.execute(
                 """
                 SELECT * FROM posts;
                 """
@@ -138,13 +139,21 @@ class Post:
                     """
                     SELECT * FROM posts
                     WHERE id is ?;
-                    """
+                    """,
                     (id,),
                 )
                 row = CURSOR.fetchone()
-                return cls(row[1], row[2], row[3], row[0]) if row else None
+            return cls._create_post_from_row(row) if row else None
         except Exception as e:
             return e
+
+    @classmethod # datetime helper, seperates responsibility of parsing datetime string
+    def _create_post_from_row(cls, row):
+        if row:
+            created_at = datetime.strptime(row[3], "%Y-%m-%d %H:%M:%S")
+            return cls(row[1], row[2], created_at, row[0])
+        return None
+
 
     #! ORM Instance Methods
     def save(self):
@@ -159,7 +168,7 @@ class Post:
                 )
                 self.id = CURSOR.lastrowid
                 type(self).all[self.id] = self
-                return self
+            return self
         except Exception as e:
             return e
 
@@ -172,11 +181,11 @@ class Post:
                     SET total_interactions = ?, content_type = ?
                     WHERE id = ?
                     """,
-                    (self.total_interactions, self.content_type, self.created_at, self.id)
+                    (self.total_interactions, self.content_type, self.id)
                 )
                 CONN.commit()
                 type(self).all[self.id] = self
-                return self
+            return self
         except Exception as e:
             return e
 
@@ -192,9 +201,7 @@ class Post:
                 )
                 CONN.commit()
                 del type(self).all[self.id]
-                self.id = CURSOR.lastrowid
-                type(self).all[self.id] = self
                 self.id = None
-                return self
+            return self
         except Exception as e:
             return e

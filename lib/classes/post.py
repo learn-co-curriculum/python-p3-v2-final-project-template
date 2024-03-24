@@ -9,21 +9,25 @@ CONTENT_TYPES = [
     'Text',
 ]
 
+FACT_CHECKED = [
+    'Verified',
+    'Debunked',
+    'Caution'
+]
+
 class Post:
     all = {} # dict of all posts in db
     
-    def __init__(self, total_interactions, content_type, id=None):
+    def __init__(self, total_interactions, content_type, id=None, review_badge=None):
         self.total_interactions = total_interactions
         self.content_type = content_type
         self.created_at = datetime.now()
         self.id = id
-        # self.title = post title, is this needed? or fake link?
-        # self.author = author
-        # status badges factual, false, use with caution
+        self.review_badge = review_badge # All posts set to None until reviewed
 
     def __repr__(self):
         return (
-            f'<Post {self.id}: {self.created_at}, {self.total_interactions}, {self.content_type}>'
+            f'<Post {self.id}: {self.created_at}, {self.total_interactions}, {self.content_type}>, {self.review_badge}'
         )
 
     #! Attributes and Props
@@ -45,7 +49,7 @@ class Post:
     @content_type.setter
     def content_type(self, content_type):
         if not content_type in CONTENT_TYPES:
-            raise ValueError(f'Content Type must be in list of CONTENT_TYPES.')
+            raise ValueError(f"'content_type' must be in list of CONTENT_TYPES.")
         else:
             self._content_type = content_type
 
@@ -59,6 +63,17 @@ class Post:
             raise TypeError(f"'created_at' must be a valid datetime object.")
         else:
             self._created_at = value
+
+    @property
+    def review_badge(self):
+        return self._review_badge
+    
+    @review_badge.setter
+    def review_badge(self, new_review_badge):
+        if not new_review_badge in FACT_CHECKED:
+            raise ValueError(f"'review_badge' must be in list of FACT_CHECKED.")
+        else:
+            self._review_badge = new_review_badge
 
     #! Association Methods go here
     #method to check for virality
@@ -74,7 +89,8 @@ class Post:
                         id INTEGER PRIMARY KEY,
                         total_interactions INTEGER,
                         content_type TEXT,
-                        created_at TEXT
+                        created_at TEXT,
+                        review_badge TEXT
                     );
                     """
                 )
@@ -94,10 +110,10 @@ class Post:
             return e
 
     @classmethod
-    def create(cls, total_interactions, content_type):
+    def create(cls, total_interactions, content_type, review_badge):
         try:
             with CONN:
-                new_post = cls(total_interactions, content_type)
+                new_post = cls(total_interactions, content_type, review_badge)
                 new_post.save()
             return new_post
         except Exception as e:
@@ -152,7 +168,7 @@ class Post:
     def _create_post_from_row(cls, row):
         if row:
             created_at = datetime.strptime(row[3], "%Y-%m-%d %H:%M:%S")
-            return cls(row[1], row[2], created_at, row[0])
+            return cls(row[1], row[2], created_at, row[4], row[0])
         return None
 
 
@@ -165,7 +181,7 @@ class Post:
                     INSERT INTO posts (total_interactions, content_type, created_at)
                     VALUES (?, ?, ?);
                     """,
-                    (self.total_interactions, self.content_type, self.created_at)
+                    (self.total_interactions, self.content_type, self.created_at, self.review_badge)
                 )
                 self.id = CURSOR.lastrowid
                 type(self).all[self.id] = self
@@ -179,10 +195,10 @@ class Post:
                 CURSOR.execute(
                     """
                     UPDATE posts 
-                    SET total_interactions = ?, content_type = ?
+                    SET total_interactions = ?, content_type = ?, review_badge = ?
                     WHERE id = ?
                     """,
-                    (self.total_interactions, self.content_type, self.id)
+                    (self.total_interactions, self.content_type, self.review_badge, self.id)
                 )
                 CONN.commit()
                 type(self).all[self.id] = self

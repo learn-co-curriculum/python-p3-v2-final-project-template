@@ -2,11 +2,6 @@ from classes.__init__ import CURSOR, CONN
 from faker import Faker
 class Reviewer:
 
-    fake = Faker()
-    print("\nExample 1:")
-    for _ in range(2):
-        print("Random Word:", fake.word())
-        print("Sentence:", fake.sentence())
 
     def __init__(self, name, id=None):
         self.id = id
@@ -81,15 +76,16 @@ class Reviewer:
 
     def update(self):
         try:
-            sql = """
-                UPDATE reviewers
-                SET name = ?
-                WHERE id = ?
-            """
-            CURSOR.execute(sql, (self.name, self.id))
-            CONN.commit()
+            with CONN:
+                CURSOR.execute(
+                    """
+                    UPDATE reviewers
+                    SET name = ?
+                    WHERE id = ?
+                    """,
+                    (self.name, self.id),
+                )
         except Exception as e:
-            CONN.rollback()
             return e
 
     def delete(self):
@@ -104,12 +100,29 @@ class Reviewer:
             CONN.rollback()
             return e
         
+
+
     def find_by_id(self):
         pass
 
+    @classmethod
     def get_all(self):
         pass
 
-    def posts_to_review(self):
-        # return [post for post in self.posts if not post.reviewed]
+    def tasks(self):
+        from classes.task import Task
+
+        try:
+            with CONN:
+                CURSOR.execute(
+                    """
+                        SELECT * FROM tasks
+                        WHERE reviewer_id = ?
+                    """,
+                    (self.id,),
+                )
+                rows = CURSOR.fetchall()
+                # return [Task()]
+        except Exception as e:
+            return e
         pass

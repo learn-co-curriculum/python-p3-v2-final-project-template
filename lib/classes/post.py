@@ -24,7 +24,7 @@ class Post:
         self.created_at = datetime.now()
         self.id = id
         self.review_badge = review_badge # All posts set to None until reviewed
-        self.is_viral = is_viral
+        # self.is_viral = is_viral
 
     def __repr__(self):
         return (
@@ -76,16 +76,16 @@ class Post:
         else:
             self._review_badge = new_review_badge
 
-    @property
-    def is_viral(self):
-        return self._is_viral
+    # @property
+    # def is_viral(self):
+    #     return self._is_viral
     
-    @is_viral.setter
-    def is_viral(self, total_interactions):
-        if total_interactions >= 3500000:
-            self._is_viral = True
-        else:
-            self._is_viral = False #! need to update all ORM methods
+    # @is_viral.setter
+    # def is_viral(self, total_interactions):
+    #     if total_interactions >= 3500000:
+    #         self._is_viral = True
+    #     else:
+    #         self._is_viral = False #! need to update all ORM methods
 
     #! Association Methods go here
     #method to check for virality

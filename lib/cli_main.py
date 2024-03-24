@@ -1,39 +1,33 @@
-# lib/cli.py
 import click
-from cli.cli_visits import visits_menu
-from cli.cli_user import user_account_menu
-from cli.cli_restaurants import restaurants_menu
+from cli.pages import (
+    define_page,
+    navigate,
+    go_back,
+    draw_page,
+    handle_user_input,
+    exit_program,
+    pages,
+    current_page,
+    previous_pages,
+)
+from cli.user_account_page import user_account_page
+from cli.restaurants_page import restaurants_page
+from cli.visits_page import visits_page
 
+@click.command()
+def main():
+    # Define pages
+    home_page = define_page("home", "Home")
+    home_page.add_option("User Account", lambda: navigate("user_account"))
+    home_page.add_option("Restaurants", lambda: navigate("restaurants"))
+    home_page.add_option("Visits", lambda: navigate("visits"))
 
-
-def show_main_menu():
-    click.echo("\nMain Menu:")
-    click.echo("1: View User Account")
-    click.echo("2: View Restaurants")
-    click.echo("3: View Visits")
-    click.echo("4: Exit Program")
-
-
-def main_menu():
-    menu_options = {
-        '1': user_account_menu,  
-        '2': restaurants_menu,   
-        '3': visits_menu,        
-    }
+    navigate("home")
 
     while True:
-        click.clear()
-        show_main_menu()
-        choice = click.prompt("Please enter your choice", type=str)
+        draw_page()
+        user_input = click.prompt("Enter your choice").lower()
+        handle_user_input(user_input)
 
-        if choice in menu_options:
-            click.clear()
-            menu_options[choice]()
-        elif choice == '4':
-            click.echo("Goodbye!")
-            break
-        else:
-            click.clear()
-            click.echo("Invalid choice. Please try again.")
-if __name__ == '__main__':
-    main_menu()
+if __name__ == "__main__":
+    main()

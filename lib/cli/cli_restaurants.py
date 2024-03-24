@@ -1,5 +1,11 @@
 # cli_restaurants.py
 import click
+from classes.Restaurant import Restaurant
+
+@click.group()	
+def restaurants():	
+    """Restaurants commands."""	
+    pass
 
 @restaurants.command()
 def filter_by_cuisine():

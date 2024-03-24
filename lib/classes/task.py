@@ -1,9 +1,7 @@
-
-#lib/classes/task.py
 from classes.__init__ import CURSOR, CONN
-from classess.post import Post
-from classess.reviewer import Reviewer
-import datetime 
+from classes.post import Post
+from classes.reviewer import Reviewer
+import datetime
 
 
 class Task:

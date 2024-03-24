@@ -18,12 +18,13 @@ FACT_CHECKED = [
 class Post:
     all = {} # dict of all posts in db
     
-    def __init__(self, total_interactions, content_type, id=None, review_badge=None):
+    def __init__(self, total_interactions, content_type, id=None, review_badge=None, is_viral=False):
         self.total_interactions = total_interactions
         self.content_type = content_type
         self.created_at = datetime.now()
         self.id = id
         self.review_badge = review_badge # All posts set to None until reviewed
+        self.is_viral = is_viral
 
     def __repr__(self):
         return (
@@ -74,6 +75,17 @@ class Post:
             raise ValueError(f"'review_badge' must be in list of FACT_CHECKED.")
         else:
             self._review_badge = new_review_badge
+
+    @property
+    def is_viral(self):
+        return self._is_viral
+    
+    @is_viral.setter
+    def is_viral(self, total_interactions):
+        if total_interactions >= 3500000:
+            self._is_viral = True
+        else:
+            self._is_viral = False #! need to update all ORM methods
 
     #! Association Methods go here
     #method to check for virality

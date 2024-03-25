@@ -1,5 +1,7 @@
+#!/usr/bin/env python3
+#lib/classes/reviewer.py
 from classes.__init__ import CURSOR, CONN
-from faker import Faker
+
 class Reviewer:
     all = {}
 
@@ -7,6 +9,11 @@ class Reviewer:
         self.id = id
         self.name = name
         self.posts = []
+
+    def __repr__(self):
+        return (
+            f"<Reviewer {self.id}: {self.name}>"
+            )
     
     @property
     def name(self):
@@ -21,22 +28,16 @@ class Reviewer:
         else:
             self._name = name
 
-    def __repr__(self):
-        return f"<Reviewer {self.id}: {self.name}>"
-
     @classmethod
     def create_table(cls):
         try:
             with CONN:
-                CURSOR.executescript(
+                CURSOR.execute(
                     """
-                    BEGIN;
                     CREATE TABLE IF NOT EXISTS reviewers (
                         id INTEGER PRIMARY KEY,
                         name TEXT
                     );
-                    CREATE INDEX idx_full_name ON reviewers (full_name);
-                    COMMIT
                     """
                 )
         except Exception as e:
@@ -53,28 +54,13 @@ class Reviewer:
                 )
         except Exception as e:
             return e
-    
-    def save(self):
-        try:
-            with CONN:
-                CURSOR.execute(
-                    """
-                    INSERT INTO reviewers (name)
-                    VALUES (?)
-                    """
-                )
-                CONN.commit()
-                self.id = CURSOR.lastrowid
-                type(self).all[self.id] = self
-                return self
-        except Exception as e:
-            return e
 
     @classmethod
     def create(cls, name):
         try:
-            reviewer = cls(name)
-            rev = reviewer.save()
+            with CONN:
+                reviewer = cls(name)
+                rev = reviewer.save()
             return rev
         except Exception as e:
             return e
@@ -90,6 +76,9 @@ class Reviewer:
                     """,
                     (self.name, self.id),
                 )
+                CONN.commit()
+                type(self).all[self.id] = self
+                return self
         except Exception as e:
             return e
 
@@ -103,9 +92,10 @@ class Reviewer:
                     """,
                     (self.id,),
                 )
-            CONN.commit()
-            del type(self).all[self.id]
-            self.id = None
+                CONN.commit()
+                del type(self).all[self.id]
+                self.id = None
+            return self
         except Exception as e:
             return e
         
@@ -116,7 +106,7 @@ class Reviewer:
             CURSOR.execute(
                 f"""
                 SELECT * FROM reviewers
-                WHERE id is ?;
+                WHERE id = ?;
             """,
             (id,),
             )
@@ -139,20 +129,37 @@ class Reviewer:
         except Exception as e:
             return e
 
-    def tasks(self):
-        from classes.task import Task
-
+    def save(self):
         try:
             with CONN:
                 CURSOR.execute(
                     """
-                        SELECT * FROM tasks
-                        WHERE reviewer_id = ?
+                    INSERT INTO reviewers (name)
+                    VALUES (?);
                     """,
-                    (self.id,),
+                    (self.name,),
                 )
-                rows = CURSOR.fetchall()
-                # return [Task()]
+                CONN.commit()
+                self.id = CURSOR.lastrowid
+                type(self).all[self.id] = self
+            return self
         except Exception as e:
             return e
-        pass
+
+    # def tasks(self):
+    #     from classes.task import Task
+
+    #     try:
+    #         with CONN:
+    #             CURSOR.execute(
+    #                 """
+    #                     SELECT * FROM tasks
+    #                     WHERE reviewer_id = ?
+    #                 """,
+    #                 (self.id,),
+    #             )
+    #             rows = CURSOR.fetchall()
+    #             # return [Task()]
+    #     except Exception as e:
+    #         return e
+    #     pass

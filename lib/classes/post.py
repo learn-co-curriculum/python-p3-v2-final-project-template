@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-#lib/post.py
+#lib/classes.post.py
 from classes.__init__ import CURSOR, CONN
 from datetime import datetime
 
 CONTENT_TYPES = [
     'Picture',
     'Video',
-    'Text',
+    'Text'
 ]
 
 FACT_CHECKED = [
@@ -17,19 +17,24 @@ FACT_CHECKED = [
 
 class Post:
     all = {} # dict of all posts in db
-    
-    def __init__(self, total_interactions, content_type, id=None, review_badge=None, is_viral=False):
+
+    def __init__(self, total_interactions, content_type, id=None):
         self.total_interactions = total_interactions
         self.content_type = content_type
         self.created_at = datetime.now()
+        self.review_badge = None # All posts set to None until reviewed
+        self.is_viral = self.calculate_virality(total_interactions)
         self.id = id
-        self.review_badge = review_badge # All posts set to None until reviewed
-        # self.is_viral = is_viral
+        
 
     def __repr__(self):
         return (
-            f'<Post {self.id}: {self.created_at}, {self.total_interactions}, {self.content_type}>, {self.review_badge}'
+            f"""<Post {self.id}: Creation Date: {self.created_at}, Interactions: {self.total_interactions}, Content Type: {self.content_type}, Viral: {self.is_viral}, Review Badge: {self.review_badge}>"""
         )
+
+    @staticmethod # belongs class, not its instances. can be called without creating an instance
+    def calculate_virality(total_interactions):
+        return total_interactions >= 3500000
 
     #! Attributes and Props
     @property
@@ -57,7 +62,7 @@ class Post:
     @property
     def created_at(self):
         return self._created_at
-    
+
     @created_at.setter
     def created_at(self, value):
         if not isinstance(value, datetime):
@@ -65,30 +70,35 @@ class Post:
         else:
             self._created_at = value
 
-    @property
-    def review_badge(self):
-        return self._review_badge
-    
-    @review_badge.setter
     def review_badge(self, new_review_badge):
         if not new_review_badge in FACT_CHECKED:
             raise ValueError(f"'review_badge' must be in list of FACT_CHECKED.")
         else:
-            self._review_badge = new_review_badge
+            self.review_badge = new_review_badge
 
-    # @property
-    # def is_viral(self):
-    #     return self._is_viral
-    
-    # @is_viral.setter
-    # def is_viral(self, total_interactions):
-    #     if total_interactions >= 3500000:
-    #         self._is_viral = True
-    #     else:
-    #         self._is_viral = False #! need to update all ORM methods
+    def is_viral(self, total_interactions):
+        if total_interactions >= 3500000:
+            self.is_viral = True
+        else:
+            self.is_viral = False
 
-    #! Association Methods go here
-    #method to check for virality
+    def task(self):
+        from classes.task import Task
+
+        try:
+            with CONN:
+                CURSOR.execute(
+                    """
+                    SELECT * FROM tasks
+                    WHERE post_id = ?
+                    """,
+                    (self.id,),
+                )
+                rows = CURSOR.fetchall()
+                return [Task(row[1], row[2], row[3], row[4], row[5], row[0]) for row in rows]
+        except Exception as e:
+            return e
+    # ! if has task, get/show task status
 
     #! ORM Class Methods
     @classmethod
@@ -102,7 +112,8 @@ class Post:
                         total_interactions INTEGER,
                         content_type TEXT,
                         created_at TEXT,
-                        review_badge TEXT
+                        review_badge TEXT,
+                        is_viral TEXT
                     );
                     """
                 )
@@ -121,7 +132,7 @@ class Post:
         except Exception as e:
             return e
 
-    @classmethod
+    @classmethod #! minimum fields: interactions and content type -- optional attr
     def create(cls, total_interactions, content_type, review_badge):
         try:
             with CONN:
@@ -132,31 +143,25 @@ class Post:
             return e
 
     @classmethod
-    def new_from_db(cls):
+    def new_from_db(cls, row):
         try:
-            with CONN:
-                CURSOR.execute(
-                    """
-                    SELECT * FROM posts
-                    ORDER BY id DESC
-                    LIMIT 1;
-                    """
-                )
-                row = CURSOR.fetchone()
-            return cls._create_post_from_row(row) if row else None
+            post = cls(row[1], row[2], row[3], row[4], row[5], row[0])
+            cls.all[post.id] = post
+            return Post
         except Exception as e:
             return e
 
     @classmethod
     def get_all(cls):
         try:
-            CURSOR.execute(
-                """
-                SELECT * FROM posts;
-                """
-            )
-            rows = CURSOR.fetchall()
-            return [cls(row[1], row[2], row[3], row[0]) for row in rows]
+            with CONN:
+                CURSOR.execute(
+                    """
+                    SELECT * FROM posts;
+                    """
+                )
+                rows = CURSOR.fetchall()
+                return [cls(row[1], row[2], row[3], row[4], row[5], row[0]) for row in rows]
         except Exception as e:
             return e
 
@@ -176,13 +181,27 @@ class Post:
         except Exception as e:
             return e
 
-    @classmethod # datetime helper, seperates responsibility of parsing datetime string
+    @classmethod
+    def find_by(cls, attr, val):
+        try:
+            CURSOR.execute(
+                f"""
+                SELECT * FROM doctors
+                WHERE {attr} is ?;
+                """,
+                (val,),
+            )
+            row = CURSOR.fetchone()
+            return cls._create_post_from_row(row) if row else None
+        except Exception as e:
+            return e
+
+    @classmethod # datetime helper. Parses datetime str
     def _create_post_from_row(cls, row):
         if row:
             created_at = datetime.strptime(row[3], "%Y-%m-%d %H:%M:%S")
-            return cls(row[1], row[2], created_at, row[4], row[0])
+            return cls(row[1], row[2], created_at, row[4], row[5], row[0])
         return None
-
 
     #! ORM Instance Methods
     def save(self):
@@ -190,11 +209,12 @@ class Post:
             with CONN:
                 CURSOR.execute(
                     """
-                    INSERT INTO posts (total_interactions, content_type, created_at)
-                    VALUES (?, ?, ?);
+                    INSERT INTO posts (total_interactions, content_type, created_at, review_badge, is_viral)
+                    VALUES (?, ?, ?, ?, ?);
                     """,
-                    (self.total_interactions, self.content_type, self.created_at, self.review_badge)
+                    (self.total_interactions, self.content_type, self.created_at, self.review_badge, self.is_viral)
                 )
+                CONN.commit()
                 self.id = CURSOR.lastrowid
                 type(self).all[self.id] = self
             return self
@@ -207,14 +227,14 @@ class Post:
                 CURSOR.execute(
                     """
                     UPDATE posts 
-                    SET total_interactions = ?, content_type = ?, review_badge = ?
+                    SET total_interactions = ?, content_type = ?, review_badge = ?, is_viral = ?
                     WHERE id = ?
                     """,
-                    (self.total_interactions, self.content_type, self.review_badge, self.id)
+                    (self.total_interactions, self.content_type, self.review_badge, self.is_viral, self.id),
                 )
                 CONN.commit()
                 type(self).all[self.id] = self
-            return self
+                return self
         except Exception as e:
             return e
 
@@ -228,9 +248,9 @@ class Post:
                     """,
                     (self.id,),
                 )
-                CONN.commit()
+                CONN.commit() #rm memoized obj
                 del type(self).all[self.id]
-                self.id = None
+                self.id = None #nullify id
             return self
         except Exception as e:
             return e

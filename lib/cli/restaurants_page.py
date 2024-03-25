@@ -23,9 +23,25 @@ def filter_by_cuisine():
 
 def filter_by_location():
     page_number = 1
-    print('WORKING')
+    location = ''
+
     while True:
-        display_restaurants_by_location('Shibuya', page_number)
+        print('Shibuya')
+        print('Shinjuku')
+        print('FUCHU')
+        choice = click.prompt('\nType your choice')
+        if choice == 'Shibuya':
+            location = 'Shibuya'
+            break
+        elif choice == 'Shinjuku':
+            location = 'Shinjuku'
+            break
+        else:
+            click.echo('Please input a valid location')
+            
+
+    while True:
+        display_restaurants_by_location(location, page_number)
         choice = click.prompt("\nEnter your choice (p: Previous Page, n: Next Page, x: Back to Restaurants Menu)")
         if choice == 'p' and page_number > 1:
             page_number -= 1

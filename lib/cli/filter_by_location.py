@@ -6,7 +6,7 @@ def display_restaurants_by_location(location, page_number):
     offset = (page_number - 1) * restaurants_per_page
     restaurants = Restaurant.get_restaurants_by_location(location, limit=restaurants_per_page, offset=offset)
     
-    total_restaurants = len(restaurants)
+    total_restaurants = Restaurant.get_count_by_location(location)
     total_pages = (total_restaurants + restaurants_per_page - 1) // restaurants_per_page
 
     click.clear()

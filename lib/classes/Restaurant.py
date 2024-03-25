@@ -462,6 +462,17 @@ class Restaurant:
             CONN.rollback()
             print('An Error Occurred: ', e)
             raise Exception
+        
+    @classmethod
+    def get_count_by_location(cls, location):
+        try:
+            CURSOR.execute('SELECT COUNT(*) FROM restaurants WHERE ward = ?', (location,))
+            count = CURSOR.fetchone()[0]
+            return count
+        except Exception as e:
+            CONN.rollback()
+            print('An Error Occurred: ', e)
+            raise Exception
 
     @classmethod
     def get_total_pages(cls, restaurants_per_page):

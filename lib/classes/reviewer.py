@@ -1,5 +1,8 @@
+#!/usr/bin/env python3
+#lib/classes/reviewer.py
 from classes.__init__ import CURSOR, CONN
 from faker import Faker
+
 class Reviewer:
     all = {}
 

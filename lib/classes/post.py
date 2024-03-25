@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-#lib/post.py
+#lib/classes.post.py
 from classes.__init__ import CURSOR, CONN
 from datetime import datetime
 
@@ -25,14 +25,14 @@ class Post:
         self.review_badge = None # All posts set to None until reviewed
         self.is_viral = self.calculate_virality(total_interactions)
         self.id = id
+        
 
     def __repr__(self):
         return (
-            f'<Post {self.id}: {self.created_at}, {self.total_interactions}, {self.content_type},'
-            f'{self.review_badge}, Viral: {self.is_viral}>'
+            f"""<Post {self.id}: Creation Date: {self.created_at}, Interactions: {self.total_interactions}, Content Type: {self.content_type}, Viral: {self.is_viral}, Review Badge: {self.review_badge}>"""
         )
 
-    @staticmethod
+    @staticmethod # belongs class, not its instances. can be called without creating an instance
     def calculate_virality(total_interactions):
         return total_interactions >= 3500000
 
@@ -70,38 +70,35 @@ class Post:
         else:
             self._created_at = value
 
-    @property
-    def review_badge(self):
-        return self._review_badge
-
-    @review_badge.setter
     def review_badge(self, new_review_badge):
         if not new_review_badge in FACT_CHECKED:
             raise ValueError(f"'review_badge' must be in list of FACT_CHECKED.")
         else:
-            self._review_badge = new_review_badge
+            self.review_badge = new_review_badge
 
-    @property
-    def is_viral(self):
-        return self._is_viral
-    
-    @is_viral.setter
     def is_viral(self, total_interactions):
         if total_interactions >= 3500000:
-            self._is_viral = True
+            self.is_viral = True
         else:
-            self._is_viral = False
+            self.is_viral = False
 
-    #! Association Methods go here
-    def create_task(self):
+    def task(self):
         from classes.task import Task
-        fact_check_task = Task(post_id=self.id) # create a Task instance
-        
-        try: #save instance to db
-            fact_check_task.save()
-            return fact_check_task
+
+        try:
+            with CONN:
+                CURSOR.execute(
+                    """
+                    SELECT * FROM tasks
+                    WHERE post_id = ?
+                    """,
+                    (self.id,),
+                )
+                rows = CURSOR.fetchall()
+                return [Task(row[1], row[2], row[3], row[4], row[5], row[0]) for row in rows]
         except Exception as e:
             return e
+    # ! if has task, get/show task status
 
     #! ORM Class Methods
     @classmethod

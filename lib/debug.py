@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
 # lib/debug.py
-from rich import print as richp
+# from rich import print
+from rich.console import Console
+from rich import inspect
+import rich
 # from classes.__init__ import CONN, CURSOR
 from classes.reviewer import Reviewer
 from classes.post import Post
 from classes.task import Task
 
+console = Console()
 
 def setup_db():
     Task.drop_table()
@@ -27,16 +31,16 @@ def setup_db():
     r8 = Reviewer.create('Lucas Rodriguez')
     r9 = Reviewer.create('Isabella Khan')
     r10 = Reviewer.create('Mason Kim')
-    richp(r1)
-    richp(r2)
-    richp(r3)
-    richp(r4)
-    richp(r5)
-    richp(r6)
-    richp(r7)
-    richp(r8)
-    richp(r9)
-    richp(r10)
+    print(r1)
+    print(r2)
+    print(r3)
+    print(r4)
+    print(r5)
+    print(r6)
+    print(r7)
+    print(r8)
+    print(r9)
+    print(r10)
 
     
     p1 = Post.create(5200000, 'Text', 'Verified')
@@ -45,14 +49,15 @@ def setup_db():
     p4 = Post.create(4500000, 'Picture', 'Debunked')
     p5 = Post.create(66400000, 'Video', 'Verified')
     p6 = Post.create(8000000, 'Text', 'Caution')
-    richp(p1)
-    richp(p2)
-    richp(p3)
-    richp(p4)
-    richp(p5)
-    richp(p6)
+    console.print(p1)
+    console.print(p2)
+    console.print(p3)
+    console.print(p4)
+    console.print(p5)
+    console.print(p6, style='bold underline blue')
 
 if __name__ == '__main__':
     setup_db()
-    richp('db seeded!')
+    print('db seeded!')
     import ipdb; ipdb.set_trace()
+    inspect(rich)

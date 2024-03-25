@@ -27,3 +27,30 @@ test_3.save()
 test_3.delete()
 
 ipdb.set_trace()
+
+
+
+# def view_all_restaurants():
+#     """View all restaurants."""
+
+#     all = Restaurant.get_all()
+#     page = [0,20]
+#     restaurants = all[page[0]: page[1]]
+
+#     def parse_by_page():
+#         pass
+
+#     def next_page():
+#         p[0] += 20
+#         p[1] += 20
+#         restaurants = all[page[0]: page[1]]
+
+#     def prev_page():
+#         click.echo('Previous Page')
+
+
+#     #limit search by 20
+
+#     #print the name and cuisine 
+#     for restaurant in restaurants:
+#         click.echo(f"{restaurant.id}. {restaurant.name} || {restaurant.cuisine}")

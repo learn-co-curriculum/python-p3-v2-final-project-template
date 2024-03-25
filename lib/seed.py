@@ -2,6 +2,7 @@ import csv
 from classes.Restaurant import Restaurant
 from classes.Visit import Visit
 from classes.User import User
+from cli.filter_by_location import display_restaurants_by_location
 
 tokyo_restaurants = 'lib/data/tokyo_restaurants.csv'
 
@@ -43,3 +44,23 @@ Restaurant.create_table()
 Visit.create_table()
 
 seed_database(tokyo_restaurants)
+
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+
+display_restaurants_by_location('Shibuya', 1)
+
+
+
+
+
+

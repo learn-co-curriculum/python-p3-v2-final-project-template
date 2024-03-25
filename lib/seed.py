@@ -42,4 +42,8 @@ User.create_table()
 Restaurant.create_table()
 Visit.create_table()
 
-seed_database(tokyo_restaurants)
+
+
+
+
+

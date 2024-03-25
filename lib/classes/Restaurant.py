@@ -17,7 +17,6 @@ class Restaurant:
         self.id = id
 
 
-
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 # # # # # # # # # # # # # # =>    PROPERTIES    <=  # # # # # # # # # # # # # #
         from . import CURSOR, CONN

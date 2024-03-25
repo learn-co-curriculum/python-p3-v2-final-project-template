@@ -24,10 +24,12 @@ def navigate(page_id):
 
 def go_back():
     global current_page
+
     if previous_pages:
         current_page = previous_pages.pop()
     else:
-        click.echo("No previous page found.")
+        print('\nYou are in the home page\n')
+
 
 def draw_page():
     click.clear()
@@ -46,7 +48,11 @@ def handle_user_input(input):
     if input == 'q':
         exit_program()
     elif input == 'x':
-        go_back()
+        if not len(previous_pages) == 1:
+            go_back()
+        else:
+            print('\nNo previous page found')
+
     elif input.isdigit():
         index = int(input)
         if 1 <= index <= len(current_page.options):

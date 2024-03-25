@@ -46,7 +46,10 @@ def handle_user_input(input):
     if input == 'q':
         exit_program()
     elif input == 'x':
-        go_back()
+            if previous_pages:
+                go_back()
+            else:
+                click.echo("No previous page found.")
     elif input.isdigit():
         index = int(input)
         if 1 <= index <= len(current_page.options):

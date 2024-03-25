@@ -26,23 +26,68 @@ def filter_by_location():
     location = ''
 
     while True:
+
+        click.clear()
+        print('Choose a Location')
+        print('==================')
+        print('\n')
         print('Shibuya')
+        print('---')
         print('Shinjuku')
-        print('FUCHU')
-        choice = click.prompt('\nType your choice')
-        if choice == 'Shibuya':
+        print('---')
+        print('Bunkyo/Sumida/Taito')
+        print('---')
+        print('Chiyoda')
+        print('---')
+        print('Chuo')
+        print('---')
+        print('Meguro')
+        print('---')
+        print('Minato')
+        print('---')
+        print('Setagaya/Shinagawa')
+        print('\n')
+
+        choice = click.prompt('\nType your choice').lower()
+        
+        if choice == 'shibuya':
             location = 'Shibuya'
             break
-        elif choice == 'Shinjuku':
+        elif choice == 'shinjuku':
             location = 'Shinjuku'
             break
+        elif choice == 'bunkyo/Sumida/Taito':
+            location = 'Bunkyo/Sumida/Taito'
+            break
+        elif choice == 'chiyoda':
+            location = 'Chiyoda'
+            break
+        elif choice == 'chuo':
+            location = 'Chuo'
+            break
+        elif choice == 'minato':
+            location = 'Minato'
+            break
+        elif choice == 'meguro':
+            location = 'Meguro'
+            break
+        elif choice == 'setagaya/Shinagawa':
+            location = 'Setagaya/Shinagawa'
+            break
+        elif choice == 'x':
+            navigate("restaurants")
+            break
         else:
-            click.echo('Please input a valid location')
+            print('\nPlease input a valid location\n')
+            click.pause()
             
 
     while True:
+
+        click.clear()
         display_restaurants_by_location(location, page_number)
         choice = click.prompt("\nEnter your choice (p: Previous Page, n: Next Page, x: Back to Restaurants Menu)")
+
         if choice == 'p' and page_number > 1:
             page_number -= 1
         elif choice == 'n':

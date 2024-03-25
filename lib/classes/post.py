@@ -132,7 +132,7 @@ class Post:
         except Exception as e:
             return e
 
-    @classmethod #! minimum fields: interactions and content type -- how to handle optional attr?
+    @classmethod #! minimum fields: interactions and content type -- optional attr
     def create(cls, total_interactions, content_type, review_badge):
         try:
             with CONN:

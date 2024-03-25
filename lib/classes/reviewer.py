@@ -58,8 +58,9 @@ class Reviewer:
     @classmethod
     def create(cls, name):
         try:
-            reviewer = cls(name)
-            rev = reviewer.save()
+            with CONN:
+                reviewer = cls(name)
+                rev = reviewer.save()
             return rev
         except Exception as e:
             return e

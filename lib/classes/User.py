@@ -1,8 +1,11 @@
 from . import CURSOR, CONN
+import click
 
 
 class User:
     
+    current_user = None
+
     def __init__(self, name, id = None):
         self.name = name
         self.id = id
@@ -90,7 +93,7 @@ class User:
         
     
 
-    # = = = = = = = = = = = = = =>  Aggregate Methods   <= = = = = = = = = = = #
+    # = = = = = = = = = = = = = =>  Association Methods   <= = = = = = = = = = = #
 
     def get_visits():
         pass
@@ -139,7 +142,28 @@ class User:
             CONN.rollback()
             print('An Error Occured: ', e)
             raise Exception
-    
+        
+    @classmethod
+    def get_user_by_name(cls, name):
+        try:
+            query = 'SELECT * FROM users WHERE name = ?'
+            CURSOR.execute(query, (name,))
+            obj = CURSOR.fetchone()
+            return cls(obj[1], obj[0])
+        except Exception as e:
+            CONN.rollback()
+            print('An Error Occured: ', e)
+            raise Exception
+        
+    @classmethod
+    def set_current_user(cls, user):
+
+        if not cls.current_user:
+            cls.current_user = user
+        else:
+            print('User already logged in')
+            click.pause()
+
     # = = = = = = = = = = = = = => Table Methods   <= = = = = = = = = = = = = #
     
     @classmethod

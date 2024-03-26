@@ -46,7 +46,16 @@ def main():
 def menu():
     print("Please select an option:")
     print("0. Exit the program")
-    print("1. Some useful function")
+    print("1. List all reviewers")
+    print("2. Find reviewer by id")
+    print("3: Create reviewer")
+    print("4: Update reviewer")
+    print("5: Delete reviewer")
+    print("6. List all posts")
+    print("7. Find post by id")
+    print("8: Create post")
+    print("10: Update post")
+    print("11: Delete post")
 
 if __name__ == "__main__":
     main()

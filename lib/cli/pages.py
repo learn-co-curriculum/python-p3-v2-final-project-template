@@ -52,7 +52,6 @@ def handle_user_input(input):
             go_back()
         else:
             print('\nNo previous page found')
-
     elif input.isdigit():
         index = int(input)
         if 1 <= index <= len(current_page.options):

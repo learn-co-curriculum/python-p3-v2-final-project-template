@@ -219,7 +219,33 @@ class Restaurant:
             CONN.rollback()
             print('An Error Occurred: ', e)
             raise Exception
-        
+    
+    @classmethod
+    def get_restaurants_by_cuisine(cls, cuisine, limit=None, offset=None):
+        try:
+            query = "SELECT * FROM restaurants WHERE cuisine = ?"
+            params = (cuisine,)
+            if limit is not None and offset is not None:
+                query += " LIMIT ? OFFSET ?"
+                params += (limit, offset)
+            CURSOR.execute(query, params)
+            rows = CURSOR.fetchall()
+            return [cls(row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[0]) for row in rows]
+        except Exception as e:
+            CONN.rollback()
+            print('An Error Occurred: ', e)
+            raise Exception
+
+    @classmethod
+    def get_count_by_cuisine(cls, cuisine):
+        try:
+            CURSOR.execute("SELECT COUNT(*) FROM restaurants WHERE cuisine = ?", (cuisine,))
+            count = CURSOR.fetchone()[0]
+            return count
+        except Exception as e:
+            CONN.rollback()
+            print('An Error Occurred: ', e)
+            raise Exception
     # = = = = = = = = = = = = = => Table Methods   <= = = = = = = = = = = = = #
     
     @classmethod

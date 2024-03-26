@@ -1,6 +1,8 @@
 import click
 from classes.Restaurant import Restaurant
+from classes.Visit import Visit
 from rich import print
+from cli.pages import navigate
 
 def display_restaurants(page_number):
     restaurants_per_page = 10
@@ -22,3 +24,27 @@ def display_restaurants(page_number):
             print(f"[blue]Description[/blue]:[white]{restaurant.description[0:120]}...[/white]")
             print("---")
     print(f"\nPage {page_number} of {total_pages}")
+
+def select_restaurant(restaurant_id):
+    restaurant = Restaurant.get_by_id(restaurant_id)
+    if restaurant:
+        display_restaurant_details(restaurant)
+    else:
+        click.echo("Invalid restaurant number. Please try again.")
+
+def display_restaurant_details(restaurant):
+    click.clear()
+    click.echo("Restaurant Details")
+    click.echo("=" * 20)
+    click.echo(f"Name: {restaurant.name}")
+    click.echo(f"Cuisine: {restaurant.cuisine}")
+    click.echo(f"Address: {restaurant.address}")
+    click.echo(f"Ward: {restaurant.ward}")
+    click.echo(f"Price: {restaurant.price}")
+    click.echo(f"Website: {restaurant.website}")
+    click.echo(f"Award: {restaurant.award}")
+    click.echo(f"Misc: {restaurant.misc}")
+    click.echo(f"Description: {restaurant.description}")
+    click.echo("\nPress any key to go back to the restaurant list.")
+    click.getchar()
+    navigate("view_all_restaurants")

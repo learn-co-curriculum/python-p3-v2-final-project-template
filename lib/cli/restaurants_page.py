@@ -1,5 +1,5 @@
 from cli.pages import define_page, navigate
-from cli.view_all_restaurants import display_restaurants
+from cli.view_all_restaurants import display_restaurants, select_restaurant
 from cli.filter_by_location import display_restaurants_by_location
 from cli.filter_by_cuisine import display_restaurants_by_cuisine
 import click
@@ -169,6 +169,21 @@ def filter_by_location():
             break
         else:
             click.echo("Invalid choice. Please try again.")
+
+def view_all_restaurants():
+    page_number = 1
+    while True:
+        display_restaurants(page_number)
+        choice = click.prompt("Enter your choice")
+        if choice.lower() == 'p' and page_number > 1:
+            page_number -= 1
+        elif choice.lower() == 'n':
+            page_number += 1
+        elif choice.lower() == 'x':
+            navigate("restaurants")
+            break
+        else:
+            select_restaurant(choice)
 
 restaurants_page = define_page("restaurants", "Restaurants")
 restaurants_page.add_option("View All Restaurants", view_all_restaurants)

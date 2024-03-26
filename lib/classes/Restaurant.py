@@ -504,3 +504,16 @@ class Restaurant:
         total_restaurants = cls.get_total_count()
         total_pages = (total_restaurants + restaurants_per_page - 1) // restaurants_per_page
         return total_pages
+    @classmethod
+    def get_by_id(cls, restaurant_id):
+        try:
+            CURSOR.execute("SELECT * FROM restaurants WHERE id = ?", (restaurant_id,))
+            row = CURSOR.fetchone()
+            if row:
+                return cls(row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[0])
+            else:
+                return None
+        except Exception as e:
+            CONN.rollback()
+            print('An Error Occurred: ', e)
+            raise Exception

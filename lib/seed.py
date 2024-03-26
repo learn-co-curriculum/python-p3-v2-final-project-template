@@ -23,22 +23,21 @@ def seed_tables():
     for _ in range(10):
         try:
             Reviewer.create(fake.name())
-            print('Created reviewers')
+            Post.create(fake.number(),)
+            print('Created reviewer and post')
         except Exception as e:
             return e
 
-    # for _ in range(6):
-    #     try:
-    #         # Post.create(fake.number)
-    #     except Exception as e:
-    #         return e
-
-
-    # Create seed data
-    # task_list = Task.create("Task List",)
-    # Reviewer.create
-# seed_database()
-
+    for _ in range(6):
+        try:
+            reviewers = Reviewer.get_all()
+            posts = Post.get_all()
+            Task.create(
+                # put things here
+            )
+            print('Created task')
+        except Exception as e:
+            return e
 
 if __name__ == "__main__":
     drop_tables()

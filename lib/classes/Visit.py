@@ -99,6 +99,16 @@ class Visit:
 
     # = = = = = = = = = = = = = =>  Aggregate Methods   <= = = = = = = = = = = #
         
+    @classmethod
+    def get_visits_by_restaurant_id(cls, restaurant_id):
+        try:
+            CURSOR.execute('SELECT * FROM visits WHERE restaurant_id = ?', (restaurant_id,))
+            rows = CURSOR.fetchall()
+            return [cls.instance_from_db(row) for row in rows]
+        except Exception as e:
+            CONN.rollback()
+            print('An Error Occurred: ', e)
+            raise Exception
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 # # # # # # # # # # # # # # =>  CLASS METHODS   <=  # # # # # # # # # # # # # # 

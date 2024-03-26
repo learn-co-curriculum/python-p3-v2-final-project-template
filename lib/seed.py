@@ -4,6 +4,9 @@ from classes.Visit import Visit
 from classes.User import User
 
 
+
+
+
 tokyo_restaurants = 'lib/data/tokyo_restaurants.csv'
 
 def seed_database(csv_file):

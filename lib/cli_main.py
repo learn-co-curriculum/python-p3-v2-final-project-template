@@ -15,7 +15,11 @@ from cli.pages import (
 from cli.user_account_page import user_account_page
 from cli.restaurants_page import restaurants_page
 from cli.visits_page import visits_page
+
+from cli.view_all_restaurants import display_restaurants
+
 from classes.User import User
+
 
 
 ###############################################
@@ -184,6 +188,10 @@ def main():
     home_page.add_option("User Account", lambda: navigate("user_account"))
     home_page.add_option("Restaurants", lambda: navigate("restaurants"))
     home_page.add_option("Visits", lambda: navigate("visits"))
+
+    view_all_restaurants_page = define_page("view_all_restaurants", "All Restaurants")
+    view_all_restaurants_page.add_option("Display Restaurants", lambda: display_restaurants(1))
+    view_all_restaurants_page.add_option("Back", lambda: navigate("restaurants"))
 
     navigate("home")
 

@@ -1,72 +1,78 @@
 from cli.pages import define_page, navigate
-from cli.view_all_restaurants import display_restaurants, select_restaurant
-from cli.filter_by_location import display_restaurants_by_location
-from cli.filter_by_cuisine import display_restaurants_by_cuisine
+from classes.Restaurant import Restaurant
+from cli.restaurant_utils import display_restaurants, select_restaurant
 import click
 from rich import print
+import click
 
 def view_all_restaurants():
     page_number = 1
     while True:
-        display_restaurants(page_number)
-        choice = click.prompt("\nEnter your choice (p: Previous Page, n: Next Page, x: Back to Restaurants Menu)")
-        if choice == 'p' and page_number > 1:
+        restaurants_per_page = 10
+        offset = (page_number - 1) * restaurants_per_page
+        restaurants = Restaurant.get_all(limit=restaurants_per_page, offset=offset)
+        total_restaurants = Restaurant.get_total_count()
+        total_pages = (total_restaurants + restaurants_per_page - 1) // restaurants_per_page
+
+        display_restaurants(restaurants, page_number, total_restaurants, total_pages)
+
+        choice = click.prompt("\nEnter your choice (p: Previous Page, n: Next Page, x: Back to Restaurants Menu, #: Select Restaurant)")
+        if choice.lower() == 'p' and page_number > 1:
             page_number -= 1
-        elif choice == 'n':
+        elif choice.lower() == 'n' and page_number < total_pages:
             page_number += 1
-        elif choice == 'x':
+        elif choice.lower() == 'x':
             navigate("restaurants")
             break
         else:
-            click.echo("Invalid choice. Please try again.")
+            select_restaurant(choice)
 
 def filter_by_cuisine():
     page_number = 1
     cuisine = ''
 
     while True:
-
         click.clear()
-        print('[bold #FF7EF5 ]Choose a Cuisine Type[/bold #FF7EF5 ]')
+        print('[bold #FF7EF5]Choose a Cuisine Type[/bold #FF7EF5]')
         print('==================')
         print('\n')
-        print('Chinese')
+        print('1. Chinese')
         print('---')
-        print('French')
+        print('2. French')
         print('---')
-        print('Hispanic')
+        print('3. Hispanic')
         print('---')
-        print('Italian')
+        print('4. Italian')
         print('---')
-        print('Japanese')
+        print('5. Japanese')
         print('---')
-        print('Sushi')
+        print('6. Sushi')
         print('---')
-        print('Tempura')
+        print('7. Tempura')
         print('---')
         print('\n')
 
         choice = click.prompt('\nType your choice').lower()
         
-        if choice == 'chinese':
+        if choice == 'chinese' or choice == '1':
             cuisine = 'Chinese'
             break
-        elif choice == 'french':
+        elif choice == 'french' or choice == '2':
             cuisine = 'French'
             break
-        elif choice == 'hispanic':
+        elif choice == 'hispanic' or choice == '3':
             cuisine = 'Hispanic'
             break
-        elif choice == 'italian':
+        elif choice == 'italian' or choice == '4':
             cuisine = 'Italian'
             break
-        elif choice == 'japanese':
+        elif choice == 'japanese' or choice == '5':
             cuisine = 'Japanese'
             break
-        elif choice == 'sushi':
+        elif choice == 'sushi' or choice == '6':
             cuisine = 'Sushi'
             break
-        elif choice == 'tempura':
+        elif choice == 'tempura' or choice == '7':
             cuisine = 'Tempura'
             break
         elif choice == 'x':
@@ -75,75 +81,77 @@ def filter_by_cuisine():
         else:
             print('\nPlease input a valid cuisine\n')
             click.pause()
-            
 
     while True:
-
         click.clear()
-        display_restaurants_by_cuisine(cuisine, page_number)
-        choice = click.prompt("\nEnter your choice (p: Previous Page, n: Next Page, x: Back to Restaurants Menu)")
+        restaurants_per_page = 10
+        offset = (page_number - 1) * restaurants_per_page
+        restaurants = Restaurant.get_restaurants_by_cuisine(cuisine, limit=restaurants_per_page, offset=offset)
+        total_restaurants = Restaurant.get_count_by_cuisine(cuisine)
+        total_pages = (total_restaurants + restaurants_per_page - 1) // restaurants_per_page
+        display_restaurants(restaurants, page_number, total_restaurants, total_pages)
 
-        if choice == 'p' and page_number > 1:
+        choice = click.prompt("\nEnter your choice (p: Previous Page, n: Next Page, x: Back to Restaurants Menu, #: Select Restaurant)")
+        if choice.lower() == 'p' and page_number > 1:
             page_number -= 1
-        elif choice == 'n':
+        elif choice.lower() == 'n' and page_number < total_pages:
             page_number += 1
-        elif choice == 'x':
+        elif choice.lower() == 'x':
             navigate("restaurants")
             break
         else:
-            click.echo("Invalid choice. Please try again.")
+            select_restaurant(choice)
 
 def filter_by_location():
     page_number = 1
     location = ''
 
     while True:
-
         click.clear()
-        print('[bold #FF7EF5 ]Choose a Location[/bold #FF7EF5]')
+        print('[bold #FF7EF5]Choose a Location[/bold #FF7EF5]')
         print('==================')
         print('\n')
-        print('Shibuya')
+        print('1. Shibuya')
         print('---')
-        print('Shinjuku')
+        print('2. Shinjuku')
         print('---')
-        print('Bunkyo/Sumida/Taito')
+        print('3. Bunkyo/Sumida/Taito')
         print('---')
-        print('Chiyoda')
+        print('4. Chiyoda')
         print('---')
-        print('Chuo')
+        print('5. Chuo')
         print('---')
-        print('Meguro')
+        print('6. Meguro')
         print('---')
-        print('Minato')
+        print('7. Minato')
         print('---')
-        print('Setagaya/Shinagawa')
+        print('8. Setagaya/Shinagawa')
         print('\n')
 
         choice = click.prompt('\nType your choice').lower()
         
-        if choice == 'shibuya':
+        if choice == 'shibuya' or choice == '1':
             location = 'Shibuya'
             break
-        elif choice == 'shinjuku':
+        elif choice == 'shinjuku' or choice == '2':
             location = 'Shinjuku'
             break
-        elif choice == 'bunkyo/Sumida/Taito':
+        elif choice == 'bunkyo/sumida/taito' or choice == '3':
             location = 'Bunkyo/Sumida/Taito'
             break
-        elif choice == 'chiyoda':
+        elif choice == 'chiyoda' or choice == '4':
             location = 'Chiyoda'
             break
-        elif choice == 'chuo':
+        elif choice == 'chuo' or choice == '5':
             location = 'Chuo'
             break
-        elif choice == 'minato':
+        elif choice == 'minato' or choice == '6':
             location = 'Minato'
             break
-        elif choice == 'meguro':
+        elif choice == 'meguro' or choice == '7':
             location = 'Meguro'
             break
-        elif choice == 'setagaya/Shinagawa':
+        elif choice == 'setagaya/shinagawa' or choice == '8':
             location = 'Setagaya/Shinagawa'
             break
         elif choice == 'x':
@@ -152,32 +160,20 @@ def filter_by_location():
         else:
             print('\nPlease input a valid location\n')
             click.pause()
-            
 
     while True:
-
         click.clear()
-        display_restaurants_by_location(location, page_number)
-        choice = click.prompt("\nEnter your choice (p: Previous Page, n: Next Page, x: Back to Restaurants Menu)")
+        restaurants_per_page = 10
+        offset = (page_number - 1) * restaurants_per_page
+        restaurants = Restaurant.get_restaurants_by_location(location, limit=restaurants_per_page, offset=offset)
+        total_restaurants = Restaurant.get_count_by_location(location)
+        total_pages = (total_restaurants + restaurants_per_page - 1) // restaurants_per_page
+        display_restaurants(restaurants, page_number, total_restaurants, total_pages)
 
-        if choice == 'p' and page_number > 1:
-            page_number -= 1
-        elif choice == 'n':
-            page_number += 1
-        elif choice == 'x':
-            navigate("restaurants")
-            break
-        else:
-            click.echo("Invalid choice. Please try again.")
-
-def view_all_restaurants():
-    page_number = 1
-    while True:
-        display_restaurants(page_number)
-        choice = click.prompt("Enter your choice")
+        choice = click.prompt("\nEnter your choice (p: Previous Page, n: Next Page, x: Back to Restaurants Menu, #: Select Restaurant)")
         if choice.lower() == 'p' and page_number > 1:
             page_number -= 1
-        elif choice.lower() == 'n':
+        elif choice.lower() == 'n' and page_number < total_pages:
             page_number += 1
         elif choice.lower() == 'x':
             navigate("restaurants")

@@ -7,6 +7,9 @@ class Page:
 
     def add_option(self, text, action):
         self.options.append((text, action))
+    
+    def clear_options(self):
+        self.options = []
 
 pages = {}
 current_page = None

@@ -3,6 +3,7 @@ from classes.Restaurant import Restaurant
 from classes.Visit import Visit
 from classes.User import User
 from cli.filter_by_location import display_restaurants_by_location
+from cli.user_account_page import view_user
 
 tokyo_restaurants = 'lib/data/tokyo_restaurants.csv'
 
@@ -19,6 +20,7 @@ def seed_database(csv_file):
     christian = User.create('Christian')
     sungjin = User.create('Sungjin')
     matteo = User.create('Matteo')
+    muadib = User.create('Muadib')
 
 
     Visit.create(8, 'I had a great time, the food was sooooo goood!!', '04-30-2023', 1, 46)
@@ -30,7 +32,6 @@ def seed_database(csv_file):
     Visit.create(7, 'BEST IN TOWN', '02-30-2022', 1, 46)
     Visit.create(8, 'Great Service', '03-20-2023', 3, 46)
     Visit.create(9, 'Best Restaurant in town', '01-26-2020', 3, 46)
-
 
 
 
@@ -57,7 +58,8 @@ seed_database(tokyo_restaurants)
 # 
 # 
 
-display_restaurants_by_location('Shibuya', 1)
+
+
 
 
 

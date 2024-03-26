@@ -114,6 +114,32 @@ class User:
             row[0]  #id
         )
     
+    @classmethod
+    def get_all(cls, limit=None, offset=None):
+        try:
+            query = 'SELECT * FROM users'
+            if limit is not None and offset is not None:
+                query += f' LIMIT {limit} OFFSET {offset}'
+            CURSOR.execute(query)
+            rows = CURSOR.fetchall()
+            return [cls(row[1], row[0]) for row in rows]
+        except Exception as e:
+            CONN.rollback()
+            print('An Error Occurred: ', e)
+            raise Exception
+
+    @classmethod
+    def get_user_by_id(cls, id):
+        try:
+            query = 'SELECT * FROM users WHERE id = ?'
+            CURSOR.execute(query, (id,))
+            obj = CURSOR.fetchone()
+            return cls(obj[1], obj[0])
+        except Exception as e:
+            CONN.rollback()
+            print('An Error Occured: ', e)
+            raise Exception
+    
     # = = = = = = = = = = = = = => Table Methods   <= = = = = = = = = = = = = #
     
     @classmethod

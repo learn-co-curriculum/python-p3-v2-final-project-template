@@ -122,9 +122,12 @@ from classes.User import User
 @click.command()
 def main():
     # Welcome User
+
     while True:
+
         click.clear()
         current_users = [user.name for user in User.get_all()]
+
         print('''###############################################
 #   ______      __                            # 
 #  /_  __/___  / /____  ______                #
@@ -136,18 +139,46 @@ def main():
 # / /_/ / / / / / / /_/ / ,< / /_/ (__  )  __/#
 # \____/_/ /_/ /_/\__,_/_/|_|\__,_/____/\___/ #
 ###############################################''')
+        
         print('\n[white]Welcome to[/white] [#FF7EF5]TOKYO OMAKASE [/#FF7EF5]\n')
         print('\n[#FF7EF5]東京のお任せ[/#FF7EF5][white]へようこそ！[/white] \n')
+
         choice = click.prompt('Login or Create New User? (l/n)').lower()
+
         if choice == 'l':
             login_name = click.prompt('\nEnter User Name')
             if login_name in current_users:
+                User.set_current_user(User.get_user_by_name(login_name))
+  
                 print('[green]\nLogin Successful!\n[/green]')
                 click.pause()            
                 break;
             else:
                 print('[red]Please enter a valid input[/red]')
                 click.pause()
+
+        elif choice == 'n':
+            new_user = click.prompt('\nEnter New User Name')
+            if new_user in current_users:
+                print('[red]\n\nName already in use...\n\nPlease pick a different name\n\n[/red]')
+                click.pause()
+            else:
+                if not (len(new_user) > 0 and len(new_user) <= 12):
+                    print('[red]Please enter a valid input between 1 and 12 characters[/red]')
+                    click.pause()
+                else:
+
+                    User.set_current_user(User.create(new_user))
+
+                    print(f'[green]\nNew User \"{new_user}\" created\n\nLogging in...\n[/green]')
+                    click.pause()   
+                    break
+
+        else:
+            print('[red]Please enter a valid input[/red]')
+            click.pause()
+
+
     # Define pages
     home_page = define_page("home", "Home")
     home_page.add_option("User Account", lambda: navigate("user_account"))

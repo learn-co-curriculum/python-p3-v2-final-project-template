@@ -8,7 +8,6 @@ from classes.task import Task
 
 fake = Faker()
 
-
 def drop_tables():
     Task.drop_table()
     Reviewer.drop_table()
@@ -23,12 +22,18 @@ def seed_tables():
     for _ in range(10):
         try:
             Reviewer.create(fake.name())
-            Post.create(fake.number(),)
-            print('Created reviewer and post')
+            print('Created reviewer')
+        except Exception as e:
+            return e
+        
+    for _ in range(50):
+        try: 
+            Post.create(fake.number())
+            print('Created post')
         except Exception as e:
             return e
 
-    for _ in range(6):
+    for _ in range(50):
         try:
             reviewers = Reviewer.get_all()
             posts = Post.get_all()

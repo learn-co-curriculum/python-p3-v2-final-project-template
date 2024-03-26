@@ -1,6 +1,7 @@
 # lib/helpers.py
 from classes.reviewer import Reviewer
 from classes.post import Post
+from classes.task import Task
 
 def exit_program():
     print("Goodbye!")

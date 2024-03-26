@@ -54,8 +54,8 @@ def menu():
     print("6. List all posts")
     print("7. Find post by id")
     print("8: Create post")
-    print("10: Update post")
-    print("11: Delete post")
+    print("9: Update post")
+    print("10: Delete post")
 
 if __name__ == "__main__":
     main()

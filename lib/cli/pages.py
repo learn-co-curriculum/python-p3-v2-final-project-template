@@ -1,4 +1,5 @@
 import click
+from rich import print
 
 class Page:
     def __init__(self, title):
@@ -36,16 +37,16 @@ def go_back():
 
 def draw_page():
     click.clear()
-    click.echo(current_page.title)
-    click.echo("=" * len(current_page.title))
+    print(f'[bold #FF7EF5]{current_page.title}[/bold #FF7EF5]')
+    print("[white]=[/white]" * len(current_page.title))
     click.echo()
 
     for index, option in enumerate(current_page.options, start=1):
-        click.echo(f"{index}. {option[0]}")
+        print(f"[#FF7EF5]{index}[/#FF7EF5]. [white]{option[0]}[/white]")
     click.echo()
 
-    click.echo("x. Return to the previous page")
-    click.echo("q. Exit the program")
+    print("[white]x. Return to the previous page[/white]")
+    print("[white]q. Exit the program[/white]")
 
 def handle_user_input(input):
     if input == 'q':

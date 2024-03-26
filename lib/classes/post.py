@@ -25,7 +25,6 @@ class Post:
         self.review_badge = None # All posts set to None until reviewed
         self.is_viral = self.calculate_virality(total_interactions)
         self.id = id
-        
 
     def __repr__(self):
         return (
@@ -142,12 +141,12 @@ class Post:
         except Exception as e:
             return e
 
-    @classmethod
+    @classmethod #create new instantance of Post based on info in db
     def new_from_db(cls, row):
         try:
             post = cls(row[1], row[2], row[3], row[4], row[5], row[0])
             cls.all[post.id] = post
-            return Post
+            return post
         except Exception as e:
             return e
 
@@ -172,9 +171,9 @@ class Post:
                 CURSOR.execute(
                     """
                     SELECT * FROM posts
-                    WHERE id is ?;
+                    WHERE id = ?;
                     """,
-                    (id,),
+                    (id,)
                 )
                 row = CURSOR.fetchone()
             return cls._create_post_from_row(row) if row else None
@@ -186,10 +185,10 @@ class Post:
         try:
             CURSOR.execute(
                 f"""
-                SELECT * FROM doctors
-                WHERE {attr} is ?;
+                SELECT * FROM posts
+                WHERE {attr} = ?;
                 """,
-                (val,),
+                (val,)
             )
             row = CURSOR.fetchone()
             return cls._create_post_from_row(row) if row else None
@@ -230,7 +229,7 @@ class Post:
                     SET total_interactions = ?, content_type = ?, review_badge = ?, is_viral = ?
                     WHERE id = ?
                     """,
-                    (self.total_interactions, self.content_type, self.review_badge, self.is_viral, self.id),
+                    (self.total_interactions, self.content_type, self.review_badge, self.is_viral, self.id)
                 )
                 CONN.commit()
                 type(self).all[self.id] = self
@@ -246,7 +245,7 @@ class Post:
                     DELETE FROM posts
                     WHERE id = ?
                     """,
-                    (self.id,),
+                    (self.id,)
                 )
                 CONN.commit() #rm memoized obj
                 del type(self).all[self.id]

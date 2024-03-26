@@ -143,6 +143,20 @@ class Visit:
             CONN.rollback()
             print('An Error Occurred: ', e)
             raise Exception
+        
+
+
+    @classmethod
+    def get_visit_by_id(cls, id):
+        try:
+            query = 'SELECT * FROM visits WHERE id = ?'
+            CURSOR.execute(query, (id,))
+            obj = CURSOR.fetchone()
+            return cls(obj[1], obj[2], obj[3], obj[4], obj[5], obj[0])
+        except Exception as e:
+            CONN.rollback()
+            print('An Error Occured: ', e)
+            raise Exception
     # = = = = = = = = = = = = = => Table Methods   <= = = = = = = = = = = = = #
     
     @classmethod

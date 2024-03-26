@@ -31,10 +31,10 @@ def edit_visit(chosen_visit):
 visits_page = define_page("visits", "Visits")
 # Add options for visits page
 
-while current_user:
-    visits = User.current_user.visits() 
+# while current_user:
+#     visits = User.current_user.visits() 
 
-print(visits)
+# print(visits)
 
 
 # for visit in visits:

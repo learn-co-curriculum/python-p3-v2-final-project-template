@@ -1,4 +1,6 @@
 import click
+from rich import print
+
 from cli.pages import (
     define_page,
     navigate,

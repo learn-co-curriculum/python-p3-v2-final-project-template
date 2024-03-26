@@ -3,6 +3,7 @@ from cli.view_all_restaurants import display_restaurants
 from cli.filter_by_location import display_restaurants_by_location
 from cli.filter_by_cuisine import display_restaurants_by_cuisine
 import click
+from rich import print
 
 def view_all_restaurants():
     page_number = 1
@@ -26,7 +27,7 @@ def filter_by_cuisine():
     while True:
 
         click.clear()
-        print('Choose a Cuisine Type')
+        print('[bold #FF7EF5 ]Choose a Cuisine Type[/bold #FF7EF5 ]')
         print('==================')
         print('\n')
         print('Chinese')
@@ -99,7 +100,7 @@ def filter_by_location():
     while True:
 
         click.clear()
-        print('Choose a Location')
+        print('[bold #FF7EF5 ]Choose a Location[/bold #FF7EF5]')
         print('==================')
         print('\n')
         print('Shibuya')

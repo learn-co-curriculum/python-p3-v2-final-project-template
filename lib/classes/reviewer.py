@@ -6,9 +6,9 @@ class Reviewer:
     all = {}
 
     def __init__(self, name, id=None):
-        self.id = id
         self.name = name
         self.posts = []
+        self.id = id
 
     def __repr__(self):
         return (
@@ -74,7 +74,7 @@ class Reviewer:
                     SET name = ?
                     WHERE id = ?
                     """,
-                    (self.name, self.id),
+                    (self.name, self.id)
                 )
                 CONN.commit()
                 type(self).all[self.id] = self
@@ -99,7 +99,6 @@ class Reviewer:
         except Exception as e:
             return e
         
-
     @classmethod
     def find_by_id(cls, id):
         try:
@@ -108,10 +107,10 @@ class Reviewer:
                 SELECT * FROM reviewers
                 WHERE id = ?;
             """,
-            (id,),
+            (id,)
             )
             row = CURSOR.fetchone()
-            return cls(row[1]) if row else None
+            return cls(row[0]) if row else None
         except Exception as e:
             return e
 
@@ -125,7 +124,7 @@ class Reviewer:
                     """
                 )
                 rows = CURSOR.fetchall()
-                return [cls(row[1]) for row in rows]
+                return [cls(row[1], row[0]) for row in rows]
         except Exception as e:
             return e
 
@@ -137,7 +136,7 @@ class Reviewer:
                     INSERT INTO reviewers (name)
                     VALUES (?);
                     """,
-                    (self.name,),
+                    (self.name,)
                 )
                 CONN.commit()
                 self.id = CURSOR.lastrowid

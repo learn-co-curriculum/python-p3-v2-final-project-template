@@ -4,7 +4,7 @@
 from rich.console import Console
 from rich import inspect
 import rich
-# from classes.__init__ import CONN, CURSOR
+from classes.__init__ import CONN, CURSOR
 from classes.reviewer import Reviewer
 from classes.post import Post
 from classes.task import Task
@@ -54,6 +54,10 @@ def setup_db():
     console.print(p4)
     console.print(p5)
     console.print(p6, style='bold underline blue')
+
+
+
+
 
 if __name__ == '__main__':
     setup_db()

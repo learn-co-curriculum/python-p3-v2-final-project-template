@@ -1,6 +1,7 @@
 import click
 from cli.pages import define_page, navigate
 from classes.User import User
+from rich import print
 
 exit = False
 

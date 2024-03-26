@@ -2,8 +2,7 @@ import csv
 from classes.Restaurant import Restaurant
 from classes.Visit import Visit
 from classes.User import User
-from cli.filter_by_location import display_restaurants_by_location
-from cli.user_account_page import view_user
+
 
 tokyo_restaurants = 'lib/data/tokyo_restaurants.csv'
 

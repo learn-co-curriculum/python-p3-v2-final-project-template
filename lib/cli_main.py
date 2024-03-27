@@ -1,5 +1,7 @@
 import click
 from rich import print
+from rich.prompt import Prompt
+import random
 
 from cli.pages import (
     define_page,
@@ -15,10 +17,12 @@ from cli.pages import (
 from cli.user_account_page import user_account_page
 from cli.restaurants_page import restaurants_page
 from cli.visits_page import visits_page
+from cli.omakase import omakase_page
 
 from cli.view_all_restaurants import display_restaurants
 
 from classes.User import User
+from classes.Restaurant import Restaurant
 
 
 
@@ -54,18 +58,6 @@ from classes.User import User
 # ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠻⣷⣦⣀⠀⠀⠀⠀⢀⣴⣾⠟⠋⠁
 # ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠛⠿⣶⣤⣴⡿⠋⠀⠀⠀⠀
 
-# ⠀⠀⠀⠀⠀⠀⠀⠀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣧⠀⠀⠀⠀⠀⠀⠀⠀
-# ⠀⠀⠀⢀⣀⣀⣀⣰⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣆⣀⣀⣀⡀⠀⠀⠀
-# ⠀⣴⣾⣿⣿⣿⣿⣿⣿⣿⣿⡿⠋⠙⢿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣦⠀
-# ⠀⣙⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧⠀⠀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣋⠀
-# ⣿⣿⣿⣿⣿⣿⣿⠁⠀⠈⠻⠿⠀⠀⠿⠟⠁⠀⠈⣿⣿⣿⣿⣿⣿⣿
-# ⠘⢿⣿⣿⣿⣿⣿⣦⣤⣤⣄⡀⠀⠀⢀⣠⣤⣤⣴⣿⣿⣿⣿⣿⡿⠃
-# ⠀⠀⠙⢿⣿⣿⣿⣿⣿⠿⠋⠀⣠⣄⠀⠙⠿⣿⣿⣿⣿⣿⡿⠋⠀⠀
-# ⠀⠀⠀⢰⣿⣿⣿⣿⣿⠀⠀⢠⣿⣿⡄⠀⠀⣿⣿⣿⣿⣿⡆⠀⠀⠀
-# ⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣾⣿⣿⣿⣿⣷⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀
-# ⠀⠀⠀⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠀⠀⠀
-# ⠀⠀⠀⠈⠛⠛⣿⣿⣿⣿⣿⡿⠛⠛⢿⣿⣿⣿⣿⣿⠛⠛⠁⠀⠀⠀
-# ⠀⠀⠀⠀⠀⠀⠘⠛⠛⠉⠁⠀⠀⠀⠀⠈⠉⠛⠛⠃⠀⠀⠀⠀⠀⠀
 
 # ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣤⣦⣤⣤⣤⣤⣤⣶⣶⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 # ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣸⡿⠛⢻⠛⢻⠛⢻⣿⡟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -183,11 +175,41 @@ def main():
             click.pause()
 
 
+    def omakase_restaurant():
+        click.clear()
+        rest_length = len(Restaurant.get_all())
+        randomizer = random.randint(0,rest_length)
+
+        random_restaurant = Restaurant.get_by_id(randomizer)
+
+        while True:
+
+            print('[white]=[/white]' * 20)
+            print(f'\n[#FF7EF5]{random_restaurant.name}[/#FF7EF5]\n')
+            print(f'\n[white]{random_restaurant.description}[/white]\n')
+            print(f'\n[#FF7EF5]Location:[/#FF7EF5] {random_restaurant.address}\n')
+            print(f'[#FF7EF5]Cuisine:[/#FF7EF5] [blue]{random_restaurant.cuisine}[/blue]\n')
+            print(f'[#FF7EF5]Price:[/#FF7EF5] [blue]{random_restaurant.price}[/blue]\n')
+            print(f'[#FF7EF5]Award:[/#FF7EF5] [blue]{random_restaurant.award}[/blue]\n')
+            print('[white]=[/white]' * 20)
+            print('\n')
+
+            choice = Prompt.ask('Press \'x\' to return home')
+            if choice == 'x':
+                navigate('home')
+                break
+            else:
+                click.clear()
+            
+
+
+
     # Define pages
     home_page = define_page("home", "Home")
     home_page.add_option("User Account", lambda: navigate("user_account"))
     home_page.add_option("Restaurants", lambda: navigate("restaurants"))
     home_page.add_option("Visits", lambda: navigate("visits"))
+    home_page.add_option("お任せします！ (view a random restaurant)", lambda: omakase_restaurant())
 
     view_all_restaurants_page = define_page("view_all_restaurants", "All Restaurants")
     view_all_restaurants_page.add_option("Display Restaurants", lambda: display_restaurants(1))

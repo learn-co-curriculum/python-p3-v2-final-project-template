@@ -1,200 +1,115 @@
 # Tokyo Omakase 東京のお任せ
 
-Tokyo Omakase is your guide to Tokyo's best restaurants
+Tokyo Omakase is your guide to Tokyo's best restaurants. You can do the following 
 
-## Installation
+## Install and Run
+
+```
 pip install click
 pip install rich
-pipenv install
-pipenv shell
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# Project Reqs
-
-## Learning Goals
-
-- Discuss the basic directory structure of a CLI.
-- Outline the first steps in building a CLI.
-
----
-
-## Introduction
-
-You now have a basic idea of what constitutes a CLI. Fork and clone this lesson
-for a project template for your CLI.
-
-Take a look at the directory structure:
-
-```console
-.
-├── Pipfile
-├── Pipfile.lock
-├── README.md
-└── lib
-    ├── models
-    │   ├── __init__.py
-    │   └── model_1.py
-    ├── cli.py
-    ├── debug.py
-    └── helpers.py
 ```
 
-Note: The directory also includes two files named `CONTRIBUTING.md` and
-`LICENSE.md` that are specific to Flatiron's curriculum. You can disregard or
-delete the files if you want.
 
----
 
-## Generating Your Environment
+This whill install dependent packages
 
-You might have noticed in the file structure- there's already a Pipfile!
-
-Install any additional dependencies you know you'll need for your project by
-adding them to the `Pipfile`. Then run the commands:
-
-```console
+```
 pipenv install
 pipenv shell
 ```
 
----
 
-## Generating Your CLI
+This creates an environment to control dependencies
 
-A CLI is, simply put, an interactive script and prompts the user and performs
-operations based on user input.
-
-The project template has a sample CLI in `lib/cli.py` that looks like this:
-
-```py
-# lib/cli.py
-
-from helpers import (
-    exit_program,
-    helper_1
-)
-
-
-def main():
-    while True:
-        menu()
-        choice = input("> ")
-        if choice == "0":
-            exit_program()
-        elif choice == "1":
-            helper_1()
-        else:
-            print("Invalid choice")
-
-
-def menu():
-    print("Please select an option:")
-    print("0. Exit the program")
-    print("1. Some useful function")
-
-
-if __name__ == "__main__":
-    main()
 ```
-
-The helper functions are located in `lib/helpers.py`:
-
-```py
-# lib/helpers.py
-
-def helper_1():
-    print("Performing useful function#1.")
-
-
-def exit_program():
-    print("Goodbye!")
-    exit()
+python lib/cli_main.py
 ```
+Run Tokyo Omakase
 
-You can run the template CLI with `python lib/cli.py`, or include the shebang
-and make it executable with `chmod +x`. The template CLI will ask for input, do
-some work, and accomplish some sort of task.
 
-Past that, CLIs can be whatever you'd like, as long as you follow the project
-requirements.
 
-Of course, you will update `lib/cli.py` with prompts that are appropriate for
-your application, and you will update `lib/helpers.py` to replace `helper_1()`
-with a useful function based on the specific problem domain you decide to
-implement, along with adding other helper functions to the module.
+## Welcome Page
 
-In the `lib/models` folder, you should rename `model_1.py` with the name of a
-data model class from your specific problem domain, and add other classes to the
-folder as needed. The file `lib/models/__init__.py` has been initialized to
-create the necessary database constants. You need to add import statements to
-the various data model classes in order to use the database constants.
+After logging in, you will be prompted to either login or create a new account. 
 
-You are also welcome to implement a different module and directory structure.
-However, your project should be well organized, modular, and follow the design
-principal of separation of concerns, which means you should separate code
-related to:
+### Login
+To login to an existing account, enter 'l' and press enter. It will then prompt you to 'Enter User Name', enter in your username (including capitalization) and hit enter. If your account does not exist you will be prompted to choose between login and creating a user.
 
-- User interface
-- Data persistence
-- Problem domain rules and logic
+### Create a New User
+To create anew user, enter 'n' and press enter. It will then prompt you to 'Enter New User Name', enter in your username an hit enter. 
 
----
+![Login](readme_img/login.png)
 
-## Updating README.md
+## Home Page
 
-`README.md` is a Markdown file that should describe your project. You will
-replace the contents of this `README.md` file with a description of **your**
-actual project.
+The home page has 3 options available for you to choose...
 
-Markdown is not a language that we cover in Flatiron's Software Engineering
-curriculum, but it's not a particularly difficult language to learn (if you've
-ever left a comment on Reddit, you might already know the basics). Refer to the
-cheat sheet in this assignments's resources for a basic guide to Markdown.
+1. Restaurants
+2. Visits
+3. Users
 
-### What Goes into a README?
+In this application, you can navigate to different menus by entering the corresponding menu number and hitting enter. You can go back in the directory by entering 'x' and hitting enter. By entering 'q' and hitting enter you can exit the entire program. At some points the application will prompt you with different commands, those will be available on the command line.
 
-This README serves as a template. Replace the contents of this file to describe
-the important files in your project and describe what they do. Each Python file
-that you edit should get at least a paragraph, and each function should be
-described with a sentence or two.
+## Restaurants
+Tokyo Omakase comes preloaded with 200+ Michellin rated restaurants that you can browse. There are 3 different ways to browse the restaurants...
 
-Describe your actual CLI script first, and with a good level of detail. The rest
-should be ordered by importance to the user. (Probably functions next, then
-models.)
+1. View All Restaurants
+2. Filter By Cuisine
+3. Filter By Location
 
-Screenshots and links to resources that you used throughout are also useful to
-users and collaborators, but a little more syntactically complicated. Only add
-these in if you're feeling comfortable with Markdown.
+All of these options have the ability to view restaurant details, view its visits, and add your own visit.
 
----
+### View All
+View all allows a user to see all of the restaurants in one place. To navigate through pages enter 'n' for next OR 'p' for previous. Once you found a restaurant you would like to view, enter in the corresponding number and hit enter. This will display the restaurant details and options to...
 
-## Conclusion
+1. View Visits
+2. Add Visit
 
-A lot of work goes into a good CLI, but it all relies on concepts that you've
-practiced quite a bit by now. Hopefully this template and guide will get you off
-to a good start with your Phase 3 Project.
+#### View Visits
+View visits will display all of the stored visits about the restaurant. Details include...
 
-Happy coding!
+1. User name
+2. Description
+3. Rating
+4. Date
 
----
+These visits allow users to express their sentiment towards their visit and leave any comments about dishes etc.
 
-## Resources
+#### Add Visit
 
-- [Markdown Cheat Sheet](https://www.markdownguide.org/cheat-sheet/)
+Add Visit allows a user to share their own experience with other users. You will be prompted with a series of questions about rating, description, and the date you went. 
+
+After submitting you can view the same restaurant and check your own visit along with the others.
+
+
+### Filter By Cuisine
+
+Just like view all, filter by cuisine has the same restaurant viewer and visit functionality EXCEPT before viewing the restaurants you can choose to filter the restaurant list by a certain cuisine type...
+
+1. Chinese
+2. French
+3. Hispanic
+4. Italian
+5. Japanese
+6. Sushi
+7. Tempura
+
+
+### Filter By Location
+
+Same as filter by cuisine, but you can filter the restaurants by location. In Tokyo, the city is split up into districts that they call wards. There are many wards but some have more restaurants than others. We created the following categories to encapsulate the best locations for dining in tokyo and represent relative geographic area...
+
+1. Shibuya
+2. Shinjuku
+3. Bunkyo/Sumida/Taito
+4. Chiyoda
+5. Chuo
+6. Meguro
+7. Minato
+8. Setagaya/Shinagawa
+
+
+
+## Visits
+
+## Users

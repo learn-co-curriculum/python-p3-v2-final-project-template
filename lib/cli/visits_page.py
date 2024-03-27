@@ -31,6 +31,9 @@ def edit_visit(chosen_visit):
 visits_page = define_page("visits", "Visits")
 # Add options for visits page
 
+
+
+
 # while current_user:
 #     visits = User.current_user.visits() 
 
@@ -39,7 +42,7 @@ visits_page = define_page("visits", "Visits")
 
 # for visit in visits:
 
-#     visits_page.add_option(f'{visit.date}', lambda: print("Visits - Option 1"))
+visits_page.add_option(f'{User.current_user}', lambda: print("Visits - Option 1"))
 
 # ... (Add more options as needed)
 

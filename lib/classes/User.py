@@ -100,7 +100,7 @@ class User:
         sql = """ 
             SELECT *
             FROM visits
-            WHERE id = ?
+            WHERE user_id = ?
         """
         try:
             CURSOR.execute(sql, (self.id,))

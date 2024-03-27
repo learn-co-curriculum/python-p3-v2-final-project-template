@@ -29,8 +29,8 @@ def seed_database(csv_file):
     Visit.create(3, 'MEHHH', '04-30-2023', 2, 46)
     Visit.create(4, 'NOT so great', '04-30-2023', 3, 46)
     Visit.create(7, 'Incredible', '04-30-2023', 1, 46)
-    Visit.create(5, 'So So', '04-30-2023', 1, 46)
-    Visit.create(3, 'I had a great time, the food was sooooo goood!!', '03-13-2024', 2, 46)
+    Visit.create(5, 'So So', '04-30-2023', 3, 46)
+    Visit.create(3, 'I had a great time, the food was sooooo goood!!', '03-13-2024', 3, 46)
     Visit.create(7, 'BEST IN TOWN', '02-30-2022', 1, 46)
     Visit.create(8, 'Great Service', '03-20-2023', 3, 46)
     Visit.create(9, 'Best Restaurant in town', '01-26-2020', 3, 46)
@@ -48,18 +48,21 @@ Visit.create_table()
 
 seed_database(tokyo_restaurants)
 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
 
+
+
+
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
 
 
 

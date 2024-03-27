@@ -1,4 +1,5 @@
 from. import CURSOR, CONN
+from datetime import datetime
 
 class Visit:
     
@@ -50,10 +51,15 @@ class Visit:
     # HOW SHOULD WE FORMAT DATE???
     @date.setter  
     def date(self, date):
-        # if not isinstance(date, str):
-        #     raise ValueError("HELLLO")
-        # else:
-            self._date = date
+        if not isinstance(date, str):
+            raise ValueError("Please Input a string")
+
+        try:
+            parsed = datetime.strptime(date, "%m-%d-%Y")
+        except ValueError:
+            raise ValueError('Date should be MM-DD-YYY')
+        
+        self._date = date
         
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 

@@ -150,7 +150,7 @@ def main():
                 click.pause()            
                 break;
             else:
-                print('[red]Please enter a valid input[/red]')
+                print('\n[red]Please enter an existing username[/red]\n')
                 click.pause()
 
         elif choice == 'n':
@@ -160,7 +160,7 @@ def main():
                 click.pause()
             else:
                 if not (len(new_user) > 0 and len(new_user) <= 12):
-                    print('[red]Please enter a valid input between 1 and 12 characters[/red]')
+                    print('\n[red]Please enter a valid input between 1 and 12 characters[/red]\n')
                     click.pause()
                 else:
 
@@ -171,7 +171,7 @@ def main():
                     break
 
         else:
-            print('[red]Please enter a valid input[/red]')
+            print('\n[red]Please enter a valid input[/red]\n')
             click.pause()
 
 
@@ -206,10 +206,11 @@ def main():
 
     # Define pages
     home_page = define_page("home", "Home")
-    home_page.add_option("User Account", lambda: navigate("user_account"))
     home_page.add_option("Restaurants", lambda: navigate("restaurants"))
-    home_page.add_option("Visits", lambda: navigate("visits"))
+    home_page.add_option("My Visits", lambda: navigate("visits"))
     home_page.add_option("お任せします！ (view a random restaurant)", lambda: omakase_restaurant())
+    home_page.add_option("Manage Users", lambda: navigate("user_account"))
+
 
     view_all_restaurants_page = define_page("view_all_restaurants", "All Restaurants")
     view_all_restaurants_page.add_option("Display Restaurants", lambda: display_restaurants(1))

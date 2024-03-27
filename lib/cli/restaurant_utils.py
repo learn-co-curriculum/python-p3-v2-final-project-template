@@ -55,7 +55,8 @@ def display_restaurant_details(restaurant):
         display_restaurant_details(restaurant)
 
 def display_visits(restaurant_id):
-    visits = Visit.get_visits_by_restaurant_id(restaurant_id)
+    rest_obj = Restaurant.get_by_id(restaurant_id)
+    visits = rest_obj.visits()
     
     click.clear()
     click.echo("Visits")

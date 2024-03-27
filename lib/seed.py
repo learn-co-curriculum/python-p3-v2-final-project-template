@@ -80,7 +80,7 @@ seed_database(tokyo_restaurants)
 # 
 # 
 
-
+print(Restaurant.get_by_id(1).visits())
 
 
 

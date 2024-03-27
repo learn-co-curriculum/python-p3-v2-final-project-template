@@ -1,5 +1,5 @@
 from . import CURSOR, CONN
-import click
+#import click
 from classes.Visit import Visit
 
 

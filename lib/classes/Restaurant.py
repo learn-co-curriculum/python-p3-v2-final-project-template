@@ -1,5 +1,5 @@
 from . import CURSOR, CONN
-
+from classes.Visit import Visit
 class Restaurant:
 
     
@@ -275,6 +275,23 @@ class Restaurant:
             CONN.rollback()
             print('An Error Occurred: ', e)
             raise Exception
+        
+    #Association Methods
+    def visits(self):
+        sql = """ 
+            SELECT *
+            FROM visits
+            WHERE restaurant_id = ?
+        """
+        try:
+            CURSOR.execute(sql, (self.id,))
+            CONN.commit()
+            rows = CURSOR.fetchall()
+            return [ Visit(row[1],row[2],row[3],row[4],row[5],row[0]) for row in rows]
+        except Exception as e:
+            print('An Error Occurred:', e)
+            raise Exception
+
 
 
 

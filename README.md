@@ -4,13 +4,6 @@ Tokyo Omakase is your guide to Tokyo's best restaurants. You can do the followin
 
 ## Install and Run
 
-This whill install dependent packages
-
-```
-pipenv install
-pipenv shell
-```
-
 
 This creates an environment to control dependencies
 
@@ -106,5 +99,4 @@ Same as filter by cuisine, but you can filter the restaurants by location. In To
 ## Visits
 
 ## Users
-
 

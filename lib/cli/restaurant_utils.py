@@ -76,7 +76,6 @@ def display_visits(restaurant_id):
     click.getchar()
     navigate("view_all_restaurants")
 
-
 def add_visit(restaurant_id):
 
 

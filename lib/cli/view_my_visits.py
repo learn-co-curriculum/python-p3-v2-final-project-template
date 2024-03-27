@@ -83,17 +83,21 @@ def display_my_visits():
     exit = False
 
     user = User.current_user.visits()
-    visits_page.options = []
+    
 
-    if not user:
-        print('\nNo Visits Uploaded\n')
+    if user == []:
+        print('\n[red]No Visits Uploaded ... Please upload a visit in the Restaurants Menu[red]\n')
+        click.pause()
+        navigate('visits')
     else:
+        visits_page.options = []
+
         for visit in user:
             restaurant_obj = Restaurant.get_by_id(visit.restaurant_id)
             visits_page.add_option(f'[yellow]{visit.date}[/yellow] Rating: {visit.rating} <"{visit.description[0:20]}..."> [#FF7EF5]{restaurant_obj.name}[/#FF7EF5] in [blue]{restaurant_obj.ward}[/blue]', lambda visit_id = visit._id: view_visit(visit_id))
             # print(f'\n{visit.date} Rating: {visit.rating} <"{visit.description[0:20]}..."> [#FF7EF5]{restaurant_obj.name}[/#FF7EF5] in [blue]{restaurant_obj.ward}[/blue]')
 
-        return user
+    return user
         
 
     

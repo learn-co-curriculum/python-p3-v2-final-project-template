@@ -2,6 +2,7 @@ import click
 from classes.Restaurant import Restaurant
 from classes.Visit import Visit
 from cli.pages import navigate
+from classes.User import User
 
 def display_restaurants(restaurants, page_number, total_restaurants, total_pages):
     click.clear()
@@ -40,11 +41,14 @@ def display_restaurant_details(restaurant):
     click.echo(f"Description: {restaurant.description}")
     click.echo("\nOptions:")
     click.echo("1. View Visits")
-    click.echo("2. Return to Restaurant List")
+    click.echo("2. Add Visit")
+    click.echo("3. Return to Restaurant List")
     choice = click.prompt("Enter your choice")
     if choice == "1":
         display_visits(restaurant.id)
     elif choice == "2":
+        add_visit(restaurant.id)
+    elif choice == "3":
         navigate("view_all_restaurants")
     else:
         click.echo("Invalid choice. Please try again.")
@@ -57,7 +61,7 @@ def display_visits(restaurant_id):
     click.echo("=" * 20)
     if visits:
         for visit in visits:
-            click.echo(f"User: {visit.user_id}")
+            #click.echo(f"User: {visit.user_id}")
             click.echo(f"Rating: {visit.rating}")
             click.echo(f"Description: {visit.description}")
             click.echo(f"Date: {visit.date}")
@@ -67,3 +71,34 @@ def display_visits(restaurant_id):
     click.echo("\nPress any key to return to the restaurant details.")
     click.getchar()
     navigate("view_all_restaurants")
+
+
+def add_visit(restaurant_id):
+
+
+    click.clear()
+    click.echo("Add Visit")
+    click.echo("=" * 20)
+
+    while True:
+        try:
+            rating = int(click.prompt("Enter your rating (1-10)"))
+            if rating < 1 or rating > 10:
+                raise ValueError
+            break
+        except ValueError:
+            click.echo("Please enter a valid rating between 1 and 10.")
+
+    description = click.prompt("Enter your description")
+    #!Add Date Validation?
+    date = click.prompt("Enter the visit date (MM-DD-YYYY)")
+    user_id = User.current_user.id
+
+    try:
+        visit = Visit.create(rating, description, date, user_id, restaurant_id)
+        click.echo("Visit added successfully!")
+        click.pause()
+        navigate("view_all_restaurants")
+    except Exception as e:
+        click.echo(f"An error occurred while adding the visit: {str(e)}")
+        click.pause()

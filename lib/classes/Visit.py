@@ -157,6 +157,8 @@ class Visit:
             CONN.rollback()
             print('An Error Occured: ', e)
             raise Exception
+    
+    
     # = = = = = = = = = = = = = => Table Methods   <= = = = = = = = = = = = = #
     
     @classmethod

@@ -22,7 +22,7 @@ def view_visit(visit_id):
 
     while not exit:
 
-        choice = click.prompt(f'Edit or Delete visit? (d/e)')
+        choice = click.prompt(f'Edit or Delete visit? (d/e/x)')
         if choice == 'd':
             confirmation = click.prompt('\nAre you sure you want to delete this visit? (y/n)')
             if confirmation == 'y':
@@ -58,7 +58,7 @@ def view_visit(visit_id):
                 display_my_visits()
                 exit = True
             elif edit_choice == '3':
-                description = Prompt.ask(f'\nChange rating from "[#FF7EF5]{visit.description[0:20]}[/#FF7EF5]" to... ')
+                description = Prompt.ask(f'\nChange rating from "[#FF7EF5]{visit.description[0:20]}[/#FF7EF5]" to')
                 visit.description = description
                 visit.update()
                 print('\n[green]Updated Description[green]\n')
@@ -67,6 +67,8 @@ def view_visit(visit_id):
                 exit = True
             else:
                 print('\n[red]Please use a valid input[/red]\n')
+        elif choice == 'x':
+            exit = True
         else:
             print('\n[red]Please use a valid input[red]\n')
 

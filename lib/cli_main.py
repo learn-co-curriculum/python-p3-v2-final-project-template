@@ -185,9 +185,9 @@ def main():
 
     # Define pages
     home_page = define_page("home", "Home")
-    home_page.add_option("User Account", lambda: navigate("user_account"))
     home_page.add_option("Restaurants", lambda: navigate("restaurants"))
-    home_page.add_option("Visits", lambda: navigate("visits"))
+    home_page.add_option("My Visits", lambda: navigate("visits"))
+    home_page.add_option("Manage Users", lambda: navigate("user_account"))
 
     view_all_restaurants_page = define_page("view_all_restaurants", "All Restaurants")
     view_all_restaurants_page.add_option("Display Restaurants", lambda: display_restaurants(1))

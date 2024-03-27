@@ -116,10 +116,15 @@ class Visit:
     # = = = = = = = = = = = = = => CRUD Methods   <= = = = = = = = = = = = = #
 
     @classmethod
-    def create(cls, rating, description, date, user_id, restaurant_id, id = None):
-        new_visit = cls(rating, description, date, user_id, restaurant_id, id)
-        new_visit.save()
-        return new_visit
+    def create(cls, rating, description, date, user_id, restaurant_id, id=None):
+        try:
+            new_visit = cls(rating, description, date, user_id, restaurant_id, id)
+            new_visit.save()
+            return new_visit
+        except Exception as e:
+            print('An Error Occurred:', e)
+            raise Exception
+
     
     @classmethod
     def instance_from_db(cls, row):

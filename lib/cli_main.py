@@ -17,7 +17,7 @@ from cli.pages import (
 from cli.user_account_page import user_account_page
 from cli.restaurants_page import restaurants_page
 from cli.visits_page import visits_page
-from cli.omakase import omakase_page
+
 
 from cli.view_all_restaurants import display_restaurants
 

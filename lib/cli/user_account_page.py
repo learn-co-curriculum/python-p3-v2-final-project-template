@@ -2,6 +2,7 @@ import click
 from cli.pages import define_page, navigate
 from classes.User import User
 from rich import print
+from rich.prompt import Prompt
 
 exit = False
 
@@ -18,15 +19,15 @@ def view_user(user_id):
             edit_user(chosen_user)
             break
         else:
-            print('Please enter a valid option')
+            print('\n[red]Please enter a valid option[/red]\n')
 
 def edit_user(chosen_user):
     global exit
 
     while not exit:
         choice = click.prompt(f'\nEnter a new name for {chosen_user.name}')
-        if not (len(choice) < 12 and len(choice) > 0) :
-            print('Please use a valid input that is between 0 and 12 characters')
+        if not (len(choice) <= 12 and len(choice) >= 1) :
+            print('\n[red]Please enter a valid input between 1 and 12[/red]\n')
         else:
             chosen_user.name = choice
             chosen_user.update()
@@ -37,7 +38,8 @@ def edit_user(chosen_user):
             for user in new_users:
                 user_account_page.add_option(f'{user.name}', lambda user_id = user.id: view_user(user_id))
 
-            print(f'\nUpdate Successful\n')
+            print(f'\n[green]Update Successful[/green]\n')
+
             click.pause()
             exit = True
 
@@ -47,7 +49,7 @@ def delete_user(chosen_user):
     while not exit:
         choice = click.prompt(f'\nDelete {chosen_user.name}? (y/n)')
         if choice == 'y':
-            confirmation = click.prompt(f'\nAre you sure you want to delete {chosen_user.name}? (y/n)')
+            confirmation = Prompt.ask(f'\n[red]Are you sure?[/red] (y/n)')
             if confirmation == 'y':
                 chosen_user.delete()
 
@@ -57,18 +59,18 @@ def delete_user(chosen_user):
                 for user in new_users:
                     user_account_page.add_option(f'{user.name}', lambda user_id = user.id: view_user(user_id))
 
-                print(f'\n{chosen_user.name} was successfully deleted\n')
+                print(f'\n[green]{chosen_user.name} was successfully deleted[/green]\n')
                 click.pause()
                 exit = True
             elif confirmation == 'n':
-                print(f'\nAborting delete of {chosen_user.name}')
+                print(f'\n[green]Aborting delete of {chosen_user.name}[/green]\n')
                 exit = True
             else:
-                print('Please enter a valid input')
+                print('\n[red]Please enter a valid input[/red]\n')
         elif choice == 'n':
             break
         else:
-            print('Please use a valid input')
+            print('\n[red]Please enter a valid input[/red]\n')
             
 
 

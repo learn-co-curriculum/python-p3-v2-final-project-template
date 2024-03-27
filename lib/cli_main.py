@@ -158,7 +158,7 @@ def main():
                 click.pause()            
                 break;
             else:
-                print('[red]Please enter a valid input[/red]')
+                print('\n[red]Please enter an existing username[/red]\n')
                 click.pause()
 
         elif choice == 'n':
@@ -168,7 +168,7 @@ def main():
                 click.pause()
             else:
                 if not (len(new_user) > 0 and len(new_user) <= 12):
-                    print('[red]Please enter a valid input between 1 and 12 characters[/red]')
+                    print('\n[red]Please enter a valid input between 1 and 12 characters[/red]\n')
                     click.pause()
                 else:
 
@@ -179,7 +179,7 @@ def main():
                     break
 
         else:
-            print('[red]Please enter a valid input[/red]')
+            print('\n[red]Please enter a valid input[/red]\n')
             click.pause()
 
 

@@ -44,32 +44,38 @@ def view_visit(visit_id):
             if edit_choice == '1':
                 try:
                     rating = int(Prompt.ask(f'\nChange rating from [#FF7EF5]{visit.rating}[/#FF7EF5] to'))
-                    if rating < 1 or rating > 10:
-                        visit.rating = int(rating)
-                        visit.update()
-                        print('\n[green]Updated Rating[green]\n')
-                        click.pause()
-                        display_my_visits()
-                        exit = True
+                    visit.rating = rating
+                    visit.update()
+                    print('\n[green]Updated Rating[green]\n')
+                    click.pause()
+                    display_my_visits()
+                    exit = True
                 except ValueError:
                     print('\n[red]Please enter a valid rating between 1 and 10[/red]\n')
 
             elif edit_choice == '2':
-                date = Prompt.ask(f'\nChange rating from [#FF7EF5]{visit.date}[/#FF7EF5] to')
-                visit.date = date
-                visit.update()
-                print('\n[green]Updated Date[green]\n')
-                click.pause()
-                display_my_visits()
-                exit = True
+                try:
+                    date = Prompt.ask(f'\nChange date from [#FF7EF5]{visit.date}[/#FF7EF5] to')
+                    visit.date = date
+                    visit.update()
+                    print('\n[green]Updated Date[green]\n')
+                    click.pause()
+                    display_my_visits()
+                    exit = True
+                except ValueError:
+                    print('\n[red]Please enter a valid date with the \'MM-DD-YYYY\' format and [/red]\n')
+                
             elif edit_choice == '3':
-                description = Prompt.ask(f'\nChange rating from "[#FF7EF5]{visit.description[0:20]}[/#FF7EF5]" to')
-                visit.description = description
-                visit.update()
-                print('\n[green]Updated Description[green]\n')
-                click.pause()
-                display_my_visits()
-                exit = True
+                try:
+                    description = Prompt.ask(f'\nChange description from "[#FF7EF5]{visit.description[0:20]}[/#FF7EF5]" to')
+                    visit.description = description
+                    visit.update()
+                    print('\n[green]Updated Description[green]\n')
+                    click.pause()
+                    display_my_visits()
+                    exit = True
+                except ValueError:
+                    print('\n[red]Please enter a description under 100 characters[/red]\n')
             else:
                 print('\n[red]Please use a valid input[/red]\n')
         elif choice == 'x':

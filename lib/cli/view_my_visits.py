@@ -22,7 +22,7 @@ def view_visit(visit_id):
 
     while not exit:
 
-        choice = click.prompt(f'Edit or Delete visit? (d/e)')
+        choice = click.prompt(f'Edit or Delete visit? (d/e/x)')
         if choice == 'd':
             confirmation = click.prompt('\nAre you sure you want to delete this visit? (y/n)')
             if confirmation == 'y':
@@ -42,13 +42,18 @@ def view_visit(visit_id):
             edit_choice = click.prompt('\nWhat would you like to change? (1. Rating, 2. Date, 3. Description)')
 
             if edit_choice == '1':
-                rating = Prompt.ask(f'\nChange rating from [#FF7EF5]{visit.rating}[/#FF7EF5] to')
-                visit.rating = int(rating)
-                visit.update()
-                print('\n[green]Updated Rating[green]\n')
-                click.pause()
-                display_my_visits()
-                exit = True
+                try:
+                    rating = int(Prompt.ask(f'\nChange rating from [#FF7EF5]{visit.rating}[/#FF7EF5] to'))
+                    if rating < 1 or rating > 10:
+                        visit.rating = int(rating)
+                        visit.update()
+                        print('\n[green]Updated Rating[green]\n')
+                        click.pause()
+                        display_my_visits()
+                        exit = True
+                except ValueError:
+                    print('\n[red]Please enter a valid rating between 1 and 10[/red]\n')
+
             elif edit_choice == '2':
                 date = Prompt.ask(f'\nChange rating from [#FF7EF5]{visit.date}[/#FF7EF5] to')
                 visit.date = date
@@ -58,7 +63,7 @@ def view_visit(visit_id):
                 display_my_visits()
                 exit = True
             elif edit_choice == '3':
-                description = Prompt.ask(f'\nChange rating from "[#FF7EF5]{visit.description[0:20]}[/#FF7EF5]" to... ')
+                description = Prompt.ask(f'\nChange rating from "[#FF7EF5]{visit.description[0:20]}[/#FF7EF5]" to')
                 visit.description = description
                 visit.update()
                 print('\n[green]Updated Description[green]\n')
@@ -67,6 +72,8 @@ def view_visit(visit_id):
                 exit = True
             else:
                 print('\n[red]Please use a valid input[/red]\n')
+        elif choice == 'x':
+            exit = True
         else:
             print('\n[red]Please use a valid input[red]\n')
 
@@ -81,13 +88,18 @@ def display_my_visits():
     exit = False
 
     user = User.current_user.visits()
-    visits_page.options = []
+    
+    if user == []:
+        print('\n[red]No Visits Uploaded ... Please upload a visit in the restaurants menu[red]\n')
+        click.pause()
+        navigate('visits')
+    else:
+        visits_page.options = []
 
-
-    for visit in user:
-        restaurant_obj = Restaurant.get_by_id(visit.restaurant_id)
-        visits_page.add_option(f'[yellow]{visit.date}[/yellow] Rating: {visit.rating} <"{visit.description[0:20]}..."> [#FF7EF5]{restaurant_obj.name}[/#FF7EF5] in [blue]{restaurant_obj.ward}[/blue]', lambda visit_id = visit._id: view_visit(visit_id))
-        # print(f'\n{visit.date} Rating: {visit.rating} <"{visit.description[0:20]}..."> [#FF7EF5]{restaurant_obj.name}[/#FF7EF5] in [blue]{restaurant_obj.ward}[/blue]')
+        for visit in user:
+            restaurant_obj = Restaurant.get_by_id(visit.restaurant_id)
+            visits_page.add_option(f'[yellow]{visit.date}[/yellow] Rating: {visit.rating} <"{visit.description[0:20]}..."> [#FF7EF5]{restaurant_obj.name}[/#FF7EF5] in [blue]{restaurant_obj.ward}[/blue]', lambda visit_id = visit._id: view_visit(visit_id))
+            # print(f'\n{visit.date} Rating: {visit.rating} <"{visit.description[0:20]}..."> [#FF7EF5]{restaurant_obj.name}[/#FF7EF5] in [blue]{restaurant_obj.ward}[/blue]')
 
     return user
         

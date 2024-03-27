@@ -25,6 +25,8 @@ class Visit:
     def rating(self, rating):
         if not isinstance(rating, int):
             raise ValueError('Rating must be a number between 1 and 10')
+        elif not (rating >= 1 and rating <= 10):
+            raise ValueError('Rating must be between 1 and 10')
         else:
             self._rating = rating
 

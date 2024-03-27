@@ -84,9 +84,8 @@ def display_my_visits():
 
     user = User.current_user.visits()
     
-
     if user == []:
-        print('\n[red]No Visits Uploaded ... Please upload a visit in the Restaurants Menu[red]\n')
+        print('\n[red]No Visits Uploaded ... Please upload a visit in the restaurants menu[red]\n')
         click.pause()
         navigate('visits')
     else:

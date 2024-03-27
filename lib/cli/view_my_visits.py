@@ -42,13 +42,18 @@ def view_visit(visit_id):
             edit_choice = click.prompt('\nWhat would you like to change? (1. Rating, 2. Date, 3. Description)')
 
             if edit_choice == '1':
-                rating = Prompt.ask(f'\nChange rating from [#FF7EF5]{visit.rating}[/#FF7EF5] to')
-                visit.rating = int(rating)
-                visit.update()
-                print('\n[green]Updated Rating[green]\n')
-                click.pause()
-                display_my_visits()
-                exit = True
+                try:
+                    rating = int(Prompt.ask(f'\nChange rating from [#FF7EF5]{visit.rating}[/#FF7EF5] to'))
+                    if rating < 1 or rating > 10:
+                        visit.rating = int(rating)
+                        visit.update()
+                        print('\n[green]Updated Rating[green]\n')
+                        click.pause()
+                        display_my_visits()
+                        exit = True
+                except ValueError:
+                    print('\n[red]Please enter a valid rating between 1 and 10[/red]\n')
+
             elif edit_choice == '2':
                 date = Prompt.ask(f'\nChange rating from [#FF7EF5]{visit.date}[/#FF7EF5] to')
                 visit.date = date

@@ -56,14 +56,18 @@ def display_restaurant_details(restaurant):
 
 def display_visits(restaurant_id):
     visits = Visit.get_visits_by_restaurant_id(restaurant_id)
+    
     click.clear()
     click.echo("Visits")
     click.echo("=" * 20)
+
     if visits:
         for visit in visits:
-            #click.echo(f"User: {visit.user_id}")
-            click.echo(f"Rating: {visit.rating}")
+            user_object = User.get_user_by_id(visit.user_id)
+            visit_name = user_object.name
+            click.echo(f"User: {visit_name}")
             click.echo(f"Description: {visit.description}")
+            click.echo(f"Rating: {visit.rating}/10")
             click.echo(f"Date: {visit.date}")
             click.echo("---")
     else:

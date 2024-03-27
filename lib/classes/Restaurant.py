@@ -504,6 +504,7 @@ class Restaurant:
         total_restaurants = cls.get_total_count()
         total_pages = (total_restaurants + restaurants_per_page - 1) // restaurants_per_page
         return total_pages
+    
     @classmethod
     def get_by_id(cls, restaurant_id):
         try:

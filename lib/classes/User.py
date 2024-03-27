@@ -1,5 +1,6 @@
 from . import CURSOR, CONN
 import click
+from classes.Visit import Visit
 
 
 class User:
@@ -95,8 +96,23 @@ class User:
 
     # = = = = = = = = = = = = = =>  Association Methods   <= = = = = = = = = = = #
 
-    def get_visits():
-        pass
+    def visits(self):
+        sql = """ 
+            SELECT *
+            FROM visits
+            WHERE user_id = ?
+        """
+        try:
+            CURSOR.execute(sql, (self.id,))
+            CONN.commit()
+            rows = CURSOR.fetchall()
+            return [ Visit(row[1],row[2],row[3],row[4],row[5],row[0]) for row in rows]
+        except Exception as e:
+            print('An Error Occurred:', e)
+            raise Exception
+
+
+        
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 

@@ -1,4 +1,5 @@
 import sqlite3
-
-CONN = sqlite3.connect('company.db')
+#how you connect to db?
+CONN = sqlite3.connect('airline.db')
+#how you connect WITH the db?
 CURSOR = CONN.cursor()
